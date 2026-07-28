@@ -10,8 +10,8 @@
   html, body { width: 100%; height: 100%; overflow: hidden; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
-    background: #1a1a1e;
-    color: #f5f5f7;
+    background: #131314;
+    color: #e8e8ed;
     -webkit-font-smoothing: antialiased;
   }
   button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
@@ -20,50 +20,53 @@
   #welcome {
     position: fixed; inset: 0; z-index: 100;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    transition: opacity 0.8s ease, visibility 0.8s ease;
+    background: #131314;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #welcome::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,255,255,0.03) 0%, transparent 100%);
+    pointer-events: none;
   }
   #welcome.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .welcome-card {
-    text-align: center;
-    max-width: 640px; padding: 48px 40px;
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);
-    animation: fadeUp 1s ease;
+    position: relative; text-align: center;
+    max-width: 560px; padding: 64px 48px;
+    animation: fadeUp 0.8s ease;
   }
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   .welcome-card .badge {
     display: inline-block;
-    padding: 4px 14px; border-radius: 20px;
-    background: rgba(255,255,255,0.1);
-    font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase;
-    margin-bottom: 20px;
+    padding: 5px 16px; border-radius: 16px;
+    background: rgba(255,255,255,0.06);
+    font-size: 12px; letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
   }
-  .welcome-card h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
-  .welcome-card p  { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 32px; }
-  .welcome-card .highlight { color: #64b5f6; }
+  .welcome-card h1 { font-size: 40px; font-weight: 600; margin-bottom: 16px; line-height: 1.25; color: #f0f0f5; }
+  .welcome-card p  { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 36px; }
+  .welcome-card .highlight { color: rgba(255,255,255,0.75); }
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 36px; border-radius: 40px;
-    background: #64b5f6; color: #1a1a2e;
+    padding: 14px 36px; border-radius: 24px;
+    background: #f0f0f5; color: #131314;
     font-size: 16px; font-weight: 600;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, background 0.2s ease;
   }
-  .btn-primary:hover { transform: scale(1.04); box-shadow: 0 8px 30px rgba(100,181,246,0.3); }
-  .btn-primary:active { transform: scale(0.96); }
+  .btn-primary:hover { transform: scale(1.03); background: #fff; }
+  .btn-primary:active { transform: scale(0.97); }
   .welcome-card .footer-note {
-    margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.35);
+    margin-top: 28px; font-size: 12px; color: rgba(255,255,255,0.25);
   }
 
   /* ========== Gallery ========== */
   #gallery {
     position: fixed; inset: 0; z-index: 1;
     display: flex; align-items: center; justify-content: center;
-    background: #1a1a1e;
+    background: #131314;
   }
   .image-wrapper {
     position: relative;
@@ -75,41 +78,38 @@
     max-height: 100%;
     object-fit: contain;
     display: block;
-    transition: opacity 0.4s ease;
-    padding: 20px;
+    transition: opacity 0.25s ease;
+    padding: 16px;
     user-select: none;
     -webkit-user-drag: none;
   }
-  .image-wrapper img.loading { opacity: 0; }
 
   /* ========== Top Bar ========== */
   .top-bar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 20;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 24px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    padding: 14px 20px;
     pointer-events: none;
   }
   .top-bar > * { pointer-events: auto; }
   .top-bar .counter {
-    font-size: 14px; font-weight: 500; letter-spacing: 0.3px;
-    color: rgba(255,255,255,0.8);
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.45);
   }
 
   /* ========== Nav Arrows ========== */
   .nav-btn {
     position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
-    width: 56px; height: 56px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 22px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    color: rgba(255,255,255,0.8);
-    font-size: 22px;
-    transition: background 0.2s, transform 0.2s;
-    margin: 0 12px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.55);
+    font-size: 18px;
+    transition: background 0.2s, color 0.2s;
+    margin: 0 8px;
   }
-  .nav-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-50%) scale(1.08); }
-  .nav-btn:active { transform: translateY(-50%) scale(0.92); }
+  .nav-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .nav-btn:active { background: rgba(255,255,255,0.18); }
   .nav-btn.prev { left: 0; }
   .nav-btn.next { right: 0; }
 
@@ -117,76 +117,92 @@
   .bottom-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    padding: 16px 20px;
     gap: 12px;
   }
   .bottom-bar .title {
-    font-size: 14px; font-weight: 500;
-    color: rgba(255,255,255,0.85);
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.55);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     flex: 1;
   }
 
   /* ========== Toggle ========== */
   .toggle-annotations {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 16px 8px 12px; border-radius: 40px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.7);
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.35);
     transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
   }
-  .toggle-annotations:hover { background: rgba(255,255,255,0.13); }
-  .toggle-annotations.active { background: rgba(100,181,246,0.2); color: #64b5f6; }
+  .toggle-annotations:hover { background: rgba(255,255,255,0.08); }
+  .toggle-annotations.active {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+  }
   .toggle-track {
-    position: relative; width: 36px; height: 20px; border-radius: 12px;
-    background: rgba(255,255,255,0.2);
+    position: relative; width: 32px; height: 18px; border-radius: 10px;
+    background: rgba(255,255,255,0.1);
     transition: background 0.3s;
   }
-  .toggle-annotations.active .toggle-track { background: #64b5f6; }
+  .toggle-annotations.active .toggle-track { background: rgba(255,255,255,0.5); }
   .toggle-thumb {
     position: absolute; top: 2px; left: 2px;
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), background 0.3s;
+  }
+  .toggle-annotations.active .toggle-thumb {
+    transform: translateX(14px);
     background: #fff;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .toggle-annotations.active .toggle-thumb { transform: translateX(16px); }
 
-  /* ========== Dropdown Category ========== */
-  .category-select {
-    padding: 8px 16px; border-radius: 40px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: none; color: rgba(255,255,255,0.8);
-    font-size: 13px; font-weight: 500;
-    appearance: none; -webkit-appearance: none;
-    cursor: pointer;
+  /* ========== Zoom Toggle ========== */
+  .toggle-zoom {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
-    max-width: 140px;
   }
-  .category-select option { background: #2a2a2e; color: #f5f5f7; }
-  .category-select:focus { outline: none; }
+  .toggle-zoom:hover { background: rgba(255,255,255,0.1); }
+  .toggle-zoom.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+  .toggle-zoom .toggle-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.3s;
+  }
+  .toggle-zoom.active .toggle-dot { background: rgba(255,255,255,0.7); }
+
+  /* ========== Zoomed image wrapper ========== */
+  .image-wrapper.zooming { cursor: grab; overflow: hidden; }
+  .image-wrapper.zooming:active { cursor: grabbing; }
+  .image-wrapper.zooming img {
+    max-width: none; max-height: none; padding: 0;
+    transition: none;
+  }
 
   /* ========== Back to Home ========== */
   .btn-home {
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 16px; border-radius: 40px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    font-size: 13px; color: rgba(255,255,255,0.7);
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 18px;
+    background: rgba(255,255,255,0.06);
+    font-size: 12px; color: rgba(255,255,255,0.45);
     transition: background 0.2s;
     flex-shrink: 0;
   }
-  .btn-home:hover { background: rgba(255,255,255,0.13); }
+  .btn-home:hover { background: rgba(255,255,255,0.1); }
 
   /* ========== Loading Spinner ========== */
   .spinner {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1);
-    border-top-color: #64b5f6; border-radius: 50%;
+    width: 28px; height: 28px; border: 2px solid rgba(255,255,255,0.08);
+    border-top-color: rgba(255,255,255,0.35); border-radius: 50%;
     animation: spin 0.7s linear infinite;
     z-index: 5;
   }
@@ -207,16 +223,16 @@
 
   /* ========== Responsive ========== */
   @media (max-width: 640px) {
-    .welcome-card { padding: 32px 24px; margin: 0 16px; }
-    .welcome-card h1 { font-size: 26px; }
-    .nav-btn { width: 40px; height: 40px; font-size: 16px; margin: 0 4px; }
-    .bottom-bar { padding: 12px 12px; flex-wrap: wrap; }
+    .welcome-card { padding: 40px 28px; }
+    .welcome-card h1 { font-size: 28px; }
+    .nav-btn { width: 38px; height: 38px; font-size: 16px; margin: 0 4px; }
+    .bottom-bar { padding: 12px 14px; flex-wrap: wrap; }
     .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
-    .top-bar { padding: 12px 12px; }
+    .top-bar { padding: 12px 14px; }
     .image-wrapper img { padding: 8px; }
-    .toggle-annotations { padding: 6px 12px; font-size: 12px; }
-    .btn-home { padding: 6px 12px; font-size: 12px; }
-    .category-select { padding: 6px 12px; font-size: 12px; max-width: 110px; }
+    .toggle-annotations { padding: 5px 12px; font-size: 11px; }
+    .toggle-zoom { padding: 5px 12px; font-size: 11px; }
+    .btn-home { padding: 5px 12px; font-size: 11px; }
   }
 </style>
 </head>
@@ -226,10 +242,13 @@
 <div id="welcome">
   <div class="welcome-card">
     <div class="badge">🏠 新生指南</div>
-    <h1>XX 校区<br>宿舍尺寸指南</h1>
+    <h1>合肥理工学院<br>宿舍尺寸指南</h1>
     <p>
       床有多宽？书桌能放多大显示器？衣柜能挂多长的衣服？<br>
       提前了解宿舍各处的<span class="highlight">实际尺寸</span>，买对东西不踩坑。
+    </p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:-16px;margin-bottom:24px;">
+      ⚠️ 所有尺寸均为手工测量，实际可能有所出入，仅供参考。<br>对尺寸精度要求较高的部件，建议开学后自行复测。
     </p>
     <button class="btn-primary" id="btnEnter">
       <span>开始浏览</span>
@@ -237,6 +256,9 @@
     </button>
     <div class="footer-note" id="footerNote">
       共 20 张示意图 · 支持标注对照
+    </div>
+    <div class="footer-note" style="margin-top:6px;font-size:12px;color:rgba(255,255,255,0.25);">
+      by 月亮早睡困不醒
     </div>
   </div>
 </div>
@@ -255,16 +277,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     首页
   </button>
-  <span class="counter" id="counter">1 / 31</span>
-  <select class="category-select" id="categoryFilter">
-    <option value="all">全部分类</option>
-    <option value="bed">🛏️ 床</option>
-    <option value="desk">🖥️ 书桌</option>
-    <option value="stairs">🪜 楼梯</option>
-    <option value="closet">👔 衣柜</option>
-    <option value="space">📐 空间示意</option>
-    <option value="other">📌 其他</option>
-  </select>
+  <span class="counter" id="counter">1 / 20</span>
 </div>
 
 <!-- Nav Buttons -->
@@ -281,7 +294,12 @@
   <button class="toggle-annotations" id="toggleBtn">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
     <div class="toggle-track"><div class="toggle-thumb"></div></div>
-    <span id="toggleLabel">显示标注</span>
+    <span id="toggleLabel">标注</span>
+  </button>
+  <button class="toggle-zoom" id="zoomBtn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+    <div class="toggle-dot"></div>
+    <span id="zoomLabel">缩放</span>
   </button>
 </div>
 
@@ -339,6 +357,7 @@ const PRELOAD_AHEAD = 3;     // 只预加载前方3张
 let preloadQueue = [];
 let preloading   = false;
 let preloadInterval = 200;
+let loadToken    = 0;        // 请求令牌，丢掉过期的图片加载
 const cached = {};  // key: "idx_raw" or "idx_ann"
 
 // ============================================================
@@ -364,6 +383,7 @@ function getImagePath(index) {
 function updateImage() {
   const realIdx = filteredIndices[currentIndex];
   if (realIdx === undefined) return;
+  const token = ++loadToken;   // 标记本次请求
 
   const src = getImagePath(realIdx);
   const meta = IMAGES[realIdx];
@@ -376,31 +396,42 @@ function updateImage() {
 
   // 缓存命中 → 瞬间显示
   if (cached[cacheKey]) {
-    elImg.src = src;
+    if (token !== loadToken) return;
+    elImg.style.opacity = '0';
+    setTimeout(() => {
+      if (token !== loadToken) return;
+      elImg.src = src;
+      resetZoom();
+      elImg.style.opacity = '1';
+    }, 150);
     elSpinner.style.display = 'none';
-    elImg.classList.remove('loading');
     startBackgroundPreload();
     return;
   }
 
   elSpinner.style.display = 'block';
-  elImg.classList.add('loading');
+  elImg.style.opacity = '0';
 
   const preloader = new Image();
   preloader.onload = () => {
+    if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
-    elSpinner.style.display = 'none';
-    elImg.classList.remove('loading');
+    resetZoom();
+    requestAnimationFrame(() => {
+      elImg.style.opacity = '1';
+      elSpinner.style.display = 'none';
+    });
     startBackgroundPreload();
   };
   preloader.onerror = () => {
+    if (token !== loadToken) return;
     if (showAnnotations && meta.ann) {
       elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
       showToast('⚠️ 该图暂未标注，显示原图');
     }
+    elImg.style.opacity = '1';
     elSpinner.style.display = 'none';
-    elImg.classList.remove('loading');
   };
   preloader.src = src;
 }
@@ -456,32 +487,6 @@ function nextImage() { navigate(1); }
 function prevImage() { navigate(-1); }
 
 // ============================================================
-//  Category Filter
-// ============================================================
-function filterByCategory() {
-  const val = document.getElementById('categoryFilter').value;
-  filteredIndices = val === 'all'
-    ? IMAGES.map((_, i) => i)
-    : IMAGES.reduce((acc, img, i) => { if (img.cat === val) acc.push(i); return acc; }, []);
-  currentIndex = 0;
-
-  if (filteredIndices.length === 0) {
-    showToast('该分类暂无图片');
-    elCounter.textContent = '0 / 0';
-    elTitle.textContent = '无匹配图片';
-    elImg.src = '';
-    return;
-  }
-
-  // Reset cache & preload state
-  for (const k in cached) delete cached[k];
-  preloading = false;
-  preloadQueue = [];
-
-  updateImage();
-}
-
-// ============================================================
 //  Toggle Annotations
 // ============================================================
 function toggleAnnotations() {
@@ -490,16 +495,87 @@ function toggleAnnotations() {
   const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
 
   elToggle.classList.toggle('active', showAnnotations);
-  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
+  elToggleLbl.textContent = showAnnotations ? '标注' : '标注';
 
   if (cached[cacheKey]) {
-    // 缓存已命中，瞬间切换
-    elImg.src = getImagePath(realIdx);
+    elImg.style.opacity = '0';
+    setTimeout(() => {
+      elImg.src = getImagePath(realIdx);
+      resetZoom();
+      elImg.style.opacity = '1';
+    }, 150);
     startBackgroundPreload();
   } else {
     updateImage();
   }
 }
+
+// ============================================================
+//  Zoom
+// ============================================================
+let zoomEnabled = false;
+let zoomScale  = 1;
+let zoomX = 0, zoomY = 0;
+let panning = false, panStartX = 0, panStartY = 0, panOrgX = 0, panOrgY = 0;
+
+const elZoom    = document.getElementById('zoomBtn');
+const elZoomLbl = document.getElementById('zoomLabel');
+const elWrapper = document.getElementById('imageWrapper');
+
+function toggleZoom() {
+  zoomEnabled = !zoomEnabled;
+  elZoom.classList.toggle('active', zoomEnabled);
+  elZoomLbl.textContent = zoomEnabled ? '缩放' : '缩放';
+  elWrapper.classList.toggle('zooming', zoomEnabled);
+  if (!zoomEnabled) resetZoom();
+}
+
+function resetZoom() {
+  zoomScale = 1; zoomX = 0; zoomY = 0;
+  applyZoom();
+}
+
+function applyZoom() {
+  elImg.style.transform = `translate(${zoomX}px,${zoomY}px) scale(${zoomScale})`;
+  elImg.style.transformOrigin = '0 0';
+}
+
+elWrapper.addEventListener('wheel', (e) => {
+  if (!zoomEnabled) return;
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = Math.min(5, Math.max(1, zoomScale * delta));
+  // Zoom toward cursor
+  const rect = elImg.getBoundingClientRect();
+  const cx = e.clientX - rect.left;
+  const cy = e.clientY - rect.top;
+  zoomX = zoomX - cx * (newScale - zoomScale) / zoomScale;
+  zoomY = zoomY - cy * (newScale - zoomScale) / zoomScale;
+  zoomScale = newScale;
+  applyZoom();
+}, { passive: false });
+
+elWrapper.addEventListener('pointerdown', (e) => {
+  if (!zoomEnabled || zoomScale <= 1) return;
+  panning = true;
+  panStartX = e.clientX; panStartY = e.clientY;
+  panOrgX = zoomX; panOrgY = zoomY;
+  elWrapper.setPointerCapture(e.pointerId);
+});
+elWrapper.addEventListener('pointermove', (e) => {
+  if (!panning) return;
+  zoomX = panOrgX + (e.clientX - panStartX);
+  zoomY = panOrgY + (e.clientY - panStartY);
+  applyZoom();
+});
+elWrapper.addEventListener('pointerup', () => { panning = false; });
+
+// Double-click to toggle 1x ↔ 2x
+elWrapper.addEventListener('dblclick', (e) => {
+  if (!zoomEnabled) return;
+  zoomScale = zoomScale > 1.5 ? 1 : 2;
+  applyZoom();
+});
 
 // ============================================================
 //  Welcome → Gallery
@@ -508,7 +584,6 @@ function enterGallery() {
   document.getElementById('welcome').classList.add('hidden');
   currentIndex = 0;
   filteredIndices = IMAGES.map((_, i) => i);
-  document.getElementById('categoryFilter').value = 'all';
   updateImage();
 }
 
@@ -566,7 +641,7 @@ document.getElementById('btnPrev').addEventListener('click', prevImage);
 document.getElementById('btnNext').addEventListener('click', nextImage);
 document.getElementById('btnHome').addEventListener('click', goHome);
 document.getElementById('toggleBtn').addEventListener('click', toggleAnnotations);
-document.getElementById('categoryFilter').addEventListener('change', filterByCategory);
+document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
 
 console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
 document.getElementById('footerNote').textContent =
