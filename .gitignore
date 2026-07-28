@@ -4,9 +4,12 @@ node_modules/
 照片素材-已标注/
 # 构建产物缓存
 sharp_*/
+package.json
+package-lock.json
 # Claude Code 配置
 .agents/
 .claude/
+.codex/
 # 构建脚本
 build.js
 compress_dist.js
