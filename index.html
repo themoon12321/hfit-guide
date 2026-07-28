@@ -335,6 +335,7 @@ let showAnnotations = true;  // 默认显示标注版
 let filteredIndices = IMAGES.map((_, i) => i);
 
 // Background preload
+const PRELOAD_AHEAD = 3;     // 只预加载前方3张
 let preloadQueue = [];
 let preloading   = false;
 let preloadInterval = 200;
@@ -408,24 +409,28 @@ function updateImage() {
 //  Background preloader
 // ============================================================
 function startBackgroundPreload() {
-  if (preloading) return;
-  preloading = true;
   preloadQueue = [];
 
-  for (const idx of filteredIndices) {
-    const meta = IMAGES[idx];
-    const rawKey = idx + '_raw';
-    const annKey = idx + '_ann';
-    if (!cached[rawKey])  preloadQueue.push({ idx, key: rawKey,  mode: 'raw' });
-    if (meta.ann && !cached[annKey]) preloadQueue.push({ idx, key: annKey, mode: 'ann' });
+  for (let i = 1; i <= PRELOAD_AHEAD; i++) {
+    const idx = (currentIndex + i) % filteredIndices.length;
+    if (idx === currentIndex) continue;
+    const realIdx = filteredIndices[idx];
+    if (realIdx === undefined) continue;
+    const meta = IMAGES[realIdx];
+    const rawKey = realIdx + '_raw';
+    const annKey = realIdx + '_ann';
+    if (!cached[rawKey])  preloadQueue.push({ idx: realIdx, key: rawKey,  mode: 'raw' });
+    if (meta.ann && !cached[annKey]) preloadQueue.push({ idx: realIdx, key: annKey, mode: 'ann' });
   }
 
-  // 移动网络降速：一次只发一个，间隔 1 秒
   const isSlow = navigator.connection
     && (navigator.connection.saveData || navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g');
-  preloadInterval = isSlow ? 1000 : 200;
+  preloadInterval = isSlow ? 800 : 200;
 
-  processQueue();
+  if (!preloading) {
+    preloading = true;
+    processQueue();
+  }
 }
 
 function processQueue() {
