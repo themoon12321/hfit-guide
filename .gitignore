@@ -1,18 +1,12 @@
 node_modules/
-# 原始素材（webout/ 已有处理后的副本）
+# 原始素材（本地源文件，不上传）
 图片素材-原始未标注/
 照片素材-已标注/
 # 构建产物缓存
 sharp_*/
-package.json
-package-lock.json
 # Claude Code 配置
 .agents/
 .claude/
 .codex/
-# 构建脚本
-build.js
-compress_dist.js
 # 文档
 skills-*.md
-skills-lock.json
