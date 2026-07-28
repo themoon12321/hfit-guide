@@ -331,27 +331,31 @@ function fileFor(id) { return id + '.jpg'; }
 //  State
 // ============================================================
 let currentIndex   = 0;
-let showAnnotations = false;
-let filteredIndices = IMAGES.map((_, i) => i);  // indices after category filter
+let showAnnotations = true;  // 默认显示标注版
+let filteredIndices = IMAGES.map((_, i) => i);
+
+// Background preload
+let preloadQueue = [];
+let preloading   = false;
+const cached = {};  // key: "idx_raw" or "idx_ann"
 
 // ============================================================
 //  DOM refs
 // ============================================================
-const img       = document.getElementById('mainImage');
-const wrapper   = document.getElementById('imageWrapper');
-const spinner   = document.getElementById('spinner');
-const counter   = document.getElementById('counter');
-const title     = document.getElementById('imageTitle');
-const toggleBtn = document.getElementById('toggleBtn');
-const toggleLbl = document.getElementById('toggleLabel');
+const elImg      = document.getElementById('mainImage');
+const elSpinner  = document.getElementById('spinner');
+const elCounter  = document.getElementById('counter');
+const elTitle    = document.getElementById('imageTitle');
+const elToggle   = document.getElementById('toggleBtn');
+const elToggleLbl = document.getElementById('toggleLabel');
 
 // ============================================================
 //  Helpers
 // ============================================================
 function getImagePath(index) {
-  const img = IMAGES[index];
-  const fn = fileFor(img.id);
-  if (!showAnnotations || !img.ann) return `${RAW_DIR}/${fn}`;
+  const meta = IMAGES[index];
+  const fn = fileFor(meta.id);
+  if (!showAnnotations || !meta.ann) return `${RAW_DIR}/${fn}`;
   return `${ANNOT_DIR}/${fn}`;
 }
 
@@ -361,58 +365,74 @@ function updateImage() {
 
   const src = getImagePath(realIdx);
   const meta = IMAGES[realIdx];
+  const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
 
-  // show spinner
-  spinner.style.display = 'block';
-  img.classList.add('loading');
+  elCounter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
+  elTitle.textContent   = `${meta.id} ${meta.label}`;
+  elToggle.classList.toggle('active', showAnnotations);
+  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
 
-  // preload then swap
+  // 缓存命中 → 瞬间显示
+  if (cached[cacheKey]) {
+    elImg.src = src;
+    elSpinner.style.display = 'none';
+    elImg.classList.remove('loading');
+    startBackgroundPreload();
+    return;
+  }
+
+  elSpinner.style.display = 'block';
+  elImg.classList.add('loading');
+
   const preloader = new Image();
   preloader.onload = () => {
-    img.src = src;
-    spinner.style.display = 'none';
-    img.classList.remove('loading');
+    cached[cacheKey] = true;
+    elImg.src = src;
+    elSpinner.style.display = 'none';
+    elImg.classList.remove('loading');
+    startBackgroundPreload();
   };
   preloader.onerror = () => {
-    if (showAnnotations) {
-      const fallback = `${RAW_DIR}/${fileFor(meta.id)}`;
-      img.src = fallback;
+    if (showAnnotations && meta.ann) {
+      elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
       showToast('⚠️ 该图暂未标注，显示原图');
     }
-    spinner.style.display = 'none';
-    img.classList.remove('loading');
+    elSpinner.style.display = 'none';
+    elImg.classList.remove('loading');
   };
   preloader.src = src;
-
-  counter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
-  title.textContent   = `${meta.id} ${meta.label}`;
-
-  // toggle button state
-  toggleBtn.classList.toggle('active', showAnnotations);
-  toggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
-
-  // preload neighbors
-  preloadAdjacent();
 }
 
-function preloadAdjacent() {
-  if (filteredIndices.length <= 1) return;
-  const nearby = [
-    (currentIndex + 1) % filteredIndices.length,
-    (currentIndex - 1 + filteredIndices.length) % filteredIndices.length,
-  ];
-  nearby.forEach(i => {
-    const realIdx = filteredIndices[i];
-    if (realIdx === undefined) return;
-    const meta = IMAGES[realIdx];
-    const fn = fileFor(meta.id);
-    [RAW_DIR + '/' + fn, meta.ann && ANNOT_DIR + '/' + fn].filter(Boolean).forEach(href => {
-      const link = document.createElement('link');
-      link.rel = 'preload'; link.as = 'image';
-      link.href = href;
-      document.head.appendChild(link);
-    });
-  });
+// ============================================================
+//  Background preloader
+// ============================================================
+function startBackgroundPreload() {
+  if (preloading) return;
+  preloading = true;
+  preloadQueue = [];
+
+  for (const idx of filteredIndices) {
+    const meta = IMAGES[idx];
+    const rawKey = idx + '_raw';
+    const annKey = idx + '_ann';
+    if (!cached[rawKey])  preloadQueue.push({ idx, key: rawKey,  mode: 'raw' });
+    if (meta.ann && !cached[annKey]) preloadQueue.push({ idx, key: annKey, mode: 'ann' });
+  }
+
+  processQueue();
+}
+
+function processQueue() {
+  if (preloadQueue.length === 0) { preloading = false; return; }
+  const item = preloadQueue.shift();
+  const meta = IMAGES[item.idx];
+  const url = item.mode === 'raw'
+    ? `${RAW_DIR}/${fileFor(meta.id)}`
+    : `${ANNOT_DIR}/${fileFor(meta.id)}`;
+  const loader = new Image();
+  loader.onload = loader.onerror = () => { cached[item.key] = true; };
+  loader.src = url;
+  setTimeout(processQueue, 50);
 }
 
 function navigate(delta) {
@@ -436,11 +456,17 @@ function filterByCategory() {
 
   if (filteredIndices.length === 0) {
     showToast('该分类暂无图片');
-    counter.textContent = '0 / 0';
-    title.textContent = '无匹配图片';
-    img.src = '';
+    elCounter.textContent = '0 / 0';
+    elTitle.textContent = '无匹配图片';
+    elImg.src = '';
     return;
   }
+
+  // Reset cache & preload state
+  for (const k in cached) delete cached[k];
+  preloading = false;
+  preloadQueue = [];
+
   updateImage();
 }
 
@@ -449,7 +475,19 @@ function filterByCategory() {
 // ============================================================
 function toggleAnnotations() {
   showAnnotations = !showAnnotations;
-  updateImage();
+  const realIdx = filteredIndices[currentIndex];
+  const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
+
+  elToggle.classList.toggle('active', showAnnotations);
+  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
+
+  if (cached[cacheKey]) {
+    // 缓存已命中，瞬间切换
+    elImg.src = getImagePath(realIdx);
+    startBackgroundPreload();
+  } else {
+    updateImage();
+  }
 }
 
 // ============================================================
@@ -457,7 +495,6 @@ function toggleAnnotations() {
 // ============================================================
 function enterGallery() {
   document.getElementById('welcome').classList.add('hidden');
-  // reset to first image
   currentIndex = 0;
   filteredIndices = IMAGES.map((_, i) => i);
   document.getElementById('categoryFilter').value = 'all';
