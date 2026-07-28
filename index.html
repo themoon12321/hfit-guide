@@ -83,7 +83,6 @@
     user-select: none;
     -webkit-user-drag: none;
   }
-  .image-wrapper img.dimmed { opacity: 0.08 !important; }
 
   /* ========== Top Bar ========== */
   .top-bar {
@@ -184,7 +183,6 @@
   .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
   .image-wrapper.zooming img { transition: opacity 0.25s ease; }
-  .image-wrapper.zooming img.dimmed { opacity: 0.08 !important; }
 
   /* ========== Back to Home ========== */
   .btn-home {
@@ -197,15 +195,6 @@
   }
   .btn-home:hover { background: rgba(255,255,255,0.1); }
 
-  /* ========== Loading Spinner ========== */
-  .spinner {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 28px; height: 28px; border: 2px solid rgba(255,255,255,0.08);
-    border-top-color: rgba(255,255,255,0.35); border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    z-index: 5;
-  }
-  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
   /* ========== Toast ========== */
   .toast {
@@ -265,8 +254,8 @@
 <!-- ==================== Gallery ==================== -->
 <div id="gallery">
   <div class="image-wrapper" id="imageWrapper">
-    <div class="spinner" id="spinner" style="display:none;"></div>
-    <img id="mainImage" src="" alt="宿舍尺寸示意图">
+
+    <img id="mainImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="宿舍尺寸示意图">
   </div>
 </div>
 
@@ -309,8 +298,9 @@
 // ============================================================
 //  Data
 // ============================================================
-const RAW_DIR    = 'img/raw';
-const ANNOT_DIR  = 'img/ann';
+const COS_URL    = 'https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com';
+const RAW_DIR    = COS_URL + '/img/raw';
+const ANNOT_DIR  = COS_URL + '/img/ann';
 
 // id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
 const IMAGES = [
@@ -342,19 +332,13 @@ let currentIndex   = 0;
 let showAnnotations = true;  // 默认显示标注版
 let filteredIndices = IMAGES.map((_, i) => i);
 
-// Background preload
-const PRELOAD_AHEAD = 0;     // 不预加载，纯按需加载
-let preloadQueue = [];
-let preloading   = false;
-let preloadInterval = 200;
-let loadToken    = 0;        // 请求令牌，丢掉过期的图片加载
-const cached = {};  // key: "idx_raw" or "idx_ann"
+let loadToken    = 0;
+const cached = {};  // "idx_raw" or "idx_ann"
 
 // ============================================================
 //  DOM refs
 // ============================================================
 const elImg      = document.getElementById('mainImage');
-const elSpinner  = document.getElementById('spinner');
 const elCounter  = document.getElementById('counter');
 const elTitle    = document.getElementById('imageTitle');
 const elToggle   = document.getElementById('toggleBtn');
@@ -383,82 +367,26 @@ function updateImage() {
   elTitle.textContent   = `${meta.id} ${meta.label}`;
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
-
-  // 总是先重置缩放
   resetZoom();
 
-  // 缓存命中 —— 瞬间切换
+  // 缓存命中：直接换图
   if (cached[cacheKey]) {
     if (token !== loadToken) return;
     elImg.src = src;
-    elSpinner.style.display = 'none';
-    startBackgroundPreload();
     return;
   }
 
-  // 未缓存 —— 旧图变暗，显示转圈
-  elImg.classList.add('dimmed');
-  elSpinner.style.display = 'block';
-
+  // 未缓存：后台加载，加载完再换图。旧图保持原样
   const preloader = new Image();
   preloader.onload = () => {
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
-    elImg.classList.remove('dimmed');
-    elSpinner.style.display = 'none';
-    startBackgroundPreload();
   };
   preloader.onerror = () => {
-    if (token !== loadToken) return;
-    if (showAnnotations && meta.ann) {
-      elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
-    }
-    elImg.classList.remove('dimmed');
-    elSpinner.style.display = 'none';
+    // 静默失败，旧图保留
   };
   preloader.src = src;
-}
-
-// ============================================================
-//  Background preloader
-// ============================================================
-function startBackgroundPreload() {
-  preloadQueue = [];
-
-  for (let i = 1; i <= PRELOAD_AHEAD; i++) {
-    const idx = (currentIndex + i) % filteredIndices.length;
-    if (idx === currentIndex) continue;
-    const realIdx = filteredIndices[idx];
-    if (realIdx === undefined) continue;
-    const meta = IMAGES[realIdx];
-    const rawKey = realIdx + '_raw';
-    const annKey = realIdx + '_ann';
-    if (!cached[rawKey])  preloadQueue.push({ idx: realIdx, key: rawKey,  mode: 'raw' });
-    if (meta.ann && !cached[annKey]) preloadQueue.push({ idx: realIdx, key: annKey, mode: 'ann' });
-  }
-
-  const isSlow = navigator.connection
-    && (navigator.connection.saveData || navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g');
-  preloadInterval = isSlow ? 800 : 200;
-
-  if (!preloading) {
-    preloading = true;
-    processQueue();
-  }
-}
-
-function processQueue() {
-  if (preloadQueue.length === 0) { preloading = false; return; }
-  const item = preloadQueue.shift();
-  const meta = IMAGES[item.idx];
-  const url = item.mode === 'raw'
-    ? `${RAW_DIR}/${fileFor(meta.id)}`
-    : `${ANNOT_DIR}/${fileFor(meta.id)}`;
-  const loader = new Image();
-  loader.onload = loader.onerror = () => { cached[item.key] = true; };
-  loader.src = url;
-  setTimeout(processQueue, preloadInterval);
 }
 
 function navigate(delta) {
@@ -483,9 +411,7 @@ function toggleAnnotations() {
 
   if (cached[cacheKey]) {
     resetZoom();
-    elImg.classList.remove('dimmed');
     elImg.src = getImagePath(realIdx);
-    startBackgroundPreload();
   } else {
     updateImage();
   }
