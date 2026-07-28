@@ -182,7 +182,7 @@
   /* ========== Zoomed image wrapper ========== */
   .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
-  .image-wrapper.zooming img { transition: none; }
+  .image-wrapper.zooming img { transition: opacity 0.25s ease; }
 
   /* ========== Back to Home ========== */
   .btn-home {
@@ -341,7 +341,7 @@ let showAnnotations = true;  // 默认显示标注版
 let filteredIndices = IMAGES.map((_, i) => i);
 
 // Background preload
-const PRELOAD_AHEAD = 3;     // 只预加载前方3张
+const PRELOAD_AHEAD = 1;     // 只预加载下一张（手机上不抢带宽）
 let preloadQueue = [];
 let preloading   = false;
 let preloadInterval = 200;
@@ -385,7 +385,7 @@ function updateImage() {
   // 总是先重置缩放
   resetZoom();
 
-  // 缓存命中
+  // 缓存命中 —— 瞬间切换
   if (cached[cacheKey]) {
     if (token !== loadToken) return;
     elImg.src = src;
@@ -394,28 +394,26 @@ function updateImage() {
     return;
   }
 
-  // 延迟 200ms 再显示 spinner，避免快图闪一下
-  let spinnerTimer = setTimeout(() => {
-    if (token === loadToken) elSpinner.style.display = 'block';
-  }, 200);
+  // 未缓存 —— 淡出旧图，显示加载状态
+  elImg.style.opacity = '0.12';
+  elSpinner.style.display = 'block';
 
   const preloader = new Image();
   preloader.onload = () => {
-    clearTimeout(spinnerTimer);
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
     elSpinner.style.display = 'none';
+    elImg.style.opacity = '1';
     startBackgroundPreload();
   };
   preloader.onerror = () => {
-    clearTimeout(spinnerTimer);
     if (token !== loadToken) return;
     if (showAnnotations && meta.ann) {
       elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
-      showToast('⚠️ 该图暂未标注，显示原图');
     }
     elSpinner.style.display = 'none';
+    elImg.style.opacity = '1';
   };
   preloader.src = src;
 }
@@ -483,6 +481,7 @@ function toggleAnnotations() {
 
   if (cached[cacheKey]) {
     resetZoom();
+    elImg.style.opacity = '1';
     elImg.src = getImagePath(realIdx);
     startBackgroundPreload();
   } else {
