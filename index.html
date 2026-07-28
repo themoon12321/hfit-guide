@@ -337,6 +337,7 @@ let filteredIndices = IMAGES.map((_, i) => i);
 // Background preload
 let preloadQueue = [];
 let preloading   = false;
+let preloadInterval = 200;
 const cached = {};  // key: "idx_raw" or "idx_ann"
 
 // ============================================================
@@ -419,6 +420,11 @@ function startBackgroundPreload() {
     if (meta.ann && !cached[annKey]) preloadQueue.push({ idx, key: annKey, mode: 'ann' });
   }
 
+  // 移动网络降速：一次只发一个，间隔 1 秒
+  const isSlow = navigator.connection
+    && (navigator.connection.saveData || navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g');
+  preloadInterval = isSlow ? 1000 : 200;
+
   processQueue();
 }
 
@@ -432,7 +438,7 @@ function processQueue() {
   const loader = new Image();
   loader.onload = loader.onerror = () => { cached[item.key] = true; };
   loader.src = url;
-  setTimeout(processQueue, 50);
+  setTimeout(processQueue, preloadInterval);
 }
 
 function navigate(delta) {
