@@ -180,12 +180,9 @@
   .toggle-zoom.active .toggle-dot { background: rgba(255,255,255,0.7); }
 
   /* ========== Zoomed image wrapper ========== */
-  .image-wrapper.zooming { cursor: grab; overflow: hidden; }
+  .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
-  .image-wrapper.zooming img {
-    max-width: none; max-height: none; padding: 0;
-    transition: none;
-  }
+  .image-wrapper.zooming img { transition: none; }
 
   /* ========== Back to Home ========== */
   .btn-home {
@@ -255,7 +252,7 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
     <div class="footer-note" id="footerNote">
-      共 20 张示意图 · 支持标注对照
+      共 16 张示意图 · 均含尺寸标注
     </div>
     <div class="footer-note" style="margin-top:6px;font-size:12px;color:rgba(255,255,255,0.25);">
       by 月亮早睡困不醒
@@ -277,7 +274,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     首页
   </button>
-  <span class="counter" id="counter">1 / 20</span>
+  <span class="counter" id="counter">1 / 16</span>
 </div>
 
 <!-- Nav Buttons -->
@@ -315,29 +312,20 @@ const ANNOT_DIR  = 'img/ann';
 
 // id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
 const IMAGES = [
-  // 书桌 (10张)
   { id: 'D01', ann: true, cat: 'desk',  label: '书桌 — 主正视图' },
   { id: 'D02', ann: true, cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
   { id: 'D03', ann: true, cat: 'desk',  label: '书桌下方 — 正视图' },
-  { id: 'D04',          cat: 'desk',  label: '书桌下方 — 里视图' },
-  { id: 'D05',          cat: 'desk',  label: '书桌中间三层 — 下视图' },
-  { id: 'D06',          cat: 'desk',  label: '书桌中间书架 — 三层图' },
   { id: 'D07', ann: true, cat: 'desk',  label: '书桌右下 — 两层小柜图' },
-  { id: 'D08',          cat: 'desk',  label: '书桌右下小柜 — 挡板示意图' },
   { id: 'D09', ann: true, cat: 'desk',  label: '书桌 — 正面后挡板视图' },
   { id: 'D10', ann: true, cat: 'desk',  label: '书桌 — 线缆开口直径图' },
-  // 床 (2张)
   { id: 'B01', ann: true, cat: 'bed',   label: '床板 — 视图' },
   { id: 'B02', ann: true, cat: 'bed',   label: '床板 — 层高视图' },
-  // 楼梯 (2张)
   { id: 'S01', ann: true, cat: 'stairs', label: '楼梯斜视图' },
   { id: 'S02', ann: true, cat: 'stairs', label: '楼梯柜视图一' },
-  // 衣柜 (5张, 但实际4张有标注)
   { id: 'C01', ann: true, cat: 'closet', label: '衣柜 — 闭门视图' },
   { id: 'C02', ann: true, cat: 'closet', label: '衣柜上层开门视图' },
   { id: 'C03', ann: true, cat: 'closet', label: '衣柜下方开门视图' },
   { id: 'C04', ann: true, cat: 'closet', label: '衣柜顶部缝隙视图' },
-  // 空间示意 (2张)
   { id: 'P01', ann: true, cat: 'space', label: '一四号床位 — 侧边空间示意图' },
   { id: 'P02', ann: true, cat: 'space', label: '二三号床位 — 侧边空间示意图' },
 ];
@@ -383,7 +371,7 @@ function getImagePath(index) {
 function updateImage() {
   const realIdx = filteredIndices[currentIndex];
   if (realIdx === undefined) return;
-  const token = ++loadToken;   // 标记本次请求
+  const token = ++loadToken;
 
   const src = getImagePath(realIdx);
   const meta = IMAGES[realIdx];
@@ -394,43 +382,39 @@ function updateImage() {
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
 
-  // 缓存命中 → 瞬间显示
+  // 总是先重置缩放
+  resetZoom();
+
+  // 缓存命中
   if (cached[cacheKey]) {
     if (token !== loadToken) return;
-    elImg.style.opacity = '0';
-    setTimeout(() => {
-      if (token !== loadToken) return;
-      elImg.src = src;
-      resetZoom();
-      elImg.style.opacity = '1';
-    }, 150);
+    elImg.src = src;
     elSpinner.style.display = 'none';
     startBackgroundPreload();
     return;
   }
 
-  elSpinner.style.display = 'block';
-  elImg.style.opacity = '0';
+  // 延迟 200ms 再显示 spinner，避免快图闪一下
+  let spinnerTimer = setTimeout(() => {
+    if (token === loadToken) elSpinner.style.display = 'block';
+  }, 200);
 
   const preloader = new Image();
   preloader.onload = () => {
+    clearTimeout(spinnerTimer);
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
-    resetZoom();
-    requestAnimationFrame(() => {
-      elImg.style.opacity = '1';
-      elSpinner.style.display = 'none';
-    });
+    elSpinner.style.display = 'none';
     startBackgroundPreload();
   };
   preloader.onerror = () => {
+    clearTimeout(spinnerTimer);
     if (token !== loadToken) return;
     if (showAnnotations && meta.ann) {
       elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
       showToast('⚠️ 该图暂未标注，显示原图');
     }
-    elImg.style.opacity = '1';
     elSpinner.style.display = 'none';
   };
   preloader.src = src;
@@ -495,15 +479,11 @@ function toggleAnnotations() {
   const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
 
   elToggle.classList.toggle('active', showAnnotations);
-  elToggleLbl.textContent = showAnnotations ? '标注' : '标注';
+  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
 
   if (cached[cacheKey]) {
-    elImg.style.opacity = '0';
-    setTimeout(() => {
-      elImg.src = getImagePath(realIdx);
-      resetZoom();
-      elImg.style.opacity = '1';
-    }, 150);
+    resetZoom();
+    elImg.src = getImagePath(realIdx);
     startBackgroundPreload();
   } else {
     updateImage();
@@ -556,7 +536,7 @@ elWrapper.addEventListener('wheel', (e) => {
 }, { passive: false });
 
 elWrapper.addEventListener('pointerdown', (e) => {
-  if (!zoomEnabled || zoomScale <= 1) return;
+  if (!zoomEnabled) return;
   panning = true;
   panStartX = e.clientX; panStartY = e.clientY;
   panOrgX = zoomX; panOrgY = zoomY;
@@ -645,7 +625,7 @@ document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
 
 console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
 document.getElementById('footerNote').textContent =
-  '共 ' + IMAGES.length + ' 张示意图 · ' + IMAGES.filter(i => i.ann).length + ' 张已标注';
+  '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 </script>
 </body>
 </html>
