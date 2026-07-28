@@ -343,7 +343,7 @@ let showAnnotations = true;  // 默认显示标注版
 let filteredIndices = IMAGES.map((_, i) => i);
 
 // Background preload
-const PRELOAD_AHEAD = 1;     // 只预加载下一张（手机上不抢带宽）
+const PRELOAD_AHEAD = 0;     // 不预加载，纯按需加载
 let preloadQueue = [];
 let preloading   = false;
 let preloadInterval = 200;
