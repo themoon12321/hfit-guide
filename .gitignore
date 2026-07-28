@@ -8,5 +8,8 @@ sharp_*/
 .agents/
 .claude/
 .codex/
+# npm
+package.json
+package-lock.json
 # 文档
 skills-*.md
