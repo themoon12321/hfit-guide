@@ -4,3 +4,12 @@ node_modules/
 照片素材-已标注/
 # 构建产物缓存
 sharp_*/
+# Claude Code 配置
+.agents/
+.claude/
+# 构建脚本
+build.js
+compress_dist.js
+# 文档
+skills-*.md
+skills-lock.json
