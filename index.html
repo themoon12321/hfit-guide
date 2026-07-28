@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿舍尺寸指南 — XX 校区</title>
+<style>
+  /* ========== Reset + Base ========== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #1a1a1e;
+    color: #f5f5f7;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+
+  /* ========== Welcome Screen ========== */
+  #welcome {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #welcome.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .welcome-card {
+    text-align: center;
+    max-width: 640px; padding: 48px 40px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);
+    animation: fadeUp 1s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .welcome-card .badge {
+    display: inline-block;
+    padding: 4px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .welcome-card h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
+  .welcome-card p  { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 32px; }
+  .welcome-card .highlight { color: #64b5f6; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 36px; border-radius: 40px;
+    background: #64b5f6; color: #1a1a2e;
+    font-size: 16px; font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover { transform: scale(1.04); box-shadow: 0 8px 30px rgba(100,181,246,0.3); }
+  .btn-primary:active { transform: scale(0.96); }
+  .welcome-card .footer-note {
+    margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.35);
+  }
+
+  /* ========== Gallery ========== */
+  #gallery {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    background: #1a1a1e;
+  }
+  .image-wrapper {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.4s ease;
+    padding: 20px;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .image-wrapper img.loading { opacity: 0; }
+
+  /* ========== Top Bar ========== */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .top-bar > * { pointer-events: auto; }
+  .top-bar .counter {
+    font-size: 14px; font-weight: 500; letter-spacing: 0.3px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ========== Nav Arrows ========== */
+  .nav-btn {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    color: rgba(255,255,255,0.8);
+    font-size: 22px;
+    transition: background 0.2s, transform 0.2s;
+    margin: 0 12px;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-50%) scale(1.08); }
+  .nav-btn:active { transform: translateY(-50%) scale(0.92); }
+  .nav-btn.prev { left: 0; }
+  .nav-btn.next { right: 0; }
+
+  /* ========== Bottom Bar ========== */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    gap: 12px;
+  }
+  .bottom-bar .title {
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  /* ========== Toggle ========== */
+  .toggle-annotations {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px 8px 12px; border-radius: 40px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    transition: background 0.3s, color 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-annotations:hover { background: rgba(255,255,255,0.13); }
+  .toggle-annotations.active { background: rgba(100,181,246,0.2); color: #64b5f6; }
+  .toggle-track {
+    position: relative; width: 36px; height: 20px; border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s;
+  }
+  .toggle-annotations.active .toggle-track { background: #64b5f6; }
+  .toggle-thumb {
+    position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toggle-annotations.active .toggle-thumb { transform: translateX(16px); }
+
+  /* ========== Dropdown Category ========== */
+  .category-select {
+    padding: 8px 16px; border-radius: 40px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: none; color: rgba(255,255,255,0.8);
+    font-size: 13px; font-weight: 500;
+    appearance: none; -webkit-appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    max-width: 140px;
+  }
+  .category-select option { background: #2a2a2e; color: #f5f5f7; }
+  .category-select:focus { outline: none; }
+
+  /* ========== Back to Home ========== */
+  .btn-home {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 40px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font-size: 13px; color: rgba(255,255,255,0.7);
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-home:hover { background: rgba(255,255,255,0.13); }
+
+  /* ========== Loading Spinner ========== */
+  .spinner {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #64b5f6; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    z-index: 5;
+  }
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  /* ========== Toast ========== */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
+    padding: 10px 24px; border-radius: 40px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    font-size: 13px; color: rgba(255,255,255,0.8);
+    opacity: 0; transition: opacity 0.4s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 640px) {
+    .welcome-card { padding: 32px 24px; margin: 0 16px; }
+    .welcome-card h1 { font-size: 26px; }
+    .nav-btn { width: 40px; height: 40px; font-size: 16px; margin: 0 4px; }
+    .bottom-bar { padding: 12px 12px; flex-wrap: wrap; }
+    .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
+    .top-bar { padding: 12px 12px; }
+    .image-wrapper img { padding: 8px; }
+    .toggle-annotations { padding: 6px 12px; font-size: 12px; }
+    .btn-home { padding: 6px 12px; font-size: 12px; }
+    .category-select { padding: 6px 12px; font-size: 12px; max-width: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== Welcome ==================== -->
+<div id="welcome">
+  <div class="welcome-card">
+    <div class="badge">🏠 新生指南</div>
+    <h1>XX 校区<br>宿舍尺寸指南</h1>
+    <p>
+      床有多宽？书桌能放多大显示器？衣柜能挂多长的衣服？<br>
+      提前了解宿舍各处的<span class="highlight">实际尺寸</span>，买对东西不踩坑。
+    </p>
+    <button class="btn-primary" onclick="enterGallery()">
+      <span>开始浏览</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
+    <div class="footer-note" id="footerNote">
+      共 20 张示意图 · 支持标注对照
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Gallery ==================== -->
+<div id="gallery">
+  <div class="image-wrapper" id="imageWrapper">
+    <div class="spinner" id="spinner" style="display:none;"></div>
+    <img id="mainImage" src="" alt="宿舍尺寸示意图">
+  </div>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <button class="btn-home" onclick="goHome()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    首页
+  </button>
+  <span class="counter" id="counter">1 / 31</span>
+  <select class="category-select" id="categoryFilter" onchange="filterByCategory()">
+    <option value="all">全部分类</option>
+    <option value="bed">🛏️ 床</option>
+    <option value="desk">🖥️ 书桌</option>
+    <option value="stairs">🪜 楼梯</option>
+    <option value="closet">👔 衣柜</option>
+    <option value="space">📐 空间示意</option>
+    <option value="other">📌 其他</option>
+  </select>
+</div>
+
+<!-- Nav Buttons -->
+<button class="nav-btn prev" onclick="prevImage()" aria-label="上一张">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+</button>
+<button class="nav-btn next" onclick="nextImage()" aria-label="下一张">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+</button>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+  <span class="title" id="imageTitle">正在加载…</span>
+  <button class="toggle-annotations" id="toggleBtn" onclick="toggleAnnotations()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    <span id="toggleLabel">显示标注</span>
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  Data
+// ============================================================
+const RAW_DIR    = '图片素材-原始未标注';
+const ANNOT_DIR  = '照片素材-已标注';
+
+// id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
+const IMAGES = [
+  // 书桌 (10张)
+  { id: 'D01', file: '书桌主正视图.jpg',              ann: '书桌主正视图-已标注.jpg',              cat: 'desk',  label: '书桌 — 主正视图' },
+  { id: 'D02', file: '书桌下方带柜完整视图.jpg',       ann: '书桌下方带柜完整视图-已标注.jpg',       cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
+  { id: 'D03', file: '书桌下方正视图.jpg',             ann: '书桌下方正视图-已标注.jpg',             cat: 'desk',  label: '书桌下方 — 正视图' },
+  { id: 'D04', file: '书桌下方里视图.jpg',                                                         cat: 'desk',  label: '书桌下方 — 里视图' },
+  { id: 'D05', file: '书桌中间三层下视图.jpg',                                                     cat: 'desk',  label: '书桌中间三层 — 下视图' },
+  { id: 'D06', file: '书桌中间书架三层图.jpg',                                                     cat: 'desk',  label: '书桌中间书架 — 三层图' },
+  { id: 'D07', file: '书桌右下两层小柜图.jpg',         ann: '书桌右下两层小柜图-已标注.jpg',         cat: 'desk',  label: '书桌右下 — 两层小柜图' },
+  { id: 'D08', file: '书桌右下两层小柜挡板示意图.jpg',                                             cat: 'desk',  label: '书桌右下小柜 — 挡板示意图' },
+  { id: 'D09', file: '书桌正面后挡板视图.jpg',         ann: '书桌正面后挡板视图-已标注.jpg',         cat: 'desk',  label: '书桌 — 正面后挡板视图' },
+  { id: 'D10', file: '书桌线缆开口直径图.jpg',         ann: '书桌线缆开口直径图-已标注.jpg',         cat: 'desk',  label: '书桌 — 线缆开口直径图' },
+  // 床 (2张)
+  { id: 'B01', file: '床板视图.jpg',                   ann: '床板视图-已标注.jpg',                   cat: 'bed',   label: '床板 — 视图' },
+  { id: 'B02', file: '床板层高视图.jpg',               ann: '床板层高视图.jpg',                     cat: 'bed',   label: '床板 — 层高视图' },
+  // 楼梯 (2张)
+  { id: 'S01', file: '楼梯斜视图.jpg',                 ann: '楼梯斜视图-已标注.jpg',                 cat: 'stairs', label: '楼梯斜视图' },
+  { id: 'S02', file: '楼梯柜视图一.jpg',               ann: '楼梯柜视图一-已标注.jpg',               cat: 'stairs', label: '楼梯柜视图一' },
+  // 衣柜 (5张)
+  { id: 'C01', file: '衣柜闭门视图.jpg',               ann: '衣柜闭门视图-已标注.jpg',               cat: 'closet', label: '衣柜 — 闭门视图' },
+  { id: 'C02', file: '衣柜上层开门视图.jpg',           ann: '衣柜上层开门视图-已标注.jpg',           cat: 'closet', label: '衣柜上层开门视图' },
+  { id: 'C03', file: '衣柜下方开门视图.jpg',           ann: '衣柜下方开门视图-已标注.jpg',           cat: 'closet', label: '衣柜下方开门视图' },
+  { id: 'C04', file: '衣柜顶部缝隙视图.jpg',           ann: '衣柜顶部缝隙视图-已标注.jpg',           cat: 'closet', label: '衣柜顶部缝隙视图' },
+  // 空间示意 (2张)
+  { id: 'P01', file: '一四号床位侧边空间示意图.jpg',   ann: '一四号床位侧边空间示意图.jpg',           cat: 'space', label: '一四号床位 — 侧边空间示意图' },
+  { id: 'P02', file: '二三号床位侧边空间示意图.jpg',   ann: '二三号床位侧边空间示意图.jpg',           cat: 'space', label: '二三号床位 — 侧边空间示意图' },
+];
+
+// ============================================================
+//  State
+// ============================================================
+let currentIndex   = 0;
+let showAnnotations = false;
+let filteredIndices = IMAGES.map((_, i) => i);  // indices after category filter
+
+// ============================================================
+//  DOM refs
+// ============================================================
+const img       = document.getElementById('mainImage');
+const wrapper   = document.getElementById('imageWrapper');
+const spinner   = document.getElementById('spinner');
+const counter   = document.getElementById('counter');
+const title     = document.getElementById('imageTitle');
+const toggleBtn = document.getElementById('toggleBtn');
+const toggleLbl = document.getElementById('toggleLabel');
+
+// ============================================================
+//  Helpers
+// ============================================================
+function getImagePath(index) {
+  const img = IMAGES[index];
+  if (!showAnnotations || !img.ann) return `${RAW_DIR}/${img.file}`;
+  return `${ANNOT_DIR}/${img.ann}`;
+}
+
+function updateImage() {
+  const realIdx = filteredIndices[currentIndex];
+  if (realIdx === undefined) return;
+
+  const src = getImagePath(realIdx);
+  const meta = IMAGES[realIdx];
+
+  // show spinner
+  spinner.style.display = 'block';
+  img.classList.add('loading');
+
+  // preload then swap
+  const preloader = new Image();
+  preloader.onload = () => {
+    img.src = src;
+    spinner.style.display = 'none';
+    img.classList.remove('loading');
+  };
+  preloader.onerror = () => {
+    if (showAnnotations) {
+      const fallback = `${RAW_DIR}/${meta.file}`;
+      img.src = fallback;
+      showToast('⚠️ 该图暂未标注，显示原图');
+    }
+    spinner.style.display = 'none';
+    img.classList.remove('loading');
+  };
+  preloader.src = src;
+
+  counter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
+  title.textContent   = `${meta.id} ${meta.label}`;
+
+  // toggle button state
+  toggleBtn.classList.toggle('active', showAnnotations);
+  toggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
+
+  // preload neighbors
+  preloadAdjacent();
+}
+
+function preloadAdjacent() {
+  if (filteredIndices.length <= 1) return;
+  const nearby = [
+    (currentIndex + 1) % filteredIndices.length,
+    (currentIndex - 1 + filteredIndices.length) % filteredIndices.length,
+  ];
+  nearby.forEach(i => {
+    const realIdx = filteredIndices[i];
+    if (realIdx === undefined) return;
+    const meta = IMAGES[realIdx];
+    [RAW_DIR + '/' + meta.file, meta.ann && ANNOT_DIR + '/' + meta.ann].filter(Boolean).forEach(href => {
+      const link = document.createElement('link');
+      link.rel = 'preload'; link.as = 'image';
+      link.href = href;
+      document.head.appendChild(link);
+    });
+  });
+}
+
+function navigate(delta) {
+  if (filteredIndices.length === 0) return;
+  currentIndex = (currentIndex + delta + filteredIndices.length) % filteredIndices.length;
+  updateImage();
+}
+
+function nextImage() { navigate(1); }
+function prevImage() { navigate(-1); }
+
+// ============================================================
+//  Category Filter
+// ============================================================
+function filterByCategory() {
+  const val = document.getElementById('categoryFilter').value;
+  filteredIndices = val === 'all'
+    ? IMAGES.map((_, i) => i)
+    : IMAGES.reduce((acc, img, i) => { if (img.cat === val) acc.push(i); return acc; }, []);
+  currentIndex = 0;
+
+  if (filteredIndices.length === 0) {
+    showToast('该分类暂无图片');
+    counter.textContent = '0 / 0';
+    title.textContent = '无匹配图片';
+    img.src = '';
+    return;
+  }
+  updateImage();
+}
+
+// ============================================================
+//  Toggle Annotations
+// ============================================================
+function toggleAnnotations() {
+  showAnnotations = !showAnnotations;
+  updateImage();
+}
+
+// ============================================================
+//  Welcome → Gallery
+// ============================================================
+function enterGallery() {
+  document.getElementById('welcome').classList.add('hidden');
+  // reset to first image
+  currentIndex = 0;
+  filteredIndices = IMAGES.map((_, i) => i);
+  document.getElementById('categoryFilter').value = 'all';
+  updateImage();
+}
+
+function goHome() {
+  document.getElementById('welcome').classList.remove('hidden');
+}
+
+// ============================================================
+//  Toast
+// ============================================================
+let toastTimeout;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================================
+//  Keyboard
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  // ignore when welcome is visible
+  if (!document.getElementById('welcome').classList.contains('hidden')) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGallery(); }
+    return;
+  }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); prevImage(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
+  if (e.key === 'Escape')     { goHome(); }
+  if (e.key === 'a' || e.key === 'A') { toggleAnnotations(); }
+});
+
+// ============================================================
+//  Touch swipe
+// ============================================================
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) {
+    diff > 0 ? nextImage() : prevImage();
+  }
+});
+
+// ============================================================
+//  Init — preload onto welcome screen background
+// ============================================================
+console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
+document.getElementById('footerNote').textContent =
+  '共 ' + IMAGES.length + ' 张示意图 · ' + IMAGES.filter(i => i.ann).length + ' 张已标注';
+</script>
+</body>
+</html>
