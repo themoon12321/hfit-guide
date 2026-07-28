@@ -292,37 +292,40 @@
 // ============================================================
 //  Data
 // ============================================================
-const RAW_DIR    = 'site-素材/原始';
-const ANNOT_DIR  = 'site-素材/标注';
+const RAW_DIR    = 'img/raw';
+const ANNOT_DIR  = 'img/ann';
 
 // id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
 const IMAGES = [
   // 书桌 (10张)
-  { id: 'D01', file: '书桌主正视图.jpg',              ann: '书桌主正视图-已标注.jpg',              cat: 'desk',  label: '书桌 — 主正视图' },
-  { id: 'D02', file: '书桌下方带柜完整视图.jpg',       ann: '书桌下方带柜完整视图-已标注.jpg',       cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
-  { id: 'D03', file: '书桌下方正视图.jpg',             ann: '书桌下方正视图-已标注.jpg',             cat: 'desk',  label: '书桌下方 — 正视图' },
-  { id: 'D04', file: '书桌下方里视图.jpg',                                                         cat: 'desk',  label: '书桌下方 — 里视图' },
-  { id: 'D05', file: '书桌中间三层下视图.jpg',                                                     cat: 'desk',  label: '书桌中间三层 — 下视图' },
-  { id: 'D06', file: '书桌中间书架三层图.jpg',                                                     cat: 'desk',  label: '书桌中间书架 — 三层图' },
-  { id: 'D07', file: '书桌右下两层小柜图.jpg',         ann: '书桌右下两层小柜图-已标注.jpg',         cat: 'desk',  label: '书桌右下 — 两层小柜图' },
-  { id: 'D08', file: '书桌右下两层小柜挡板示意图.jpg',                                             cat: 'desk',  label: '书桌右下小柜 — 挡板示意图' },
-  { id: 'D09', file: '书桌正面后挡板视图.jpg',         ann: '书桌正面后挡板视图-已标注.jpg',         cat: 'desk',  label: '书桌 — 正面后挡板视图' },
-  { id: 'D10', file: '书桌线缆开口直径图.jpg',         ann: '书桌线缆开口直径图-已标注.jpg',         cat: 'desk',  label: '书桌 — 线缆开口直径图' },
+  { id: 'D01', ann: true, cat: 'desk',  label: '书桌 — 主正视图' },
+  { id: 'D02', ann: true, cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
+  { id: 'D03', ann: true, cat: 'desk',  label: '书桌下方 — 正视图' },
+  { id: 'D04',          cat: 'desk',  label: '书桌下方 — 里视图' },
+  { id: 'D05',          cat: 'desk',  label: '书桌中间三层 — 下视图' },
+  { id: 'D06',          cat: 'desk',  label: '书桌中间书架 — 三层图' },
+  { id: 'D07', ann: true, cat: 'desk',  label: '书桌右下 — 两层小柜图' },
+  { id: 'D08',          cat: 'desk',  label: '书桌右下小柜 — 挡板示意图' },
+  { id: 'D09', ann: true, cat: 'desk',  label: '书桌 — 正面后挡板视图' },
+  { id: 'D10', ann: true, cat: 'desk',  label: '书桌 — 线缆开口直径图' },
   // 床 (2张)
-  { id: 'B01', file: '床板视图.jpg',                   ann: '床板视图-已标注.jpg',                   cat: 'bed',   label: '床板 — 视图' },
-  { id: 'B02', file: '床板层高视图.jpg',               ann: '床板层高视图.jpg',                     cat: 'bed',   label: '床板 — 层高视图' },
+  { id: 'B01', ann: true, cat: 'bed',   label: '床板 — 视图' },
+  { id: 'B02', ann: true, cat: 'bed',   label: '床板 — 层高视图' },
   // 楼梯 (2张)
-  { id: 'S01', file: '楼梯斜视图.jpg',                 ann: '楼梯斜视图-已标注.jpg',                 cat: 'stairs', label: '楼梯斜视图' },
-  { id: 'S02', file: '楼梯柜视图一.jpg',               ann: '楼梯柜视图一-已标注.jpg',               cat: 'stairs', label: '楼梯柜视图一' },
-  // 衣柜 (5张)
-  { id: 'C01', file: '衣柜闭门视图.jpg',               ann: '衣柜闭门视图-已标注.jpg',               cat: 'closet', label: '衣柜 — 闭门视图' },
-  { id: 'C02', file: '衣柜上层开门视图.jpg',           ann: '衣柜上层开门视图-已标注.jpg',           cat: 'closet', label: '衣柜上层开门视图' },
-  { id: 'C03', file: '衣柜下方开门视图.jpg',           ann: '衣柜下方开门视图-已标注.jpg',           cat: 'closet', label: '衣柜下方开门视图' },
-  { id: 'C04', file: '衣柜顶部缝隙视图.jpg',           ann: '衣柜顶部缝隙视图-已标注.jpg',           cat: 'closet', label: '衣柜顶部缝隙视图' },
+  { id: 'S01', ann: true, cat: 'stairs', label: '楼梯斜视图' },
+  { id: 'S02', ann: true, cat: 'stairs', label: '楼梯柜视图一' },
+  // 衣柜 (5张, 但实际4张有标注)
+  { id: 'C01', ann: true, cat: 'closet', label: '衣柜 — 闭门视图' },
+  { id: 'C02', ann: true, cat: 'closet', label: '衣柜上层开门视图' },
+  { id: 'C03', ann: true, cat: 'closet', label: '衣柜下方开门视图' },
+  { id: 'C04', ann: true, cat: 'closet', label: '衣柜顶部缝隙视图' },
   // 空间示意 (2张)
-  { id: 'P01', file: '一四号床位侧边空间示意图.jpg',   ann: '一四号床位侧边空间示意图.jpg',           cat: 'space', label: '一四号床位 — 侧边空间示意图' },
-  { id: 'P02', file: '二三号床位侧边空间示意图.jpg',   ann: '二三号床位侧边空间示意图.jpg',           cat: 'space', label: '二三号床位 — 侧边空间示意图' },
+  { id: 'P01', ann: true, cat: 'space', label: '一四号床位 — 侧边空间示意图' },
+  { id: 'P02', ann: true, cat: 'space', label: '二三号床位 — 侧边空间示意图' },
 ];
+
+// Derive file path from id
+function fileFor(id) { return id + '.jpg'; }
 
 // ============================================================
 //  State
@@ -347,8 +350,9 @@ const toggleLbl = document.getElementById('toggleLabel');
 // ============================================================
 function getImagePath(index) {
   const img = IMAGES[index];
-  if (!showAnnotations || !img.ann) return `${RAW_DIR}/${img.file}`;
-  return `${ANNOT_DIR}/${img.ann}`;
+  const fn = fileFor(img.id);
+  if (!showAnnotations || !img.ann) return `${RAW_DIR}/${fn}`;
+  return `${ANNOT_DIR}/${fn}`;
 }
 
 function updateImage() {
@@ -371,7 +375,7 @@ function updateImage() {
   };
   preloader.onerror = () => {
     if (showAnnotations) {
-      const fallback = `${RAW_DIR}/${meta.file}`;
+      const fallback = `${RAW_DIR}/${fileFor(meta.id)}`;
       img.src = fallback;
       showToast('⚠️ 该图暂未标注，显示原图');
     }
@@ -401,7 +405,8 @@ function preloadAdjacent() {
     const realIdx = filteredIndices[i];
     if (realIdx === undefined) return;
     const meta = IMAGES[realIdx];
-    [RAW_DIR + '/' + meta.file, meta.ann && ANNOT_DIR + '/' + meta.ann].filter(Boolean).forEach(href => {
+    const fn = fileFor(meta.id);
+    [RAW_DIR + '/' + fn, meta.ann && ANNOT_DIR + '/' + fn].filter(Boolean).forEach(href => {
       const link = document.createElement('link');
       link.rel = 'preload'; link.as = 'image';
       link.href = href;
