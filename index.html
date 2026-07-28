@@ -83,6 +83,7 @@
     user-select: none;
     -webkit-user-drag: none;
   }
+  .image-wrapper img.dimmed { opacity: 0.08 !important; }
 
   /* ========== Top Bar ========== */
   .top-bar {
@@ -183,6 +184,7 @@
   .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
   .image-wrapper.zooming img { transition: opacity 0.25s ease; }
+  .image-wrapper.zooming img.dimmed { opacity: 0.08 !important; }
 
   /* ========== Back to Home ========== */
   .btn-home {
@@ -394,8 +396,8 @@ function updateImage() {
     return;
   }
 
-  // 未缓存 —— 淡出旧图，显示加载状态
-  elImg.style.opacity = '0.12';
+  // 未缓存 —— 旧图变暗，显示转圈
+  elImg.classList.add('dimmed');
   elSpinner.style.display = 'block';
 
   const preloader = new Image();
@@ -403,8 +405,8 @@ function updateImage() {
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
+    elImg.classList.remove('dimmed');
     elSpinner.style.display = 'none';
-    elImg.style.opacity = '1';
     startBackgroundPreload();
   };
   preloader.onerror = () => {
@@ -412,8 +414,8 @@ function updateImage() {
     if (showAnnotations && meta.ann) {
       elImg.src = `${RAW_DIR}/${fileFor(meta.id)}`;
     }
+    elImg.classList.remove('dimmed');
     elSpinner.style.display = 'none';
-    elImg.style.opacity = '1';
   };
   preloader.src = src;
 }
@@ -481,7 +483,7 @@ function toggleAnnotations() {
 
   if (cached[cacheKey]) {
     resetZoom();
-    elImg.style.opacity = '1';
+    elImg.classList.remove('dimmed');
     elImg.src = getImagePath(realIdx);
     startBackgroundPreload();
   } else {
