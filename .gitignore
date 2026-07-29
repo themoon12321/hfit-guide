@@ -11,5 +11,7 @@ sharp_*/
 # npm
 package.json
 package-lock.json
+# 开发工具（仅本地）
+editor.html
 # 文档
 skills-*.md
