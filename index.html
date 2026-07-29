@@ -571,21 +571,22 @@ function updateImage() {
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
   resetZoom();
-  renderHotspots(meta.id);
 
-  // 缓存命中：直接换图
+  // 缓存命中：直接换图，同时渲染热点（图片已就绪）
   if (cached[cacheKey]) {
     if (token !== loadToken) return;
     elImg.src = src;
+    renderHotspots(meta.id);
     return;
   }
 
-  // 未缓存：后台加载，加载完再换图。旧图保持原样
+  // 未缓存：后台加载，加载完再换图。热点等图片 load 事件触发后再渲染
   const preloader = new Image();
   preloader.onload = () => {
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
+    // elImg load 事件会调用 renderHotspots
   };
   preloader.onerror = () => {
     // 静默失败，旧图保留
