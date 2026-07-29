@@ -562,12 +562,23 @@ function toggleBubble(dot, spot) {
   if (spot.images && spot.images.length > 0) {
     bubbleHtml += '<div class="bubble-images">';
     spot.images.forEach((img, idx) => {
-      bubbleHtml += '<img src="' + img + '" onclick="event.stopPropagation();openLightbox(\' + img + \',' + spot.images.length + ',' + idx + ')" loading="lazy">';
+      bubbleHtml += '<img src="' + img + '" data-idx="' + idx + '" data-total="' + spot.images.length + '" loading="lazy">';
     });
     bubbleHtml += '</div>';
   }
   bubble.innerHTML = bubbleHtml;
   bubble.querySelector('.bubble-close').addEventListener('click', (e) => { e.stopPropagation(); bubble.remove(); });
+  // Click-to-enlarge for bubble images
+  const bubbleImgs = bubble.querySelector('.bubble-images');
+  if (bubbleImgs) {
+    bubbleImgs.addEventListener('click', (e) => {
+      const target = e.target.closest('img');
+      if (target) {
+        e.stopPropagation();
+        openLightbox(target.src, parseInt(target.dataset.total), parseInt(target.dataset.idx));
+      }
+    });
+  }
   elWrapper.appendChild(bubble);
   const leftMin = 12, leftMax = vw - maxW - 12;
   const topMin = safe.top + 4, topMax = vh - safe.bottom - maxH - 4;
