@@ -295,9 +295,16 @@ showMyComments();
 
 loadLikes();
 
-// 双击作者名进入管理后台
-document.getElementById('credit').addEventListener('dblclick', () => {
-  window.location.href = '/admin.html';
+// 连点 5 下作者名进入管理后台
+let clickCount = 0, clickTimer;
+document.getElementById('credit').addEventListener('click', () => {
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+  if (clickCount >= 5) {
+    clickCount = 0;
+    window.location.href = '/admin.html';
+  }
 });
 </script>
 
