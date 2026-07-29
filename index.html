@@ -143,7 +143,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     关于我
   </a>
-  <div class="credit" id="credit" style="cursor:default" onclick="creditClick()">@月亮早睡困不醒 · Made with 🌙 2026 <a href="/admin.html" style="text-decoration:none;color:rgba(255,255,255,0.08);font-size:12px;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.08)'">⚙</a></div>
+  <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
 <!-- ========== Feedback Widget ========== -->
@@ -295,14 +295,18 @@ showMyComments();
 
 loadLikes();
 
-// 连点 3 下作者名进入管理后台
-let _cc = 0, _ct;
-function creditClick() {
-  _cc++;
-  clearTimeout(_ct);
-  _ct = setTimeout(() => { _cc = 0; }, 600);
-  if (_cc >= 3) { _cc = 0; window.location.href = '/admin.html'; }
-}
+// 长按 1.5 秒作者名进入管理后台
+(function() {
+  let timer = null;
+  const el = document.getElementById('credit');
+  if (!el) return;
+  el.addEventListener('mousedown', () => { timer = setTimeout(() => { window.location.href = '/admin.html'; }, 1500); });
+  el.addEventListener('mouseup', () => clearTimeout(timer));
+  el.addEventListener('mouseleave', () => clearTimeout(timer));
+  el.addEventListener('touchstart', () => { timer = setTimeout(() => { window.location.href = '/admin.html'; }, 1500); });
+  el.addEventListener('touchend', () => clearTimeout(timer));
+  el.addEventListener('touchmove', () => clearTimeout(timer));
+})();
 </script>
 
 <script>
