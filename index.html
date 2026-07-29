@@ -297,10 +297,11 @@ loadLikes();
 
 // 连点 5 下作者名进入管理后台
 let clickCount = 0, clickTimer;
-document.getElementById('credit').addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#credit')) return;
   clickCount++;
   clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 800);
   if (clickCount >= 5) {
     clickCount = 0;
     window.location.href = '/admin.html';
