@@ -3,931 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>合肥理工学院 · 宿舍尺寸指南</title>
+<title>合肥理工学院指南</title>
 <style>
-  /* ========== Reset + Base ========== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; height: 100%; overflow: hidden; }
+  html, body { width: 100%; min-height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
     background: #0d0d0f;
     color: #eaeaef;
     -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 60px 24px 40px;
   }
-  button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
 
-  /* ========== Welcome Screen ========== */
-  #welcome {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #131314;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-  }
-  #welcome::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 55% at 50% 35%, rgba(255,255,255,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 25% 70%, rgba(255,255,255,0.02) 0%, transparent 50%);
-    pointer-events: none;
-  }
-  #welcome.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .welcome-card {
-    position: relative; text-align: center;
-    max-width: 600px; padding: 80px 48px;
+  /* ========== Hero ========== */
+  .hero {
+    text-align: center;
+    max-width: 640px;
+    margin-bottom: 56px;
     animation: fadeUp 0.6s ease;
   }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .welcome-card .badge {
+  .hero .badge {
     display: inline-block;
     padding: 6px 18px; border-radius: 20px;
     background: rgba(255,255,255,0.07);
     font-size: 12px; letter-spacing: 0.4px;
     color: rgba(255,255,255,0.5);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-  .welcome-card h1 { font-size: 44px; font-weight: 650; margin-bottom: 20px; line-height: 1.22; color: #f5f5fa; letter-spacing: -0.3px; }
-  .welcome-card p  { font-size: 17px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 40px; }
-  .welcome-card .highlight { color: rgba(255,255,255,0.75); font-weight: 500; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 15px 40px; border-radius: 28px;
-    background: #f5f5fa; color: #0d0d0f;
-    font-size: 17px; font-weight: 620;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  .hero h1 {
+    font-size: 40px; font-weight: 650; line-height: 1.22;
+    color: #f5f5fa; letter-spacing: -0.3px;
+    margin-bottom: 14px;
   }
-  .btn-primary:hover { transform: scale(1.03); background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
-  .btn-primary:active { transform: scale(0.97); }
-  .welcome-card .footer-note {
-    margin-top: 32px; font-size: 13px; color: rgba(255,255,255,0.2);
+  .hero p {
+    font-size: 16px; color: rgba(255,255,255,0.45);
+    line-height: 1.7;
   }
 
-  /* ========== Gallery ========== */
-  #gallery {
-    position: fixed; inset: 0; z-index: 1;
-    display: flex; align-items: center; justify-content: center;
-    background: #0d0d0f; }
-  .image-wrapper {
+  /* ========== Grid ========== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 56px;
+  }
+  .card {
     position: relative;
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .image-wrapper img {
-    transition: opacity 0.35s ease;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-    transition: opacity 0.25s ease;
-    padding: 16px;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
-  /* ========== Top Bar ========== */
-  .top-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px;
-    pointer-events: none;
-  }
-  .top-bar > * { pointer-events: auto; }
-  .top-bar .counter {
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.45);
-  }
-
-  /* ========== Nav Arrows ========== */
-  .nav-btn {
-    position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
-    width: 44px; height: 44px; border-radius: 22px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.55);
-    font-size: 18px;
-    transition: background 0.2s, color 0.2s;
-    margin: 0 8px;
-  }
-  .nav-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
-  .nav-btn:active { background: rgba(255,255,255,0.18); }
-  .nav-btn.prev { left: 0; }
-  .nav-btn.next { right: 0; }
-
-  /* ========== Bottom Bar ========== */
-  .bottom-bar {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px;
-    gap: 12px;
-  }
-  .bottom-bar .title {
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.55);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    flex: 1;
-  }
-
-  /* ========== Toggle ========== */
-  .toggle-annotations {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 14px; border-radius: 20px;
-    background: rgba(255,255,255,0.05);
-    font-size: 12px; font-weight: 500;
-    color: rgba(255,255,255,0.35);
-    transition: background 0.3s, color 0.3s;
-    flex-shrink: 0;
-  }
-  .toggle-annotations:hover { background: rgba(255,255,255,0.08); }
-  .toggle-annotations.active {
-    background: rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.85);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-  }
-  .toggle-track {
-    position: relative; width: 32px; height: 18px; border-radius: 10px;
-    background: rgba(255,255,255,0.1);
-    transition: background 0.3s;
-  }
-  .toggle-annotations.active .toggle-track { background: rgba(255,255,255,0.5); }
-  .toggle-thumb {
-    position: absolute; top: 2px; left: 2px;
-    width: 14px; height: 14px; border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), background 0.3s;
-  }
-  .toggle-annotations.active .toggle-thumb {
-    transform: translateX(14px);
-    background: #fff;
-  }
-
-  /* ========== Zoom Toggle ========== */
-  .toggle-zoom {
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 14px; border-radius: 20px;
-    background: rgba(255,255,255,0.06);
-    font-size: 12px; font-weight: 500;
-    color: rgba(255,255,255,0.45);
-    transition: background 0.3s, color 0.3s;
-    flex-shrink: 0;
-  }
-  .toggle-zoom:hover { background: rgba(255,255,255,0.1); }
-  .toggle-zoom.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  .toggle-zoom .toggle-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-    transition: background 0.3s;
-  }
-  .toggle-zoom.active .toggle-dot { background: rgba(255,255,255,0.7); }
-
-  /* ========== Zoomed image wrapper ========== */
-  .image-wrapper.zooming { cursor: grab; }
-  .image-wrapper.zooming:active { cursor: grabbing; }
-  .image-wrapper.zooming img { transition: opacity 0.25s ease; }
-
-  /* ========== Hotspot ========== */
-  .hotspot-layer {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .hotspot-layer .hotspot-dot {
-    pointer-events: auto;
-  }
-
-  .hotspot-dot {
-    position: absolute; z-index: 10;
-    width: 32px; height: 32px; margin: -16px 0 0 -16px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255,255,255,0.18);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-    cursor: pointer; pointer-events: auto;
-    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
-    display: flex; align-items: center; justify-content: center;
-    animation: hotspotBreathe 3s ease-in-out infinite;
-  }
-  @keyframes hotspotBreathe {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.1); }
-  }
-  .hotspot-dot::after {
-    content: ''; width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-  }
-  .hotspot-dot:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,255,255,0.4);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-    animation: none; transform: scale(1.2);
-  }
-  .hotspot-dot:hover::after { background: rgba(255,255,255,0.85); }
-  .hotspot-bubble {
-    position: absolute; z-index: 11;
-    width: 260px; max-width: calc(100vw - 40px);
-    padding: 16px 18px;
-    background: rgba(22,22,26,0.96);
-    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    padding: 32px 28px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px; font-size: 13px; line-height: 1.65;
-    color: rgba(255,255,255,0.75); pointer-events: auto;
-    max-height: 70vh; overflow-y: auto;
-    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
-    opacity: 0; transform: scale(0);
-    transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    transform-origin: var(--bubble-x) var(--bubble-y);
+    transition: background 0.3s, border-color 0.3s, transform 0.25s;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
   }
-  .hotspot-bubble.show { opacity: 1; transform: scale(1); }
-  .hotspot-bubble .bubble-text { white-space: pre-line; }
-  .hotspot-bubble .bubble-title {
-    font-weight: 600; font-size: 14px; margin-bottom: 6px; padding-right: 20px;
-    color: rgba(255,255,255,0.92);
+  .card.ready { cursor: pointer; }
+  .card.ready:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-3px);
   }
-  .hotspot-bubble .bubble-close {
-    position: absolute; top: 12px; right: 14px;
-    width: 24px; height: 24px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
+  .card.ready:active { transform: translateY(-1px); }
+  .card .icon {
+    font-size: 32px; margin-bottom: 16px;
+    width: 48px; height: 48px; border-radius: 14px;
     background: rgba(255,255,255,0.06);
-    font-size: 14px; color: rgba(255,255,255,0.4);
-    cursor: pointer; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #f0f0f5; }
+  .card p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; flex: 1; }
+  .card .action {
+    margin-top: 18px;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.3);
+    transition: color 0.25s;
+  }
+  .card.ready .action { color: rgba(255,255,255,0.6); }
+  .card.ready:hover .action { color: rgba(255,255,255,0.9); }
+  .card .coming-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    font-size: 11px; color: rgba(255,255,255,0.25);
+  }
+  .card.disabled { opacity: 0.5; }
+  .card.disabled .coming-tag { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); }
+
+  /* ========== Footer ========== */
+  .footer {
+    text-align: center;
+    padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06);
+    max-width: 640px; width: 100%;
+  }
+  .footer a {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.4);
+    font-size: 12px; text-decoration: none;
     transition: background 0.2s, color 0.2s;
   }
-  .hotspot-bubble .bubble-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  .hotspot-bubble::-webkit-scrollbar { width: 4px; }
-  .hotspot-bubble::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
-  @media (max-width: 640px) {
-    .hotspot-dot { width: 28px; height: 28px; margin: -14px 0 0 -14px; }
-    .hotspot-dot::after { width: 7px; height: 7px; }
+  .footer a:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .footer .credit {
+    margin-top: 14px;
+    font-size: 13px; color: rgba(255,255,255,0.2);
   }
-
-  /* ========== Back to Home ========== */
-  .btn-home {
-    display: flex; align-items: center; gap: 5px;
-    padding: 6px 14px; border-radius: 18px;
-    background: rgba(255,255,255,0.06);
-    font-size: 12px; color: rgba(255,255,255,0.45);
-    transition: background 0.2s;
-    flex-shrink: 0;
-  }
-  .btn-home:hover { background: rgba(255,255,255,0.1); }
-
-
-  /* ========== Bubble images ========== */
-  .bubble-images {
-    display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
-  }
-  .bubble-images img {
-    width: 64px; height: 64px; object-fit: cover; border-radius: 8px;
-    cursor: pointer; transition: transform 0.2s, opacity 0.2s;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .bubble-images img:hover { transform: scale(1.12); opacity: 0.85; }
-  @media (max-width: 640px) {
-    .bubble-images img { width: 56px; height: 56px; }
-  }
-
-  /* ========== Lightbox ========== */
-  .lightbox {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.92);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-    cursor: zoom-out;
-  }
-  .lightbox.show { opacity: 1; pointer-events: auto; }
-  .lightbox img {
-    max-width: 92vw; max-height: 92vh; object-fit: contain;
-    border-radius: 6px;
-  }
-  .lightbox .lb-close {
-    position: absolute; top: 20px; right: 24px;
-    width: 40px; height: 40px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
-    font-size: 28px; line-height: 1;
-    cursor: pointer; transition: background 0.2s, color 0.2s;
-  }
-  .lightbox .lb-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
-  .lightbox .lb-nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 44px; height: 44px; border-radius: 22px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6);
-    font-size: 22px; cursor: pointer; user-select: none;
-    transition: background 0.2s, color 0.2s;
-  }
-  .lightbox .lb-nav:hover { background: rgba(255,255,255,0.14); color: #fff; }
-  .lightbox .lb-prev { left: 16px; }
-  .lightbox .lb-next { right: 16px; }
-  @media (max-width: 640px) {
-    .lightbox .lb-nav { width: 36px; height: 36px; font-size: 18px; }
-    .lightbox .lb-close { top: 12px; right: 14px; width: 36px; height: 36px; font-size: 22px; }
-  }
-
-  /* ========== Toast ========== */
-  .toast {
-    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
-    padding: 10px 24px; border-radius: 40px;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    font-size: 13px; color: rgba(255,255,255,0.8);
-    opacity: 0; transition: opacity 0.4s ease;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; }
 
   /* ========== Responsive ========== */
   @media (max-width: 640px) {
-    .welcome-card { padding: 40px 28px; }
-    .welcome-card h1 { font-size: 28px; }
-    .nav-btn { width: 34px; height: 34px; font-size: 14px; margin: 0 2px; background: rgba(255,255,255,0.04); }
-    .hotspot-bubble { width: calc(100vw - 32px); max-width: calc(100vw - 32px); padding: 14px 16px; font-size: 12px; }
-    .hotspot-bubble .bubble-title { font-size: 13px; }
-    .hotspot-bubble .bubble-close { width: 32px; height: 32px; }
-    .bottom-bar { padding: 12px 14px; flex-wrap: wrap; }
-    .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
-    .top-bar { padding: 12px 14px; }
-    .image-wrapper img { padding: 8px; }
-    .toggle-annotations { padding: 5px 12px; font-size: 11px; }
-    .toggle-zoom { padding: 5px 12px; font-size: 11px; }
-    .btn-home { padding: 5px 12px; font-size: 11px; }
+    body { padding: 40px 16px 32px; }
+    .hero h1 { font-size: 28px; }
+    .hero { margin-bottom: 40px; }
+    .grid { grid-template-columns: 1fr; gap: 14px; }
+    .card { padding: 24px 20px; }
+    .card .icon { width: 40px; height: 40px; font-size: 26px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ==================== Welcome ==================== -->
-<div id="welcome">
-  <div class="welcome-card">
-    <div class="badge">🏠 新生指南</div>
-    <h1>合肥理工学院<br>宿舍尺寸指南</h1>
-    <p>
-      床有多宽？书桌能放多大显示器？衣柜能挂多长的衣服？<br>
-      提前了解宿舍各处的<span class="highlight">实际尺寸</span>，买对东西不踩坑。
-    </p>
-    <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:-16px;margin-bottom:24px;">
-      ⚠️ 所有尺寸均为手工测量，实际可能有所出入，仅供参考。<br>对尺寸精度要求较高的部件，建议开学后自行复测。
-    </p>
-    <button class="btn-primary" id="btnEnter">
-      <span>开始浏览</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </button>
-    <div class="footer-note" id="footerNote">
-      共 16 张示意图 · 均含尺寸标注
-    </div>
-    <div style="margin-top:40px; width:48px; height:2px; background:rgba(255,255,255,0.15); margin-left:auto;margin-right:auto;border-radius:1px;"></div>
-    <div class="footer-note" style="margin-top:14px;font-size:18px;color:rgba(255,255,255,0.35);font-weight:450;letter-spacing:0.3px;">
-      @月亮早睡困不醒
-    </div>
-    <a href="about.html" style="display:inline-flex;align-items:center;gap:5px;margin-top:18px;padding:7px 18px;border-radius:18px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.4)'">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      关于我
-    </a>
-  </div>
+<div class="hero">
+  <div class="badge">🎓 新生指南</div>
+  <h1>合肥理工学院指南</h1>
+  <p>从宿舍到教室，从食堂到图书馆——<br>你想知道的，都在这里。</p>
 </div>
 
-<!-- ==================== Gallery ==================== -->
-<div id="gallery">
-  <div class="image-wrapper" id="imageWrapper">
+<div class="grid" id="cardGrid"></div>
 
-    <img id="mainImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="宿舍尺寸示意图">
-    <div id="hotspotLayer" class="hotspot-layer"></div>
-  </div>
+<div class="footer">
+  <a href="about.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    关于我
+  </a>
+  <div class="credit">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
-<!-- Top Bar -->
-<div class="top-bar">
-  <button class="btn-home" id="btnHome">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    首页
-  </button>
-  <span class="counter" id="counter">1 / 16</span>
-</div>
-
-<!-- Nav Buttons -->
-<button class="nav-btn prev" id="btnPrev" aria-label="上一张">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-</button>
-<button class="nav-btn next" id="btnNext" aria-label="下一张">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-</button>
-
-<!-- Bottom Bar -->
-<div class="bottom-bar">
-  <span class="title" id="imageTitle">正在加载…</span>
-  <button class="toggle-annotations" id="toggleBtn">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    <div class="toggle-track"><div class="toggle-thumb"></div></div>
-    <span id="toggleLabel">标注</span>
-  </button>
-  <button class="toggle-zoom active" id="hotspotBtn">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v5h-5"/><path d="M12 8v4l2 2"/></svg>
-    <div class="toggle-dot"></div>
-    <span id="hotspotLabel">隐藏标记</span>
-  </button>
-  <button class="toggle-zoom" id="zoomBtn">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-    <div class="toggle-dot"></div>
-    <span id="zoomLabel">缩放</span>
-  </button>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<script src="hotspots.js"></script>
 <script>
-// ============================================================
-//  Data
-// ============================================================
-const COS_URL    = 'https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com';
-const RAW_DIR    = COS_URL + '/img/raw';
-const ANNOT_DIR  = COS_URL + '/img/ann';
-
-// id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
-const IMAGES = [
-  { id: 'D01', ann: true, cat: 'desk',  label: '书桌 — 主正视图' },
-  { id: 'D02', ann: true, cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
-  { id: 'D03', ann: true, cat: 'desk',  label: '书桌下方 — 正视图' },
-  { id: 'D07', ann: true, cat: 'desk',  label: '书桌右下 — 两层小柜图' },
-  { id: 'D09', ann: true, cat: 'desk',  label: '书桌 — 正面后挡板视图' },
-  { id: 'D10', ann: true, cat: 'desk',  label: '书桌 — 线缆开口直径图' },
-  { id: 'B01', ann: true, cat: 'bed',   label: '床板 — 视图' },
-  { id: 'B02', ann: true, cat: 'bed',   label: '床板 — 层高视图' },
-  { id: 'S01', ann: true, cat: 'stairs', label: '楼梯斜视图' },
-  { id: 'S02', ann: true, cat: 'stairs', label: '楼梯柜视图一' },
-  { id: 'C01', ann: true, cat: 'closet', label: '衣柜 — 闭门视图' },
-  { id: 'C02', ann: true, cat: 'closet', label: '衣柜上层开门视图' },
-  { id: 'C03', ann: true, cat: 'closet', label: '衣柜下方开门视图' },
-  { id: 'C04', ann: true, cat: 'closet', label: '衣柜顶部缝隙视图' },
-  { id: 'P01', ann: true, cat: 'space', label: '一四号床位 — 侧边空间示意图' },
-  { id: 'P02', ann: true, cat: 'space', label: '二三号床位 — 侧边空间示意图' },
+const MODULES = [
+  {
+    icon: '🏠',
+    title: '宿舍尺寸指南',
+    desc: '床有多宽？书桌能放多大显示器？衣柜能挂多长的衣服？提前了解宿舍各处的实际尺寸，买对东西不踩坑。',
+    path: 'dorm/index.html',
+    status: 'ready',
+    tag: '16 张示意图'
+  },
+  {
+    icon: '📚',
+    title: '学习指南',
+    desc: '教学楼分布、自习室、选课攻略……',
+    status: 'coming-soon'
+  },
+  {
+    icon: '🏫',
+    title: '校园指南',
+    desc: '食堂、快递、运动场所、周边交通……',
+    status: 'coming-soon'
+  }
 ];
 
-// Derive file path from id
-function fileFor(id) { return id + '.jpg'; }
+const grid = document.getElementById('cardGrid');
 
+MODULES.forEach(m => {
+  const card = document.createElement('a');
+  card.className = 'card' + (m.status === 'ready' ? ' ready' : ' disabled');
 
-// ============================================================
-//  Render hotspots
-// ============================================================
-function calcImageContentRect() {
-  const imgRect = elImg.getBoundingClientRect();
-  const nw = elImg.naturalWidth, nh = elImg.naturalHeight;
-  if (!nw || !nh) { return { width: 0, height: 0, offsetLeft: 0, offsetTop: 0 }; }
-  // 去掉 CSS padding，得到 content box 尺寸
-  const cs = window.getComputedStyle(elImg);
-  const padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
-  const padT = parseFloat(cs.paddingTop) || 0, padB = parseFloat(cs.paddingBottom) || 0;
-  const contentW = imgRect.width - padL - padR;
-  const contentH = imgRect.height - padT - padB;
-  if (contentW <= 0 || contentH <= 0) { return { width: 0, height: 0, offsetLeft: 0, offsetTop: 0 }; }
-  const imgAspect = nw / nh;
-  const boxAspect = contentW / contentH;
-  let renderW, renderH, imgOffsetX, imgOffsetY;
-  if (imgAspect > boxAspect) {
-    renderW = contentW; renderH = contentW / imgAspect;
-    imgOffsetX = 0; imgOffsetY = (contentH - renderH) / 2;
+  if (m.status === 'ready') {
+    card.href = m.path;
   } else {
-    renderH = contentH; renderW = contentH * imgAspect;
-    imgOffsetX = (contentW - renderW) / 2; imgOffsetY = 0;
-  }
-  return {
-    width: renderW, height: renderH,
-    offsetLeft: padL + imgOffsetX,
-    offsetTop: padT + imgOffsetY
-  };
-}
-
-function updateHotspotLayer() {
-  const cr = calcImageContentRect();
-  if (cr.width <= 0 || cr.height <= 0) return;
-  const wrapRect = elWrapper.getBoundingClientRect();
-  const imgRect = elImg.getBoundingClientRect();
-  const layer = document.getElementById('hotspotLayer');
-  layer.style.left = (imgRect.left - wrapRect.left + cr.offsetLeft) + 'px';
-  layer.style.top = (imgRect.top - wrapRect.top + cr.offsetTop) + 'px';
-  layer.style.width = cr.width + 'px';
-  layer.style.height = cr.height + 'px';
-}
-
-function getSafeArea() {
-  const topBar = document.querySelector('.top-bar');
-  const bottomBar = document.querySelector('.bottom-bar');
-  return {
-    top: (topBar ? topBar.offsetHeight : 0) + 8,
-    bottom: (bottomBar ? bottomBar.offsetHeight : 0) + 12
-  };
-}
-
-function renderHotspots(imgId) {
-  const layer = document.getElementById('hotspotLayer');
-  layer.querySelectorAll('.hotspot-dot,.hotspot-bubble').forEach(el => el.remove());
-  if (!showHotspots || zoomEnabled) return;
-  const spots = HOTSPOTS[imgId];
-  if (!spots || spots.length === 0) return;
-  updateHotspotLayer();
-  spots.forEach((spot, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'hotspot-dot';
-    dot.style.left = spot.x + '%';
-    dot.style.top  = spot.y + '%';
-    dot.addEventListener('click', (e) => { e.stopPropagation(); toggleBubble(dot, spot); });
-    layer.appendChild(dot);
-  });
-}
-
-function toggleBubble(dot, spot) {
-  const existing = elWrapper.querySelector('.hotspot-bubble');
-  if (existing) { existing.remove(); return; }
-  const layer = document.getElementById('hotspotLayer');
-  const wr = elWrapper.getBoundingClientRect();
-  const lr = layer.getBoundingClientRect();
-  const px = (lr.left - wr.left) + lr.width * spot.x / 100;
-  const py = (lr.top - wr.top) + lr.height * spot.y / 100;
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const safe = getSafeArea();
-  const maxW = Math.min(260, vw - 28);
-  const maxH = Math.min(vh * 0.7, vh - safe.top - safe.bottom - 16);
-  const goLeft = px > vw * 0.55;
-  const goUp   = py > vh * 0.5;
-  const ox = goLeft ? -(maxW + 14) : 16;
-  const oy = goUp   ? -(maxH + 6) : 10;
-  const bubble = document.createElement('div');
-  bubble.className = 'hotspot-bubble';
-  bubble.style.visibility = 'hidden';
-  let bubbleHtml = '<span class="bubble-close">&times;</span><div class="bubble-title">' + spot.title + '</div><div class="bubble-text">' + spot.text + '</div>';
-  if (spot.images && spot.images.length > 0) {
-    bubbleHtml += '<div class="bubble-images">';
-    spot.images.forEach((img, idx) => {
-      bubbleHtml += '<img src="' + img + '" data-idx="' + idx + '" data-total="' + spot.images.length + '" loading="lazy">';
-    });
-    bubbleHtml += '</div>';
-  }
-  bubble.innerHTML = bubbleHtml;
-  bubble.querySelector('.bubble-close').addEventListener('click', (e) => { e.stopPropagation(); bubble.remove(); });
-  // Click-to-enlarge for bubble images
-  const bubbleImgs = bubble.querySelector('.bubble-images');
-  if (bubbleImgs) {
-    bubbleImgs.addEventListener('click', (e) => {
-      const target = e.target.closest('img');
-      if (target) {
-        e.stopPropagation();
-        openLightbox(target.src, parseInt(target.dataset.total), parseInt(target.dataset.idx));
-      }
-    });
-  }
-  elWrapper.appendChild(bubble);
-  const leftMin = 12, leftMax = vw - maxW - 12;
-  const topMin = safe.top + 4, topMax = vh - safe.bottom - maxH - 4;
-  let left = Math.max(leftMin, Math.min(px + ox, leftMax));
-  let top = Math.max(topMin, Math.min(py + oy, topMax));
-  bubble.style.left = left + 'px';
-  bubble.style.top  = top + 'px';
-  bubble.style.setProperty('--bubble-x', goLeft ? maxW + 'px' : '-16px');
-  bubble.style.setProperty('--bubble-y', goUp ? (maxH + 10) + 'px' : '-10px');
-  bubble.style.visibility = 'visible';
-  bubble.style.maxWidth = maxW + 'px';
-  bubble.style.maxHeight = maxH + 'px';
-  requestAnimationFrame(() => bubble.classList.add('show'));
-  setTimeout(() => {
-    const close = (e) => { if (!bubble.contains(e.target) && e.target !== dot) { bubble.remove(); document.removeEventListener('click', close); } };
-    document.addEventListener('click', close);
-  }, 0);
-}
-
-
-// ============================================================
-//  State
-// ============================================================
-let currentIndex   = 0;
-let showAnnotations = true;
-let showHotspots = true;
-let filteredIndices = IMAGES.map((_, i) => i);
-
-let loadToken    = 0;
-const cached = {};  // "idx_raw" or "idx_ann"
-
-// ============================================================
-//  DOM refs
-// ============================================================
-const elImg      = document.getElementById('mainImage');
-const elCounter  = document.getElementById('counter');
-const elTitle    = document.getElementById('imageTitle');
-const elToggle   = document.getElementById('toggleBtn');
-const elToggleLbl = document.getElementById('toggleLabel');
-
-// ============================================================
-//  Helpers
-// ============================================================
-function getImagePath(index) {
-  const meta = IMAGES[index];
-  const fn = fileFor(meta.id);
-  if (!showAnnotations || !meta.ann) return `${RAW_DIR}/${fn}`;
-  return `${ANNOT_DIR}/${fn}`;
-}
-
-function updateImage() {
-  const realIdx = filteredIndices[currentIndex];
-  if (realIdx === undefined) return;
-  const token = ++loadToken;
-
-  const src = getImagePath(realIdx);
-  const meta = IMAGES[realIdx];
-  const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
-
-  elCounter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
-  elTitle.textContent   = `${meta.id} ${meta.label}`;
-  elToggle.classList.toggle('active', showAnnotations);
-  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
-  resetZoom();
-
-  // 缓存命中：直接换图，同时渲染热点（图片已就绪）
-  if (cached[cacheKey]) {
-    if (token !== loadToken) return;
-    elImg.src = src;
-    renderHotspots(meta.id);
-    return;
+    card.href = 'javascript:void(0)';
+    card.addEventListener('click', (e) => e.preventDefault());
   }
 
-  // 未缓存：后台加载，加载完再换图。热点等图片 load 事件触发后再渲染
-  const preloader = new Image();
-  preloader.onload = () => {
-    if (token !== loadToken) return;
-    cached[cacheKey] = true;
-    elImg.src = src;
-    // elImg load 事件会调用 renderHotspots
-  };
-  preloader.onerror = () => {
-    // 静默失败，旧图保留
-  };
-  preloader.src = src;
-}
+  const tagHtml = m.status !== 'ready' ? '<span class="coming-tag">即将上线</span>' :
+    (m.tag ? '<span class="coming-tag">' + m.tag + '</span>' : '');
 
-function navigate(delta) {
-  if (filteredIndices.length === 0) return;
-  currentIndex = (currentIndex + delta + filteredIndices.length) % filteredIndices.length;
-  updateImage();
-}
+  card.innerHTML = `
+    <div class="icon">${m.icon}</div>
+    <h2>${m.title}</h2>
+    <p>${m.desc}</p>
+    <span class="action">${m.status === 'ready' ? '开始浏览 →' : '即将推出'}</span>
+    ${tagHtml}
+  `;
 
-function nextImage() { navigate(1); }
-function prevImage() { navigate(-1); }
-
-// ============================================================
-//  Toggle Annotations
-// ============================================================
-function toggleAnnotations() {
-  showAnnotations = !showAnnotations;
-  const realIdx = filteredIndices[currentIndex];
-  const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
-
-  elToggle.classList.toggle('active', showAnnotations);
-  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
-
-  if (cached[cacheKey]) {
-    resetZoom();
-    elImg.src = getImagePath(realIdx);
-  } else {
-    updateImage();
-  }
-}
-
-// ============================================================
-//  Zoom
-// ============================================================
-let zoomEnabled = false;
-let zoomScale  = 1;
-let zoomX = 0, zoomY = 0;
-let panning = false, panStartX = 0, panStartY = 0, panOrgX = 0, panOrgY = 0;
-
-const elZoom    = document.getElementById('zoomBtn');
-const elZoomLbl = document.getElementById('zoomLabel');
-const elWrapper = document.getElementById('imageWrapper');
-
-function toggleHotspots() {
-  showHotspots = !showHotspots;
-  const el=document.getElementById('hotspotBtn');
-  const lbl=document.getElementById('hotspotLabel');
-  el.classList.toggle('active',showHotspots);
-  lbl.textContent=showHotspots?'隐藏标记':'显示标记';
-  renderHotspots(IMAGES[filteredIndices[currentIndex]].id);
-}
-
-function toggleZoom() {
-  zoomEnabled = !zoomEnabled;
-  elZoom.classList.toggle('active', zoomEnabled);
-  elZoomLbl.textContent = zoomEnabled ? '缩放' : '缩放';
-  elWrapper.classList.toggle('zooming', zoomEnabled);
-  renderHotspots(IMAGES[filteredIndices[currentIndex]].id);
-  if (!zoomEnabled) resetZoom();
-}
-
-function resetZoom() {
-  zoomScale = 1; zoomX = 0; zoomY = 0;
-  applyZoom();
-}
-
-function applyZoom() {
-  elImg.style.transform = `translate(${zoomX}px,${zoomY}px) scale(${zoomScale})`;
-  elImg.style.transformOrigin = '0 0';
-}
-
-elWrapper.addEventListener('wheel', (e) => {
-  if (!zoomEnabled) return;
-  e.preventDefault();
-  const delta = e.deltaY > 0 ? 0.9 : 1.1;
-  const newScale = Math.min(5, Math.max(1, zoomScale * delta));
-  // Zoom toward cursor
-  const rect = elImg.getBoundingClientRect();
-  const cx = e.clientX - rect.left;
-  const cy = e.clientY - rect.top;
-  zoomX = zoomX - cx * (newScale - zoomScale) / zoomScale;
-  zoomY = zoomY - cy * (newScale - zoomScale) / zoomScale;
-  zoomScale = newScale;
-  applyZoom();
-}, { passive: false });
-
-elWrapper.addEventListener('pointerdown', (e) => {
-  if (!zoomEnabled) return;
-  panning = true;
-  panStartX = e.clientX; panStartY = e.clientY;
-  panOrgX = zoomX; panOrgY = zoomY;
-  elWrapper.setPointerCapture(e.pointerId);
+  grid.appendChild(card);
 });
-elWrapper.addEventListener('pointermove', (e) => {
-  if (!panning) return;
-  zoomX = panOrgX + (e.clientX - panStartX);
-  zoomY = panOrgY + (e.clientY - panStartY);
-  applyZoom();
-});
-elWrapper.addEventListener('pointerup', () => { panning = false; });
-
-// Double-click to toggle 1x ↔ 2x
-elWrapper.addEventListener('dblclick', (e) => {
-  if (!zoomEnabled) return;
-  zoomScale = zoomScale > 1.5 ? 1 : 2;
-  applyZoom();
-});
-
-// ============================================================
-//  Welcome → Gallery
-// ============================================================
-function enterGallery() {
-  document.getElementById('welcome').classList.add('hidden');
-  currentIndex = 0;
-  filteredIndices = IMAGES.map((_, i) => i);
-  updateImage();
-}
-
-function goHome() {
-  document.getElementById('welcome').classList.remove('hidden');
-}
-
-// ============================================================
-//  Toast
-// ============================================================
-let toastTimeout;
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-// ============================================================
-//  Keyboard
-// ============================================================
-document.addEventListener('keydown', (e) => {
-  // ignore when welcome is visible
-  if (!document.getElementById('welcome').classList.contains('hidden')) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGallery(); }
-    return;
-  }
-  if (e.key === 'ArrowLeft')  { e.preventDefault(); prevImage(); }
-  if (e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
-  if (e.key === 'Escape')     { goHome(); }
-  if (e.key === 'a' || e.key === 'A') { toggleAnnotations(); }
-});
-
-// ============================================================
-//  Touch swipe
-// ============================================================
-let touchStartX = 0;
-let touchOnHotspot = false;
-document.addEventListener('touchstart', (e) => {
-  touchOnHotspot = !!e.target.closest('.hotspot-dot, .hotspot-bubble');
-  if (touchOnHotspot) { touchStartX = 0; return; }
-  touchStartX = e.changedTouches[0].screenX;
-});
-document.addEventListener('touchend', (e) => {
-  if (touchOnHotspot) { touchOnHotspot = false; return; }
-  if (touchStartX === 0) return;
-  const diff = touchStartX - e.changedTouches[0].screenX;
-  if (Math.abs(diff) > 60) {
-    diff > 0 ? nextImage() : prevImage();
-  }
-});
-
-// ============================================================
-//  Lightbox
-// ============================================================
-let lightboxImages = [];
-let lightboxIndex = 0;
-
-function openLightbox(src, total, idx) {
-  const lb = document.getElementById('lightbox');
-  const img = document.getElementById('lbImage');
-  // Build full URL if relative path
-  if (total > 1) {
-    // We need to find all images in the current bubble
-    const bubble = document.querySelector('.hotspot-bubble.show');
-    if (bubble) {
-      const imgs = bubble.querySelectorAll('.bubble-images img');
-      lightboxImages = Array.from(imgs).map(i => i.getAttribute('src'));
-      lightboxIndex = idx;
-    }
-  } else {
-    lightboxImages = [src];
-    lightboxIndex = 0;
-  }
-  img.src = src;
-  lb.classList.add('show');
-  document.getElementById('lbPrev').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
-  document.getElementById('lbNext').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
-}
-
-function closeLightbox(e) {
-  if (e) e.stopPropagation();
-  document.getElementById('lightbox').classList.remove('show');
-}
-
-function navigateLightbox(dir) {
-  const len = lightboxImages.length;
-  if (len < 2) return;
-  lightboxIndex = (lightboxIndex + dir + len) % len;
-  document.getElementById('lbImage').src = lightboxImages[lightboxIndex];
-}
-
-function prevLightbox(e) { e.stopPropagation(); navigateLightbox(-1); }
-function nextLightbox(e) { e.stopPropagation(); navigateLightbox(1); }
-
-// Keyboard nav for lightbox
-document.addEventListener('keydown', (e) => {
-  if (!document.getElementById('lightbox').classList.contains('show')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') navigateLightbox(-1);
-  if (e.key === 'ArrowRight') navigateLightbox(1);
-});
-
-// ============================================================
-//  Resize handler — reposition hotspot layer
-// ============================================================
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    if (!document.getElementById('welcome').classList.contains('hidden')) return;
-    const realIdx = filteredIndices[currentIndex];
-    if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
-  }, 150);
-});
-
-// ============================================================
-//  Event Listeners
-// ============================================================
-document.getElementById('btnEnter').addEventListener('click', enterGallery);
-document.getElementById('btnPrev').addEventListener('click', prevImage);
-document.getElementById('btnNext').addEventListener('click', nextImage);
-document.getElementById('btnHome').addEventListener('click', goHome);
-document.getElementById('toggleBtn').addEventListener('click', toggleAnnotations);
-document.getElementById('hotspotBtn').addEventListener('click', toggleHotspots);
-document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
-
-// 图片加载完成后重新定位热点
-elImg.addEventListener('load', () => {
-  if (!document.getElementById('welcome').classList.contains('hidden')) return;
-  const realIdx = filteredIndices[currentIndex];
-  if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
-});
-
-console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
-document.getElementById('footerNote').textContent =
-  '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 </script>
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <span class="lb-close" onclick="closeLightbox(event)">&times;</span>
-  <span class="lb-nav lb-prev" id="lbPrev" onclick="prevLightbox(event)">&#10094;</span>
-  <img id="lbImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="放大查看">
-  <span class="lb-nav lb-next" id="lbNext" onclick="nextLightbox(event)">&#10095;</span>
-</div>
-
 </body>
 </html>
