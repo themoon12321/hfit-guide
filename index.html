@@ -10,8 +10,8 @@
   html, body { width: 100%; height: 100%; overflow: hidden; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
-    background: #0d0d0f;
-    color: #eaeaef;
+    background: #131314;
+    color: #e8e8ed;
     -webkit-font-smoothing: antialiased;
   }
   button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
@@ -20,105 +20,69 @@
   #welcome {
     position: fixed; inset: 0; z-index: 100;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #0d0d0f;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    background: #131314;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
   }
   #welcome::before {
     content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 70% 55% at 50% 35%, rgba(255,255,255,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 25% 70%, rgba(255,255,255,0.02) 0%, transparent 50%);
+    background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,255,255,0.03) 0%, transparent 100%);
     pointer-events: none;
   }
   #welcome.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .welcome-card {
     position: relative; text-align: center;
-    max-width: 600px; padding: 80px 48px;
-    animation: fadeUp 0.6s ease;
+    max-width: 560px; padding: 64px 48px;
+    animation: fadeUp 0.8s ease;
   }
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   .welcome-card .badge {
     display: inline-block;
-    padding: 6px 18px; border-radius: 20px;
-    background: rgba(255,255,255,0.07);
-    font-size: 13px; letter-spacing: 0.6px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 28px;
+    padding: 5px 16px; border-radius: 16px;
+    background: rgba(255,255,255,0.06);
+    font-size: 12px; letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
   }
-  .welcome-card h1 { font-size: 44px; font-weight: 650; margin-bottom: 20px; line-height: 1.22; color: #f5f5fa; letter-spacing: -0.3px; }
-  .welcome-card p  { font-size: 17px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 40px; }
-  .welcome-card .highlight { color: rgba(255,255,255,0.75); font-weight: 500; }
+  .welcome-card h1 { font-size: 40px; font-weight: 600; margin-bottom: 16px; line-height: 1.25; color: #f0f0f5; }
+  .welcome-card p  { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 36px; }
+  .welcome-card .highlight { color: rgba(255,255,255,0.75); }
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 15px 40px; border-radius: 28px;
-    background: #f5f5fa; color: #0d0d0f;
-    font-size: 17px; font-weight: 620;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    padding: 14px 36px; border-radius: 24px;
+    background: #f0f0f5; color: #131314;
+    font-size: 16px; font-weight: 600;
+    transition: transform 0.2s ease, background 0.2s ease;
   }
-  .btn-primary:hover { transform: scale(1.03); background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
+  .btn-primary:hover { transform: scale(1.03); background: #fff; }
   .btn-primary:active { transform: scale(0.97); }
   .welcome-card .footer-note {
-    margin-top: 32px; font-size: 13px; color: rgba(255,255,255,0.2);
+    margin-top: 28px; font-size: 12px; color: rgba(255,255,255,0.25);
   }
 
   /* ========== Gallery ========== */
   #gallery {
     position: fixed; inset: 0; z-index: 1;
     display: flex; align-items: center; justify-content: center;
-    background: #0d0d0f;
+    background: #131314;
   }
   .image-wrapper {
     position: relative;
     width: 100%; height: 100%;
-    overflow: hidden;
-    touch-action: pan-x;
-    background: #0d0d0f;
+    display: flex; align-items: center; justify-content: center;
   }
-  /* skeleton shimmer overlay */
-  .image-wrapper::after {
-    content: '';
-    position: absolute; inset: 0; z-index: 0;
-    pointer-events: none;
-    background: linear-gradient(100deg,
-      transparent 0%,
-      transparent 30%,
-      rgba(255,255,255,0.03) 35%,
-      rgba(255,255,255,0.07) 50%,
-      rgba(255,255,255,0.03) 65%,
-      transparent 70%,
-      transparent 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-  .image-wrapper.loading::after { opacity: 1; }
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-  .slide-img {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+  .image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     display: block;
+    transition: opacity 0.25s ease;
     padding: 16px;
     user-select: none;
     -webkit-user-drag: none;
-    transition: opacity 0.35s ease;
-    opacity: 0;
-    z-index: 1;
   }
-  .slide-img.active { opacity: 1; }
-  /* zoom */
-  .image-wrapper.zooming .slide-img { transition: opacity 0.35s ease; }
-  .image-wrapper.zooming .slide-img.active { opacity: 1; }
-  .image-wrapper.zooming .slide-img:not(.active) { opacity: 0; display: none; }
-  .image-wrapper.zooming::after { display: none; }
 
   /* ========== Top Bar ========== */
   .top-bar {
@@ -130,36 +94,35 @@
   .top-bar > * { pointer-events: auto; }
   .top-bar .counter {
     font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.35);
-    font-variant-numeric: tabular-nums;
+    color: rgba(255,255,255,0.45);
   }
 
   /* ========== Nav Arrows ========== */
   .nav-btn {
     position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
-    width: 48px; height: 48px; border-radius: 24px;
+    width: 44px; height: 44px; border-radius: 22px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.55);
     font-size: 18px;
-    transition: background 0.25s, color 0.25s, transform 0.25s;
-    margin: 0 12px;
+    transition: background 0.2s, color 0.2s;
+    margin: 0 8px;
   }
-  .nav-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); transform: translateY(-50%) scale(1.05); }
-  .nav-btn:active { background: rgba(255,255,255,0.16); transform: translateY(-50%) scale(0.95); }
+  .nav-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .nav-btn:active { background: rgba(255,255,255,0.18); }
   .nav-btn.prev { left: 0; }
   .nav-btn.next { right: 0; }
 
   /* ========== Bottom Bar ========== */
   .bottom-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 16px 20px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    gap: 12px;
   }
   .bottom-bar .title {
-    font-size: 14px; font-weight: 500;
-    color: rgba(255,255,255,0.65);
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.55);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     flex: 1;
   }
@@ -167,30 +130,30 @@
   /* ========== Toggle ========== */
   .toggle-annotations {
     display: flex; align-items: center; gap: 8px;
-    padding: 7px 16px; border-radius: 22px;
-    background: rgba(255,255,255,0.04);
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.3);
+    padding: 6px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.35);
     transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
   }
-  .toggle-annotations:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.55); }
+  .toggle-annotations:hover { background: rgba(255,255,255,0.08); }
   .toggle-annotations.active {
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.9);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
   }
   .toggle-track {
-    position: relative; width: 34px; height: 20px; border-radius: 11px;
-    background: rgba(255,255,255,0.08);
+    position: relative; width: 32px; height: 18px; border-radius: 10px;
+    background: rgba(255,255,255,0.1);
     transition: background 0.3s;
   }
   .toggle-annotations.active .toggle-track { background: rgba(255,255,255,0.5); }
   .toggle-thumb {
     position: absolute; top: 2px; left: 2px;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), background 0.3s;
   }
   .toggle-annotations.active .toggle-thumb {
     transform: translateX(14px);
@@ -199,20 +162,16 @@
 
   /* ========== Zoom Toggle ========== */
   .toggle-zoom {
-    display: flex; align-items: center; gap: 7px;
-    padding: 7px 16px; border-radius: 22px;
-    background: rgba(255,255,255,0.04);
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.3);
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.45);
     transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
   }
-  .toggle-zoom:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.55); }
-  .toggle-zoom.active {
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.9);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
-  }
+  .toggle-zoom:hover { background: rgba(255,255,255,0.1); }
+  .toggle-zoom.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
   .toggle-zoom .toggle-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: rgba(255,255,255,0.25);
@@ -223,74 +182,7 @@
   /* ========== Zoomed image wrapper ========== */
   .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
-
-  /* ========== Hotspot buttons & popups ========== */
-  .hotspot-dot {
-    position: absolute; z-index: 10;
-    width: 28px; height: 28px;
-    margin: -14px 0 0 -14px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255,255,255,0.25);
-    cursor: pointer;
-    transition: background 0.25s, border-color 0.25s;
-    display: flex; align-items: center; justify-content: center;
-    animation: hotspotBreathe 2.4s ease-in-out infinite;
-  }
-  @keyframes hotspotBreathe {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.25); }
-  }
-  .hotspot-dot::after {
-    content: ''; width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-    transition: background 0.25s;
-  }
-  .hotspot-dot:hover {
-    background: rgba(255,255,255,0.28);
-    border-color: rgba(255,255,255,0.5);
-    animation: none;
-    transform: scale(1.35);
-  }
-  .hotspot-dot:hover::after { background: rgba(255,255,255,0.9); }
-  .hotspot-bubble {
-    position: absolute; z-index: 11;
-    width: 260px; max-width: calc(100vw - 40px);
-    padding: 18px 20px 16px 20px;
-    background: rgba(22,22,26,0.96);
-    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px;
-    font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.75);
-    pointer-events: auto;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.04) inset;
-    opacity: 0; transform: scale(0);
-    transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    transform-origin: var(--bubble-x) var(--bubble-y);
-  }
-  .hotspot-bubble.show { opacity: 1; transform: scale(1); }
-  .hotspot-bubble .bubble-title {
-    font-weight: 600; font-size: 15px; margin-bottom: 8px; padding-right: 20px;
-    color: rgba(255,255,255,0.92);
-  }
-  .hotspot-bubble .bubble-text {
-    color: rgba(255,255,255,0.65); line-height: 1.65;
-  }
-  .hotspot-bubble .bubble-close {
-    position: absolute; top: 14px; right: 16px;
-    width: 24px; height: 24px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.06);
-    font-size: 14px; color: rgba(255,255,255,0.4);
-    cursor: pointer; line-height: 1;
-    transition: background 0.2s, color 0.2s;
-  }
-  .hotspot-bubble .bubble-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  @media (max-width: 640px) {
-    .hotspot-dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; }
-    .hotspot-dot::after { width: 6px; height: 6px; }
-  }
+  .image-wrapper.zooming img { transition: opacity 0.25s ease; }
 
   /* ========== Back to Home ========== */
   .btn-home {
@@ -325,7 +217,7 @@
     .bottom-bar { padding: 12px 14px; flex-wrap: wrap; }
     .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
     .top-bar { padding: 12px 14px; }
-    .slide-img { padding: 8px; }
+    .image-wrapper img { padding: 8px; }
     .toggle-annotations { padding: 5px 12px; font-size: 11px; }
     .toggle-zoom { padding: 5px 12px; font-size: 11px; }
     .btn-home { padding: 5px 12px; font-size: 11px; }
@@ -353,9 +245,8 @@
     <div class="footer-note" id="footerNote">
       共 16 张示意图 · 均含尺寸标注
     </div>
-    <div style="margin-top:40px; width:48px; height:2px; background:rgba(255,255,255,0.15); margin-left:auto;margin-right:auto;border-radius:1px;"></div>
-    <div class="footer-note" style="margin-top:14px;font-size:18px;color:rgba(255,255,255,0.35);font-weight:450;letter-spacing:0.3px;">
-      @月亮早睡困不醒
+    <div class="footer-note" style="margin-top:6px;font-size:12px;color:rgba(255,255,255,0.25);">
+      by 月亮早睡困不醒
     </div>
   </div>
 </div>
@@ -364,8 +255,7 @@
 <div id="gallery">
   <div class="image-wrapper" id="imageWrapper">
 
-    <img id="imgA" class="slide-img active" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="宿舍尺寸示意图">
-    <img id="imgB" class="slide-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
+    <img id="mainImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="宿舍尺寸示意图">
   </div>
 </div>
 
@@ -436,99 +326,23 @@ const IMAGES = [
 function fileFor(id) { return id + '.jpg'; }
 
 // ============================================================
-//  Hotspot data (from editor.html)
-// ============================================================
-const HOTSPOTS = {
-  "D01": [
-    { x: 28.40, y: 51.39, title: "这里怎么布置？", text: "写写你的心得" },
-    { x: 53.23, y: 38.17, title: "书桌收纳建议", text: "写写你的心得" },
-  ],
-  /* 用 editor.html 标完别的图后，把 JSON 粘到这里 */
-};
-
-// ============================================================
-//  Render hotspots on current image
-// ============================================================
-function renderHotspots(imgId) {
-  elWrapper.querySelectorAll('.hotspot-dot,.hotspot-bubble').forEach(el => el.remove());
-
-  const spots = HOTSPOTS[imgId];
-  if (!spots || spots.length === 0) return;
-
-  spots.forEach((spot, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'hotspot-dot';
-    dot.style.left = spot.x + '%';
-    dot.style.top  = spot.y + '%';
-    dot.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleBubble(dot, spot, imgId, i);
-    });
-    elWrapper.appendChild(dot);
-  });
-}
-
-function toggleBubble(dot, spot, imgId, idx) {
-	const existing = elWrapper.querySelector('.hotspot-bubble');
-	if (existing) { existing.remove(); return; }
-
-	const wrapperRect = elWrapper.getBoundingClientRect();
-	const dotPX = wrapperRect.width  * spot.x / 100;
-	const dotPY = wrapperRect.height * spot.y / 100;
-
-	const bubble = document.createElement('div');
-	bubble.className = 'hotspot-bubble';
-	const ox = 16, oy = 4;
-	bubble.style.left = (dotPX + ox) + 'px';
-	bubble.style.top  = (dotPY + oy) + 'px';
-	bubble.style.setProperty('--bubble-x', (-ox) + 'px');
-	bubble.style.setProperty('--bubble-y', (-oy) + 'px');
-
-	bubble.innerHTML = '<span class="bubble-close">×</span><div class="bubble-title">' + spot.title + '</div><div class='bubble-text'>' + spot.text + '</div>';
-
-	bubble.querySelector('.bubble-close').addEventListener('click', (e) => {
-		e.stopPropagation(); bubble.remove();
-	});
-	elWrapper.appendChild(bubble);
-	requestAnimationFrame(() => bubble.classList.add('show'));
-
-	setTimeout(() => {
-		const outside = (e) => {
-			if (!bubble.contains(e.target) && e.target !== dot) {
-				bubble.remove(); document.removeEventListener('click', outside);
-			}
-		};
-		document.addEventListener('click', outside);
-	}, 0);
-}
-
-// ============================================================
 //  State
 // ============================================================
 let currentIndex   = 0;
-let showAnnotations = true;
+let showAnnotations = true;  // 默认显示标注版
 let filteredIndices = IMAGES.map((_, i) => i);
 
 let loadToken    = 0;
-let activeImg    = 'A';         // 当前显示的图片元素
-let slideTimer   = null;        // 动画结束定时器
-const cached = {};              // "idx_raw" or "idx_ann"
+const cached = {};  // "idx_raw" or "idx_ann"
 
 // ============================================================
 //  DOM refs
 // ============================================================
-const imgs = {
-  A: document.getElementById('imgA'),
-  B: document.getElementById('imgB')
-};
+const elImg      = document.getElementById('mainImage');
 const elCounter  = document.getElementById('counter');
 const elTitle    = document.getElementById('imageTitle');
 const elToggle   = document.getElementById('toggleBtn');
 const elToggleLbl = document.getElementById('toggleLabel');
-const elWrapper  = document.getElementById('imageWrapper');
-
-function activeEl() { return imgs[activeImg]; }
-function inactiveEl() { return imgs[activeImg === 'A' ? 'B' : 'A']; }
 
 // ============================================================
 //  Helpers
@@ -536,131 +350,72 @@ function inactiveEl() { return imgs[activeImg === 'A' ? 'B' : 'A']; }
 function getImagePath(index) {
   const meta = IMAGES[index];
   const fn = fileFor(meta.id);
-  return showAnnotations && meta.ann ? `${ANNOT_DIR}/${fn}` : `${RAW_DIR}/${fn}`;
+  if (!showAnnotations || !meta.ann) return `${RAW_DIR}/${fn}`;
+  return `${ANNOT_DIR}/${fn}`;
 }
 
-// ============================================================
-//  Navigation — instant crossfade + skeleton while loading
-// ============================================================
-const EMPTY_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-function navigate(delta) {
-  if (filteredIndices.length === 0) return;
-  const nextIdx = (currentIndex + delta + filteredIndices.length) % filteredIndices.length;
-  if (nextIdx === currentIndex) return;
-
-  currentIndex = nextIdx;
+function updateImage() {
   const realIdx = filteredIndices[currentIndex];
+  if (realIdx === undefined) return;
+  const token = ++loadToken;
+
   const src = getImagePath(realIdx);
   const meta = IMAGES[realIdx];
   const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
-  const token = ++loadToken;
 
-  resetZoom();
   elCounter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
   elTitle.textContent   = `${meta.id} ${meta.label}`;
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
+  resetZoom();
 
-  // 1. IMMEDIATE crossfade — 已经切过去了
-  const inactive = inactiveEl();
-  const oldOne   = activeEl();
-  clearTimeout(slideTimer);
-  oldOne.classList.remove('active');
-  inactive.src = EMPTY_PIXEL;
-  inactive.classList.add('active');
-  activeImg = activeImg === 'A' ? 'B' : 'A';  // 立即交换，renderHotspots 用
-  renderHotspots(meta.id);
-
-  // skeleton 可见
-  elWrapper.classList.add('loading');
-
-  // 2. Clean old image after transition
-  slideTimer = setTimeout(() => {
-    oldOne.className = 'slide-img';
-    oldOne.src = EMPTY_PIXEL;
-    slideTimer = null;
-  }, 400);
-
-  // 3. Set the new active image once loaded
-  const newActiveEl = inactive; // 它就是新的 active
-  const showImage = () => {
-    if (token !== loadToken) return;
-    newActiveEl.src = src;
-    elWrapper.classList.remove('loading');
-  };
-
+  // 缓存命中：直接换图
   if (cached[cacheKey]) {
-    showImage();
-  } else {
-    const preloader = new Image();
-    preloader.onload = () => {
-      cached[cacheKey] = true;
-      showImage();
-    };
-    preloader.src = src;
+    if (token !== loadToken) return;
+    elImg.src = src;
+    return;
   }
+
+  // 未缓存：后台加载，加载完再换图。旧图保持原样
+  const preloader = new Image();
+  preloader.onload = () => {
+    if (token !== loadToken) return;
+    cached[cacheKey] = true;
+    elImg.src = src;
+  };
+  preloader.onerror = () => {
+    // 静默失败，旧图保留
+  };
+  preloader.src = src;
 }
+
+function navigate(delta) {
+  if (filteredIndices.length === 0) return;
+  currentIndex = (currentIndex + delta + filteredIndices.length) % filteredIndices.length;
+  updateImage();
+}
+
+function nextImage() { navigate(1); }
+function prevImage() { navigate(-1); }
 
 // ============================================================
 //  Toggle Annotations
 // ============================================================
 function toggleAnnotations() {
   showAnnotations = !showAnnotations;
-  elToggle.classList.toggle('active', showAnnotations);
-  elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
   const realIdx = filteredIndices[currentIndex];
   const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
-  const src = getImagePath(realIdx);
-  resetZoom();
 
-  if (cached[cacheKey]) {
-    activeEl().src = src;
-    return;
-  }
-  const preloader = new Image();
-  preloader.onload = () => {
-    cached[cacheKey] = true;
-    activeEl().src = src;
-  };
-  preloader.src = src;
-}
-
-function updateImage() {
-  const realIdx = filteredIndices[currentIndex];
-  if (realIdx === undefined) return;
-  const src = getImagePath(realIdx);
-  const meta = IMAGES[realIdx];
-  const cacheKey = realIdx + (showAnnotations ? '_ann' : '_raw');
-  const token = ++loadToken;
-
-  elCounter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
-  elTitle.textContent   = `${meta.id} ${meta.label}`;
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
-  resetZoom();
-  renderHotspots(meta.id);
 
-  const el = activeEl();
   if (cached[cacheKey]) {
-    if (token !== loadToken) return;
-    el.src = src;
-    elWrapper.classList.remove('loading');
-    return;
+    resetZoom();
+    elImg.src = getImagePath(realIdx);
+  } else {
+    updateImage();
   }
-  elWrapper.classList.add('loading');
-  const preloader = new Image();
-  preloader.onload = () => {
-    if (token !== loadToken) return;
-    cached[cacheKey] = true;
-    el.src = src;
-    elWrapper.classList.remove('loading');
-  };
-  preloader.src = src;
 }
-
-function nextImage() { navigate(1); }
-function prevImage() { navigate(-1); }
 
 // ============================================================
 //  Zoom
@@ -672,6 +427,7 @@ let panning = false, panStartX = 0, panStartY = 0, panOrgX = 0, panOrgY = 0;
 
 const elZoom    = document.getElementById('zoomBtn');
 const elZoomLbl = document.getElementById('zoomLabel');
+const elWrapper = document.getElementById('imageWrapper');
 
 function toggleZoom() {
   zoomEnabled = !zoomEnabled;
@@ -687,13 +443,8 @@ function resetZoom() {
 }
 
 function applyZoom() {
-  const el = activeEl();
-  if (!zoomEnabled || zoomScale === 1) {
-    el.style.transform = '';
-    return;
-  }
-  el.style.transform = `translate(${zoomX}px,${zoomY}px) scale(${zoomScale})`;
-  el.style.transformOrigin = '0 0';
+  elImg.style.transform = `translate(${zoomX}px,${zoomY}px) scale(${zoomScale})`;
+  elImg.style.transformOrigin = '0 0';
 }
 
 elWrapper.addEventListener('wheel', (e) => {
@@ -701,8 +452,8 @@ elWrapper.addEventListener('wheel', (e) => {
   e.preventDefault();
   const delta = e.deltaY > 0 ? 0.9 : 1.1;
   const newScale = Math.min(5, Math.max(1, zoomScale * delta));
-  const el = activeEl();
-  const rect = el.getBoundingClientRect();
+  // Zoom toward cursor
+  const rect = elImg.getBoundingClientRect();
   const cx = e.clientX - rect.left;
   const cy = e.clientY - rect.top;
   zoomX = zoomX - cx * (newScale - zoomScale) / zoomScale;
@@ -725,6 +476,8 @@ elWrapper.addEventListener('pointermove', (e) => {
   applyZoom();
 });
 elWrapper.addEventListener('pointerup', () => { panning = false; });
+
+// Double-click to toggle 1x ↔ 2x
 elWrapper.addEventListener('dblclick', (e) => {
   if (!zoomEnabled) return;
   zoomScale = zoomScale > 1.5 ? 1 : 2;
@@ -773,22 +526,14 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================================
-//  Touch swipe (单指切图，多指忽略)
+//  Touch swipe
 // ============================================================
-let touchStartX = 0, touchStartY = 0, touchFingers = 0;
-document.addEventListener('touchstart', (e) => {
-  touchFingers = e.touches.length;
-  if (touchFingers === 1) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }
-});
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
 document.addEventListener('touchend', (e) => {
-  if (touchFingers !== 1) return;  // 多指操作：不管
-  const dx = touchStartX - e.changedTouches[0].clientX;
-  const dy = Math.abs(touchStartY - e.changedTouches[0].clientY);
-  if (Math.abs(dx) > 60 && Math.abs(dx) > dy) {
-    dx > 0 ? nextImage() : prevImage();
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) {
+    diff > 0 ? nextImage() : prevImage();
   }
 });
 
