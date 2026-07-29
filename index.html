@@ -289,20 +289,30 @@ document.getElementById('fbSubmit').addEventListener('click', async function() {
 
 showMyComments();
 
-// 轮换标题和占位符
-var phrases = [
-  { t: '有什么想说的？', p: '反馈、建议、或者单纯打个招呼…' },
-  { t: '唠唠嗑～', p: '随便说点啥，我在听' },
-  { t: '欢迎留言 ✌️', p: '说说你的想法' },
-  { t: '如果能帮到你，点个赞再走 👍', p: '或者留句话也行' },
+// 随机标题
+var likeLabels = [
+  '这个页面有帮助吗？',
+  '如果能帮到你，点个赞再走 👍',
+  '觉得有用的话，点个赞吧',
+  '内容还满意吗？',
 ];
-var pi = 0;
-setInterval(function() {
-  pi = (pi + 1) % phrases.length;
-  var ph = phrases[pi];
-  document.getElementById('fbTitle').textContent = ph.t;
-  document.getElementById('fbText').placeholder = ph.p;
-}, 5000);
+var commentTitles = [
+  '有什么想说的？',
+  '唠唠嗑～',
+  '欢迎留言 ✌️',
+  '来都来了，说两句呗',
+  '键盘交给你了',
+  '随便说点啥',
+];
+var placeholders = [
+  '反馈、建议、或者单纯打个招呼…',
+  '随便说点啥，我在听',
+  '说说你的想法',
+  '畅所欲言～',
+];
+document.querySelector('.fb-label').textContent = likeLabels[Math.floor(Math.random() * likeLabels.length)];
+document.getElementById('fbTitle').textContent = commentTitles[Math.floor(Math.random() * commentTitles.length)];
+document.getElementById('fbText').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
 
 loadLikes();
 
