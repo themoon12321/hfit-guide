@@ -143,7 +143,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     关于我
   </a>
-  <div class="credit">@月亮早睡困不醒 · Made with 🌙 2026</div>
+  <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
 <!-- ========== Feedback Widget ========== -->
@@ -294,6 +294,11 @@ showMyComments();
 });
 
 loadLikes();
+
+// 双击作者名进入管理后台
+document.getElementById('credit').addEventListener('dblclick', () => {
+  window.location.href = '/admin.html';
+});
 </script>
 
 <script>
