@@ -24,11 +24,12 @@ export async function onRequest(context) {
     }
 
     if (request.method === 'POST') {
-      const { page } = await request.json();
+      const { page, delta } = await request.json();
       const key = `likes:${page || 'default'}`;
       const current = parseInt(await env.KV.get(key) || '0');
-      await env.KV.put(key, String(current + 1));
-      return new Response(JSON.stringify({ count: current + 1 }), { headers });
+      const next = Math.max(0, current + (delta || 1));
+      await env.KV.put(key, String(next));
+      return new Response(JSON.stringify({ count: next }), { headers });
     }
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
