@@ -276,6 +276,59 @@
   .btn-home:hover { background: rgba(255,255,255,0.1); }
 
 
+  /* ========== Bubble images ========== */
+  .bubble-images {
+    display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .bubble-images img {
+    width: 64px; height: 64px; object-fit: cover; border-radius: 8px;
+    cursor: pointer; transition: transform 0.2s, opacity 0.2s;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .bubble-images img:hover { transform: scale(1.12); opacity: 0.85; }
+  @media (max-width: 640px) {
+    .bubble-images img { width: 56px; height: 56px; }
+  }
+
+  /* ========== Lightbox ========== */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    cursor: zoom-out;
+  }
+  .lightbox.show { opacity: 1; pointer-events: auto; }
+  .lightbox img {
+    max-width: 92vw; max-height: 92vh; object-fit: contain;
+    border-radius: 6px;
+  }
+  .lightbox .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 28px; line-height: 1;
+    cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .lightbox .lb-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
+  .lightbox .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6);
+    font-size: 22px; cursor: pointer; user-select: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lightbox .lb-nav:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .lightbox .lb-prev { left: 16px; }
+  .lightbox .lb-next { right: 16px; }
+  @media (max-width: 640px) {
+    .lightbox .lb-nav { width: 36px; height: 36px; font-size: 18px; }
+    .lightbox .lb-close { top: 12px; right: 14px; width: 36px; height: 36px; font-size: 22px; }
+  }
+
   /* ========== Toast ========== */
   .toast {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
@@ -505,7 +558,15 @@ function toggleBubble(dot, spot) {
   const bubble = document.createElement('div');
   bubble.className = 'hotspot-bubble';
   bubble.style.visibility = 'hidden';
-  bubble.innerHTML = '<span class="bubble-close">&times;</span><div class="bubble-title">' + spot.title + '</div><div class="bubble-text">' + spot.text + '</div>';
+  let bubbleHtml = '<span class="bubble-close">&times;</span><div class="bubble-title">' + spot.title + '</div><div class="bubble-text">' + spot.text + '</div>';
+  if (spot.images && spot.images.length > 0) {
+    bubbleHtml += '<div class="bubble-images">';
+    spot.images.forEach((img, idx) => {
+      bubbleHtml += '<img src="' + img + '" onclick="event.stopPropagation();openLightbox(\' + img + \',' + spot.images.length + ',' + idx + ')" loading="lazy">';
+    });
+    bubbleHtml += '</div>';
+  }
+  bubble.innerHTML = bubbleHtml;
   bubble.querySelector('.bubble-close').addEventListener('click', (e) => { e.stopPropagation(); bubble.remove(); });
   elWrapper.appendChild(bubble);
   const leftMin = 12, leftMax = vw - maxW - 12;
@@ -760,6 +821,57 @@ document.addEventListener('touchend', (e) => {
 });
 
 // ============================================================
+//  Lightbox
+// ============================================================
+let lightboxImages = [];
+let lightboxIndex = 0;
+
+function openLightbox(src, total, idx) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lbImage');
+  // Build full URL if relative path
+  if (total > 1) {
+    // We need to find all images in the current bubble
+    const bubble = document.querySelector('.hotspot-bubble.show');
+    if (bubble) {
+      const imgs = bubble.querySelectorAll('.bubble-images img');
+      lightboxImages = Array.from(imgs).map(i => i.getAttribute('src'));
+      lightboxIndex = idx;
+    }
+  } else {
+    lightboxImages = [src];
+    lightboxIndex = 0;
+  }
+  img.src = src;
+  lb.classList.add('show');
+  document.getElementById('lbPrev').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+  document.getElementById('lbNext').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+}
+
+function closeLightbox(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+function navigateLightbox(dir) {
+  const len = lightboxImages.length;
+  if (len < 2) return;
+  lightboxIndex = (lightboxIndex + dir + len) % len;
+  document.getElementById('lbImage').src = lightboxImages[lightboxIndex];
+}
+
+function prevLightbox(e) { e.stopPropagation(); navigateLightbox(-1); }
+function nextLightbox(e) { e.stopPropagation(); navigateLightbox(1); }
+
+// Keyboard nav for lightbox
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('lightbox').classList.contains('show')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navigateLightbox(-1);
+  if (e.key === 'ArrowRight') navigateLightbox(1);
+});
+
+// ============================================================
 //  Resize handler — reposition hotspot layer
 // ============================================================
 let resizeTimer;
@@ -794,5 +906,13 @@ console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图
 document.getElementById('footerNote').textContent =
   '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 </script>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox(event)">&times;</span>
+  <span class="lb-nav lb-prev" id="lbPrev" onclick="prevLightbox(event)">&#10094;</span>
+  <img id="lbImage" src="" alt="放大查看">
+  <span class="lb-nav lb-next" id="lbNext" onclick="nextLightbox(event)">&#10095;</span>
+</div>
+
 </body>
 </html>
