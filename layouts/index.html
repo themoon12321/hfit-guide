@@ -11,102 +11,112 @@
     background: #0d0d0f;
     color: #eaeaef;
     -webkit-font-smoothing: antialiased;
-    padding: 48px 24px 40px;
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+    padding: 48px 16px 40px;
+    max-width: 600px; margin: 0 auto;
   }
 
-  /* ========== Header ========== */
   .header {
-    width: 100%; max-width: 1000px;
-    margin-bottom: 40px;
-    display: flex; justify-content: space-between; align-items: flex-end;
-  }
-  .header .left .kicker {
-    font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.15); text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .header .left h1 {
-    font-size: 28px; font-weight: 650; letter-spacing: -0.3px;
-    color: #f0f0f5;
-  }
-  .header .left p {
-    font-size: 14px; color: rgba(255,255,255,0.3);
-    margin-top: 6px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding: 0 4px;
   }
   .header .back {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 7px 16px; border-radius: 16px;
-    background: rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.35); text-decoration: none;
-    font-size: 12px; transition: background 0.2s, color 0.2s;
-    flex-shrink: 0;
+    color: rgba(255,255,255,0.25); text-decoration: none;
+    font-size: 18px; line-height: 1;
+    transition: color 0.2s;
   }
-  .header .back:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
 
-  /* ========== Grid ========== */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    max-width: 1000px; width: 100%;
-  }
+  /* ========== Card ========== */
   .card {
-    border-radius: 14px;
-    overflow: hidden;
+    border-radius: 16px; overflow: hidden;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.05);
-    cursor: pointer;
-    transition: border-color 0.25s, transform 0.25s;
-  }
-  .card:hover {
-    border-color: rgba(255,255,255,0.12);
-    transform: translateY(-2px);
-  }
-  .card .img-wrap {
-    width: 100%; aspect-ratio: 4 / 3;
-    background: rgba(255,255,255,0.02);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .card .img-wrap .placeholder {
-    font-size: 32px; opacity: 0.15;
-  }
-  .card .img-wrap img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
-  }
-  .card .info { padding: 14px 16px; }
-  .card .info .author {
-    font-size: 12px; color: rgba(255,255,255,0.25);
-    margin-bottom: 2px;
-  }
-  .card .info .author strong {
-    color: rgba(255,255,255,0.45); font-weight: 500;
-  }
-  .card .info .desc {
-    font-size: 13px; color: rgba(255,255,255,0.5);
-    line-height: 1.45;
+    margin-bottom: 16px;
   }
 
-  /* ========== Empty state ========== */
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center; padding: 80px 24px;
+  /* ===== Carousel ===== */
+  .carousel {
+    position: relative; overflow: hidden;
+    background: rgba(255,255,255,0.02);
+    user-select: none;
   }
-  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
-  .empty-state h2 { font-size: 20px; font-weight: 600; color: #f0f0f5; margin-bottom: 8px; }
-  .empty-state p { font-size: 14px; color: rgba(255,255,255,0.25); line-height: 1.6; }
-  .empty-state .btn {
-    display: inline-block; margin-top: 20px;
-    padding: 9px 22px; border-radius: 18px;
-    background: rgba(255,255,255,0.06); border: none;
-    color: rgba(255,255,255,0.4); font-size: 13px; cursor: pointer;
-    font-family: inherit; text-decoration: none;
-    transition: background 0.2s, color 0.2s;
+  .carousel .track {
+    display: flex; transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
   }
-  .empty-state .btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .carousel .track .slide {
+    flex: 0 0 100%; cursor: pointer;
+  }
+  .carousel .track .slide img {
+    width: 100%; display: block;
+  }
+
+  .carousel .arr {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0,0,0,0.4); border: none;
+    color: rgba(255,255,255,0.6); font-size: 14px;
+    cursor: pointer; display: none; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .carousel:hover .arr { display: flex; }
+  .carousel .arr:hover { background: rgba(0,0,0,0.6); color: #fff; }
+  .carousel .arr.prev { left: 8px; }
+  .carousel .arr.next { right: 8px; }
+
+  .carousel .dots {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px;
+  }
+  .carousel .dots .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .carousel .dots .dot.active { background: rgba(255,255,255,0.7); border-radius: 3px; transform: scaleX(2.8); transform-origin: center; }
+
+  .carousel .counter {
+    position: absolute; top: 10px; right: 10px;
+    padding: 3px 10px; border-radius: 10px;
+    background: rgba(0,0,0,0.45);
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    font-feature-settings: "tnum";
+  }
+
+  /* ===== Body — 文字 + 来源固定底部 ===== */
+  .card .body {
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column;
+  }
+  .card .body .text-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .card .body .text-wrap.collapsed {
+    max-height: 5.1em; /* ~3 行 */
+  }
+  .card .body .text {
+    font-size: 14px; color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+  .card .body .expand-btn {
+    background: none; border: none;
+    font-size: 13px; color: rgba(255,255,255,0.2); cursor: pointer;
+    padding: 6px 0 0; font-family: inherit;
+    align-self: flex-start; transition: color 0.2s;
+  }
+  .card .body .expand-btn:hover { color: rgba(255,255,255,0.45); }
+
+  .card .body .source {
+    font-size: 12px; color: rgba(255,255,255,0.15);
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    flex-shrink: 0;
+  }
+  .card .body .source strong {
+    color: rgba(255,255,255,0.3); font-weight: 500;
+  }
 
   /* ========== Lightbox ========== */
   .lightbox {
@@ -128,77 +138,197 @@
     border: none; color: rgba(255,255,255,0.5);
     font-size: 24px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
   }
   .lightbox .lb-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
-  .lightbox .lb-author {
-    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-    font-size: 13px; color: rgba(255,255,255,0.35);
-    background: rgba(0,0,0,0.6); padding: 6px 18px; border-radius: 16px;
+  .lightbox .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 22px;
+    background: rgba(255,255,255,0.06); border: none;
+    color: rgba(255,255,255,0.5); font-size: 20px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
   }
+  .lightbox .lb-nav:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .lightbox .lb-prev { left: 16px; }
+  .lightbox .lb-next { right: 16px; }
 
-  /* ========== Responsive ========== */
-  @media (max-width: 640px) {
-    .header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .header .left h1 { font-size: 22px; }
-    .grid { grid-template-columns: 1fr; }
+  @media (max-width: 480px) {
+    body { padding: 32px 12px 32px; }
+    .card .body { padding: 14px 14px 16px; }
+    .card .body .text { font-size: 13px; }
+    .card .body .text-wrap.collapsed { max-height: 4.25em; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="left">
-    <div class="kicker">Dorm Layouts</div>
-    <h1>宿舍布置参考</h1>
-    <p>看看学长学姐们是怎么布置自己的空间的</p>
-  </div>
-  <a class="back" href="../index.html">← 返回首页</a>
+  <a class="back" href="../index.html">←</a>
+  <h1>宿舍布置参考</h1>
 </div>
 
-<div class="grid" id="grid"></div>
+<div id="feed"></div>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
   <img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
-  <div class="lb-author" id="lbAuthor"></div>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
 </div>
 
 <script>
-// ========== 数据 ==========
-// 格式：{ img: '图片URL', author: '提供者昵称', desc: '简短描述' }
-// 图片上传到 COS 后把 URL 填到这里即可
 const LAYOUTS = [
-  // 示例数据（等你收集后再替换）
-  // { img: 'https://.../cos/img/layouts/example1.jpg', author: '匿名学长', desc: '书桌区域的收纳布置' },
+  {
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_02.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_03.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_04.jpg"
+    ],
+    "author": "Yo濛·25级·电子信息工程",
+    "text": "1.显示器为27寸，桌子背部有空间和架子可以装机械臂以节省空间。机械臂需要以零部件的形式在后面组装，否则底部部分会卡住无法塞进去。\n2.洞洞板为40*34。想覆盖整个平面可以定制58*56，但商家一般会做大一点所以一定要小1～2cm，上面的部分可以再加装一块40*34的板子（如图，效果不是很好所以还是推荐用小板子，省心且有容错，或者换成白色或许会更好看些）其次，固定部件一定要用无痕贴而不是无痕钉。\n3.鼠标垫为70*40，大多数周边鼠标垫也是这个尺寸，可以刚好塞进书桌（注意如果旁边有洞洞板且鼠标垫有充电接口，空间会不够），只是刚好能塞，实际使用并不推荐这款。"
+  },
+  {
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_02.jpg"
+    ],
+    "author": "未知饿物·25级·材料物理",
+    "text": "床帘是恬梦莱的比较遮光，建议在桌子内侧上方装个灯很实用，最上面我放的书所以加了一层纱布隔开"
+  },
+  {
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_02.jpg"
+    ],
+    "author": "funk·25级·智能制造工程",
+    "text": "桌面布置遵循简约，go学长严选"
+  },
+  {
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/zm_01.jpg"
+    ],
+    "author": "志铭·25级·计算机科学与技术",
+    "text": "暂无"
+  }
 ];
 
-// ========== 渲染 ==========
-const grid = document.getElementById('grid');
+const feed = document.getElementById('feed');
+var lbImages = [];
+var lbIndex = 0;
 
-if (LAYOUTS.length === 0) {
-  grid.innerHTML = '<div class="empty-state"><div class="icon">🛋️</div><h2>正在收集中</h2><p>欢迎学长学姐投稿你们的宿舍布置照片<br>我们会标注提供者，给学弟学妹们做参考</p><a class="btn" href="../index.html">← 返回首页</a></div>';
-} else {
-  LAYOUTS.forEach(function(item, i) {
-    var card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = '<div class="img-wrap"><img src="' + item.img + '" loading="lazy" alt=""></div><div class="info"><div class="author">来自 <strong>' + esc(item.author) + '</strong></div><div class="desc">' + esc(item.desc) + '</div></div>';
-    card.addEventListener('click', function() {
-      document.getElementById('lbImg').src = item.img;
-      document.getElementById('lbAuthor').textContent = '来自 ' + item.author;
-      document.getElementById('lightbox').classList.add('show');
-    });
-    grid.appendChild(card);
+LAYOUTS.forEach(function(item, cardIdx) {
+  var card = document.createElement('div');
+  card.className = 'card';
+
+  var imgs = item.images || [];
+  var carHtml = '';
+  if (imgs.length > 0) {
+    var slides = imgs.map(function(src, i) {
+      return '<div class="slide" data-card="' + cardIdx + '" data-idx="' + i + '"><img src="' + src + '" loading="lazy"></div>';
+    }).join('');
+    var dots = imgs.map(function(_, i) {
+      return '<span class="dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></span>';
+    }).join('');
+    var counter = imgs.length > 1 ? '<span class="counter">1/' + imgs.length + '</span>' : '';
+    carHtml = '<div class="carousel" data-card="' + cardIdx + '">' +
+      '<div class="track">' + slides + '</div>' +
+      (imgs.length > 1 ? '<button class="arr prev">‹</button><button class="arr next">›</button><div class="dots">' + dots + '</div>' : '') +
+      counter + '</div>';
+  }
+
+  // 正文 + 来源
+  var textId = 'txt_' + cardIdx;
+  var textHtml = '<div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text" id="' + textId + '">' + esc(item.text) + '</div></div>';
+  textHtml += '<button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button>';
+  textHtml += '<div class="source">来源：<strong>' + esc(item.author) + '</strong></div>';
+
+  card.innerHTML = carHtml + '<div class="body">' + textHtml + '</div>';
+  feed.appendChild(card);
+
+  // 检查是否需要展开按钮
+  (function(idx) {
+    setTimeout(function() {
+      var tw = document.getElementById('tw_' + idx);
+      var eb = document.getElementById('eb_' + idx);
+      if (tw && eb) {
+        var h = tw.scrollHeight;
+        var maxH = parseFloat(getComputedStyle(tw).maxHeight);
+        if (h <= maxH + 2) eb.style.display = 'none';
+      }
+    }, 100);
+  })(cardIdx);
+});
+
+function toggleText(idx) {
+  var tw = document.getElementById('tw_' + idx);
+  var eb = document.getElementById('eb_' + idx);
+  var isCollapsed = tw.classList.toggle('collapsed');
+  eb.textContent = isCollapsed ? '展开全文' : '收起';
+}
+
+// Carousel
+function setupCarousel(car) {
+  var track = car.querySelector('.track');
+  var slides = track.querySelectorAll('.slide');
+  var dots = car.querySelectorAll('.dot');
+  var counter = car.querySelector('.counter');
+  var total = slides.length;
+  if (total <= 1) return;
+  var idx = 0;
+  function go(i) {
+    if (i < 0) i = total - 1;
+    if (i >= total) i = 0;
+    idx = i;
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    dots.forEach(function(d, j) { d.classList.toggle('active', j === idx); });
+    if (counter) counter.textContent = (idx + 1) + '/' + total;
+  }
+  car.querySelector('.arr.prev').addEventListener('click', function(e) { e.stopPropagation(); go(idx - 1); });
+  car.querySelector('.arr.next').addEventListener('click', function(e) { e.stopPropagation(); go(idx + 1); });
+  dots.forEach(function(d) {
+    d.addEventListener('click', function(e) { e.stopPropagation(); go(parseInt(this.dataset.idx)); });
+  });
+  var sx = 0;
+  car.addEventListener('touchstart', function(e) { sx = e.changedTouches[0].screenX; });
+  car.addEventListener('touchend', function(e) {
+    var dx = sx - e.changedTouches[0].screenX;
+    if (Math.abs(dx) > 50) go(idx + (dx > 0 ? 1 : -1));
   });
 }
 
-function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+document.querySelectorAll('.carousel').forEach(setupCarousel);
 
-// 灯箱
-document.getElementById('lbClose').onclick = function() { document.getElementById('lightbox').classList.remove('show'); };
-document.getElementById('lightbox').onclick = function(e) { if (e.target === this) this.classList.remove('show'); };
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show'); });
+// Lightbox
+var lb = document.getElementById('lightbox');
+var lbImg = document.getElementById('lbImg');
+document.getElementById('feed').addEventListener('click', function(e) {
+  var slide = e.target.closest('.slide');
+  if (!slide) return;
+  var cardIdx = parseInt(slide.dataset.card);
+  var imgIdx = parseInt(slide.dataset.idx);
+  var item = LAYOUTS[cardIdx];
+  if (!item || !item.images) return;
+  lbImages = item.images.slice();
+  lbIndex = imgIdx;
+  lbImg.src = lbImages[lbIndex];
+  lb.classList.add('show');
+});
+function lbNav(dir) {
+  if (lbImages.length < 2) return;
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  lbImg.src = lbImages[lbIndex];
+}
+document.getElementById('lbClose').onclick = function() { lb.classList.remove('show'); };
+document.getElementById('lbPrev').onclick = function(e) { e.stopPropagation(); lbNav(-1); };
+document.getElementById('lbNext').onclick = function(e) { e.stopPropagation(); lbNav(1); };
+lb.onclick = function(e) { if (e.target === this) this.classList.remove('show'); };
+document.addEventListener('keydown', function(e) {
+  if (!lb.classList.contains('show')) return;
+  if (e.key === 'Escape') lb.classList.remove('show');
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 </script>
 </body>
 </html>
