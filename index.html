@@ -187,6 +187,16 @@
   .image-wrapper.zooming img { transition: opacity 0.25s ease; }
 
   /* ========== Hotspot ========== */
+  .hotspot-layer {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .hotspot-layer .hotspot-dot {
+    pointer-events: auto;
+  }
+
   .hotspot-dot {
     position: absolute; z-index: 10;
     width: 32px; height: 32px; margin: -16px 0 0 -16px;
@@ -283,7 +293,10 @@
   @media (max-width: 640px) {
     .welcome-card { padding: 40px 28px; }
     .welcome-card h1 { font-size: 28px; }
-    .nav-btn { width: 38px; height: 38px; font-size: 16px; margin: 0 4px; }
+    .nav-btn { width: 34px; height: 34px; font-size: 14px; margin: 0 2px; background: rgba(255,255,255,0.04); }
+    .hotspot-bubble { width: calc(100vw - 32px); max-width: calc(100vw - 32px); padding: 14px 16px; font-size: 12px; }
+    .hotspot-bubble .bubble-title { font-size: 13px; }
+    .hotspot-bubble .bubble-close { width: 32px; height: 32px; }
     .bottom-bar { padding: 12px 14px; flex-wrap: wrap; }
     .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
     .top-bar { padding: 12px 14px; }
@@ -327,6 +340,7 @@
   <div class="image-wrapper" id="imageWrapper">
 
     <img id="mainImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="宿舍尺寸示意图">
+    <div id="hotspotLayer" class="hotspot-layer"></div>
   </div>
 </div>
 
@@ -406,55 +420,111 @@ function fileFor(id) { return id + '.jpg'; }
 // ============================================================
 //  Render hotspots
 // ============================================================
+function calcImageContentRect() {
+  const imgRect = elImg.getBoundingClientRect();
+  const nw = elImg.naturalWidth, nh = elImg.naturalHeight;
+  if (!nw || !nh) { return { width: 0, height: 0, offsetLeft: 0, offsetTop: 0 }; }
+  // 去掉 CSS padding，得到 content box 尺寸
+  const cs = window.getComputedStyle(elImg);
+  const padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
+  const padT = parseFloat(cs.paddingTop) || 0, padB = parseFloat(cs.paddingBottom) || 0;
+  const contentW = imgRect.width - padL - padR;
+  const contentH = imgRect.height - padT - padB;
+  if (contentW <= 0 || contentH <= 0) { return { width: 0, height: 0, offsetLeft: 0, offsetTop: 0 }; }
+  const imgAspect = nw / nh;
+  const boxAspect = contentW / contentH;
+  let renderW, renderH, imgOffsetX, imgOffsetY;
+  if (imgAspect > boxAspect) {
+    renderW = contentW; renderH = contentW / imgAspect;
+    imgOffsetX = 0; imgOffsetY = (contentH - renderH) / 2;
+  } else {
+    renderH = contentH; renderW = contentH * imgAspect;
+    imgOffsetX = (contentW - renderW) / 2; imgOffsetY = 0;
+  }
+  return {
+    width: renderW, height: renderH,
+    offsetLeft: padL + imgOffsetX,
+    offsetTop: padT + imgOffsetY
+  };
+}
+
+function updateHotspotLayer() {
+  const cr = calcImageContentRect();
+  if (cr.width <= 0 || cr.height <= 0) return;
+  const wrapRect = elWrapper.getBoundingClientRect();
+  const imgRect = elImg.getBoundingClientRect();
+  const layer = document.getElementById('hotspotLayer');
+  layer.style.left = (imgRect.left - wrapRect.left + cr.offsetLeft) + 'px';
+  layer.style.top = (imgRect.top - wrapRect.top + cr.offsetTop) + 'px';
+  layer.style.width = cr.width + 'px';
+  layer.style.height = cr.height + 'px';
+}
+
+function getSafeArea() {
+  const topBar = document.querySelector('.top-bar');
+  const bottomBar = document.querySelector('.bottom-bar');
+  return {
+    top: (topBar ? topBar.offsetHeight : 0) + 8,
+    bottom: (bottomBar ? bottomBar.offsetHeight : 0) + 12
+  };
+}
+
 function renderHotspots(imgId) {
-  elWrapper.querySelectorAll('.hotspot-dot,.hotspot-bubble').forEach(el => el.remove());
+  const layer = document.getElementById('hotspotLayer');
+  layer.querySelectorAll('.hotspot-dot,.hotspot-bubble').forEach(el => el.remove());
   if (!showHotspots || zoomEnabled) return;
   const spots = HOTSPOTS[imgId];
   if (!spots || spots.length === 0) return;
+  updateHotspotLayer();
   spots.forEach((spot, i) => {
     const dot = document.createElement('div');
     dot.className = 'hotspot-dot';
     dot.style.left = spot.x + '%';
     dot.style.top  = spot.y + '%';
     dot.addEventListener('click', (e) => { e.stopPropagation(); toggleBubble(dot, spot); });
-    elWrapper.appendChild(dot);
+    layer.appendChild(dot);
   });
 }
 
-	function toggleBubble(dot, spot) {
-		const existing = elWrapper.querySelector('.hotspot-bubble');
-		if (existing) { existing.remove(); return; }
-		const rect = elWrapper.getBoundingClientRect();
-		const px = rect.width * spot.x / 100;
-		const py = rect.height * spot.y / 100;
-		const vw = window.innerWidth, vh = window.innerHeight;
-		const goLeft = px > vw * 0.55;
-		const goUp   = py > vh * 0.5;
-		const ox = goLeft ? -276 : 16;
-		const oy = goUp   ? -26 : 10;
-		const bubble = document.createElement('div');
-		bubble.className = 'hotspot-bubble';
-		bubble.style.visibility = 'hidden';
-		bubble.innerHTML = '<span class="bubble-close">&times;</span><div class="bubble-title">' + spot.title + '</div><div class="bubble-text">' + spot.text + '</div>';
-		bubble.querySelector('.bubble-close').addEventListener('click', (e) => { e.stopPropagation(); bubble.remove(); });
-		elWrapper.appendChild(bubble);
-		const maxH = vh * 0.7;
-		let left = px + ox, top = py + oy;
-		if (left < 10) left = 10;
-		if (top < 10) top = 10;
-		if (top + maxH > vh - 10) top = vh - maxH - 10;
-		bubble.style.left = left + 'px';
-		bubble.style.top  = top + 'px';
-		bubble.style.setProperty('--bubble-x', goLeft ? '276px' : '-16px');
-		bubble.style.setProperty('--bubble-y', goUp   ? (maxH+15)+'px' : '-10px');
-		bubble.style.visibility = 'visible';
-		bubble.style.maxHeight = maxH + 'px';
-		requestAnimationFrame(() => bubble.classList.add('show'));
-		setTimeout(() => {
-			const close = (e) => { if (!bubble.contains(e.target) && e.target !== dot) { bubble.remove(); document.removeEventListener('click', close); } };
-			document.addEventListener('click', close);
-		}, 0);
-	}
+function toggleBubble(dot, spot) {
+  const existing = elWrapper.querySelector('.hotspot-bubble');
+  if (existing) { existing.remove(); return; }
+  const layer = document.getElementById('hotspotLayer');
+  const wr = elWrapper.getBoundingClientRect();
+  const lr = layer.getBoundingClientRect();
+  const px = (lr.left - wr.left) + lr.width * spot.x / 100;
+  const py = (lr.top - wr.top) + lr.height * spot.y / 100;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const safe = getSafeArea();
+  const maxW = Math.min(260, vw - 28);
+  const maxH = Math.min(vh * 0.7, vh - safe.top - safe.bottom - 16);
+  const goLeft = px > vw * 0.55;
+  const goUp   = py > vh * 0.5;
+  const ox = goLeft ? -(maxW + 14) : 16;
+  const oy = goUp   ? -(maxH + 6) : 10;
+  const bubble = document.createElement('div');
+  bubble.className = 'hotspot-bubble';
+  bubble.style.visibility = 'hidden';
+  bubble.innerHTML = '<span class="bubble-close">&times;</span><div class="bubble-title">' + spot.title + '</div><div class="bubble-text">' + spot.text + '</div>';
+  bubble.querySelector('.bubble-close').addEventListener('click', (e) => { e.stopPropagation(); bubble.remove(); });
+  elWrapper.appendChild(bubble);
+  const leftMin = 12, leftMax = vw - maxW - 12;
+  const topMin = safe.top + 4, topMax = vh - safe.bottom - maxH - 4;
+  let left = Math.max(leftMin, Math.min(px + ox, leftMax));
+  let top = Math.max(topMin, Math.min(py + oy, topMax));
+  bubble.style.left = left + 'px';
+  bubble.style.top  = top + 'px';
+  bubble.style.setProperty('--bubble-x', goLeft ? maxW + 'px' : '-16px');
+  bubble.style.setProperty('--bubble-y', goUp ? (maxH + 10) + 'px' : '-10px');
+  bubble.style.visibility = 'visible';
+  bubble.style.maxWidth = maxW + 'px';
+  bubble.style.maxHeight = maxH + 'px';
+  requestAnimationFrame(() => bubble.classList.add('show'));
+  setTimeout(() => {
+    const close = (e) => { if (!bubble.contains(e.target) && e.target !== dot) { bubble.remove(); document.removeEventListener('click', close); } };
+    document.addEventListener('click', close);
+  }, 0);
+}
 
 
 // ============================================================
@@ -673,8 +743,15 @@ document.addEventListener('keydown', (e) => {
 //  Touch swipe
 // ============================================================
 let touchStartX = 0;
-document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+let touchOnHotspot = false;
+document.addEventListener('touchstart', (e) => {
+  touchOnHotspot = !!e.target.closest('.hotspot-dot, .hotspot-bubble');
+  if (touchOnHotspot) { touchStartX = 0; return; }
+  touchStartX = e.changedTouches[0].screenX;
+});
 document.addEventListener('touchend', (e) => {
+  if (touchOnHotspot) { touchOnHotspot = false; return; }
+  if (touchStartX === 0) return;
   const diff = touchStartX - e.changedTouches[0].screenX;
   if (Math.abs(diff) > 60) {
     diff > 0 ? nextImage() : prevImage();
@@ -682,8 +759,18 @@ document.addEventListener('touchend', (e) => {
 });
 
 // ============================================================
-//  Init — preload onto welcome screen background
+//  Resize handler — reposition hotspot layer
 // ============================================================
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (!document.getElementById('welcome').classList.contains('hidden')) return;
+    const realIdx = filteredIndices[currentIndex];
+    if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
+  }, 150);
+});
+
 // ============================================================
 //  Event Listeners
 // ============================================================
@@ -694,6 +781,13 @@ document.getElementById('btnHome').addEventListener('click', goHome);
 document.getElementById('toggleBtn').addEventListener('click', toggleAnnotations);
 document.getElementById('hotspotBtn').addEventListener('click', toggleHotspots);
 document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
+
+// 图片加载完成后重新定位热点
+elImg.addEventListener('load', () => {
+  if (!document.getElementById('welcome').classList.contains('hidden')) return;
+  const realIdx = filteredIndices[currentIndex];
+  if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
+});
 
 console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
 document.getElementById('footerNote').textContent =
