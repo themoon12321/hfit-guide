@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · 留言管理</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f;
+    color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 24px;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh;
+  }
+
+  /* Login */
+  .login { margin-top: 120px; text-align: center; }
+  .login h1 { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #f0f0f5; }
+  .login input {
+    padding: 10px 16px; border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #eaeaef; font-size: 14px; font-family: inherit;
+    outline: none; width: 220px;
+  }
+  .login input:focus { border-color: rgba(255,255,255,0.2); }
+  .login button {
+    margin-top: 12px; padding: 9px 24px; border-radius: 10px;
+    background: rgba(255,255,255,0.08); border: none;
+    color: rgba(255,255,255,0.6); font-size: 13px; cursor: pointer;
+    font-family: inherit;
+  }
+  .login button:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .login .err { color: #ff6b6b; font-size: 13px; margin-top: 10px; }
+
+  /* Dashboard */
+  .dash { width: 100%; max-width: 700px; }
+  .dash h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .dash .sub { font-size: 12px; color: rgba(255,255,255,0.2); margin-bottom: 24px; }
+  .section { margin-bottom: 32px; }
+  .section h2 { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+  .item {
+    padding: 12px 16px; border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    margin-bottom: 8px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .item .body { flex: 1; }
+  .item .body .text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .item .body .meta { font-size: 11px; color: rgba(255,255,255,0.15); margin-top: 4px; }
+  .item .del {
+    flex-shrink: 0; padding: 4px 12px; border-radius: 8px;
+    background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.12);
+    color: rgba(255,80,80,0.4); font-size: 11px; cursor: pointer;
+    font-family: inherit; transition: background 0.2s;
+  }
+  .item .del:hover { background: rgba(255,80,80,0.15); color: #ff6b6b; }
+  .empty { font-size: 13px; color: rgba(255,255,255,0.1); text-align: center; padding: 24px 0; }
+
+  .back { display: inline-block; margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.15); text-decoration: none; }
+  .back:hover { color: rgba(255,255,255,0.35); }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login" class="login">
+  <h1>🔐 留言管理</h1>
+  <input type="password" id="pwdInput" placeholder="输入密码" onkeydown="if(event.key==='Enter')login()">
+  <br>
+  <button onclick="login()">进入</button>
+  <div id="loginErr" class="err"></div>
+</div>
+
+<!-- Dashboard -->
+<div id="dash" class="dash" style="display:none">
+  <h1>留言管理</h1>
+  <div class="sub">只有你能看到这个页面</div>
+  <div id="pagesContainer"></div>
+  <a class="back" href="index.html">← 返回首页</a>
+</div>
+
+<script>
+const PASSWORD = 'admin123'; // ← 改你的密码！
+const API = '';
+
+async function login() {
+  const val = document.getElementById('pwdInput').value;
+  if (val !== PASSWORD) {
+    document.getElementById('loginErr').textContent = '密码错误';
+    return;
+  }
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('dash').style.display = 'block';
+  await loadAll();
+}
+
+async function loadAll() {
+  const pages = ['portal', 'dorm'];
+  let html = '';
+  for (const page of pages) {
+    try {
+      const r = await fetch(`/api/comments?page=${page}`);
+      const list = await r.json();
+      const titles = { portal: '门户主页', dorm: '宿舍尺寸指南' };
+      html += `<div class="section"><h2>${titles[page] || page} · ${list.length} 条</h2>`;
+      if (!list || !list.length) {
+        html += '<div class="empty">暂无留言</div>';
+      } else {
+        list.forEach(c => {
+          html += `<div class="item">
+            <div class="body">
+              <div class="text">${esc(c.text)}</div>
+              <div class="meta">${esc(c.nickname)} · ${c.time ? new Date(c.time).toLocaleString('zh-CN') : ''}</div>
+            </div>
+            <button class="del" onclick="del('${page}','${c.id}')">删除</button>
+          </div>`;
+        });
+      }
+      html += '</div>';
+    } catch { html += `<div class="section"><h2>${page}</h2><div class="empty">加载失败</div></div>`; }
+  }
+  document.getElementById('pagesContainer').innerHTML = html;
+}
+
+async function del(page, id) {
+  if (!confirm('确定删除这条留言？')) return;
+  // 获取当前列表，删掉匹配id的，再写回去
+  const r = await fetch(`/api/comments?page=${page}`);
+  const list = await r.json();
+  const filtered = list.filter(c => c.id !== id);
+  await fetch('/api/comments', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({page, text: '---REPLACE---', _replace: filtered})
+  });
+  await loadAll();
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s || '匿名'; return d.innerHTML; }
+</script>
+</body>
+</html>

@@ -24,13 +24,20 @@ export async function onRequest(context) {
     }
 
     if (request.method === 'POST') {
-      const { page, nickname, text } = await request.json();
+      const { page, nickname, text, _replace } = await request.json();
+      const key = `comments:${page || 'default'}`;
+
+      // _replace 用于后台删除/覆盖
+      if (_replace) {
+        await env.KV.put(key, JSON.stringify(_replace));
+        return new Response(JSON.stringify(_replace), { headers });
+      }
+
       if (!text || text.trim().length === 0) {
         return new Response(JSON.stringify({ error: '内容不能为空' }), {
           status: 400, headers,
         });
       }
-      const key = `comments:${page || 'default'}`;
       const list = await env.KV.get(key, 'json') || [];
       list.unshift({
         id: Date.now().toString(36),
