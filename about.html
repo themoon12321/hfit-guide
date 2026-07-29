@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>关于我 — @月亮早睡困不醒</title>
+<title>关于我 — 月亮早睡困不醒</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 100%; min-height: 100%; }
@@ -16,12 +16,9 @@
     padding: 40px 20px 60px;
   }
 
-  .container {
-    max-width: 600px;
-    width: 100%;
-  }
+  .container { max-width: 600px; width: 100%; }
 
-  /* ========== Back button ========== */
+  /* ========== Back ========== */
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
     color: rgba(255,255,255,0.35);
@@ -31,14 +28,14 @@
   }
   .back-link:hover { color: rgba(255,255,255,0.7); }
 
-  /* ========== Hero card ========== */
+  /* ========== Hero ========== */
   .hero {
     position: relative;
     background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 24px;
     padding: 48px 40px 40px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     overflow: hidden;
   }
   .hero::before {
@@ -50,30 +47,31 @@
     pointer-events: none;
   }
 
-  .avatar {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: linear-gradient(135deg, rgba(100,180,255,0.2), rgba(200,150,255,0.15));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; margin-bottom: 20px;
-    border: 1.5px solid rgba(255,255,255,0.08);
+  .avatar-wrap {
+    width: 80px; height: 80px; border-radius: 50%;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.1);
+    background: linear-gradient(135deg, rgba(100,180,255,0.15), rgba(200,150,255,0.1));
+  }
+  .avatar-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
   }
 
   .hero h1 {
     font-size: 28px; font-weight: 650;
-    color: #f0f0f5;
-    letter-spacing: -0.2px;
-    margin-bottom: 4px;
+    color: #f0f0f5; letter-spacing: -0.2px;
+    margin-bottom: 2px;
   }
   .hero .username {
-    font-size: 15px;
-    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
     font-weight: 400;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
-
   .hero .tagline {
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 15px; line-height: 1.7;
     color: rgba(255,255,255,0.6);
   }
   .hero .tagline strong {
@@ -86,16 +84,14 @@
     margin-top: 20px;
   }
   .tag {
-    padding: 4px 14px;
-    border-radius: 14px;
+    padding: 4px 14px; border-radius: 14px;
     font-size: 12px;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.05);
     color: rgba(255,255,255,0.55);
-    letter-spacing: 0.2px;
   }
 
-  /* ========== Section cards ========== */
+  /* ========== Sections ========== */
   .section {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.05);
@@ -104,44 +100,30 @@
     margin-bottom: 14px;
   }
   .section-title {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 13px; font-weight: 600;
     color: rgba(255,255,255,0.3);
     letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .section p {
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 14px; line-height: 1.9;
     color: rgba(255,255,255,0.65);
   }
 
+  /* ========== Hobby grid ========== */
   .hobby-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 4px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
   }
   .hobby-item {
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: rgba(255,255,255,0.03);
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
+    font-size: 13px; color: rgba(255,255,255,0.6);
     line-height: 1.5;
   }
-  .hobby-item .emoji {
-    font-size: 18px;
-    display: block;
-    margin-bottom: 6px;
-  }
-  .hobby-item .label {
-    color: rgba(255,255,255,0.35);
-    font-size: 11px;
-    margin-top: 2px;
-  }
+  .hobby-item .emoji { font-size: 18px; display: block; margin-bottom: 6px; }
+  .hobby-item .label { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 2px; }
 
   @media (max-width: 500px) {
     body { padding: 24px 16px 40px; }
@@ -151,11 +133,9 @@
     .hobby-grid { grid-template-columns: 1fr; }
   }
 
-  /* ========== Footer ========== */
   .footer-note {
     text-align: center;
-    font-size: 13px;
-    color: rgba(255,255,255,0.2);
+    font-size: 13px; color: rgba(255,255,255,0.2);
     margin-top: 32px;
     letter-spacing: 0.3px;
   }
@@ -169,32 +149,44 @@
     返回
   </a>
 
+  <!-- ========== Hero ========== -->
   <div class="hero">
-    <div class="avatar">🌙</div>
+    <div class="avatar-wrap">
+      <img src="img/avatar.jpg" alt="avatar">
+    </div>
     <h1>月亮早睡困不醒</h1>
-    <div class="username">@the_moon_sleeps_early</div>
+    <div class="username">25 届智能制造工程 · 合肥理工学院天文协会会长</div>
     <div class="tagline">
-      25 届<strong>智能制造工程</strong>专业学长 ·
-      <strong>合肥理工学院天文协会</strong>会长 ·
-      一个典型的 <strong>ENFP</strong>
+      一个兴趣驱动型选手，正在努力脱离低阶向中阶进发的 <strong>ENFP</strong>
     </div>
     <div class="tags">
       <span class="tag">🔭 热爱天文</span>
       <span class="tag">🌌 星空摄影</span>
-      <span class="tag">💡 数码折腾</span>
-      <span class="tag">📸 记录生活</span>
+      <span class="tag">💡 数码探索</span>
+      <span class="tag">🤝 很好相处</span>
     </div>
   </div>
 
+  <!-- ========== 关于我 ========== -->
   <div class="section">
     <div class="section-title">关于我</div>
     <p>
-      兴趣驱动型选手，什么都想试试，什么都想玩明白。
-      做这个宿舍尺寸指南的初衷也很简单：如果能用自己的经验帮新生少走点弯路，
-      那这件事就值得做好。
+      个人兴趣非常广泛，喜欢跟着兴趣探索各种东西，很愿意接受新鲜事物，
+      性格也挺不错喔，非常好跟别人相处（感觉有点自夸😗，不过身边朋友都这么说🥰）。
+      是一只正在努力脱离低阶向中阶进发的 enfp，欢迎来找我玩呀，虽然可能平时有点忙（）
+    </p>
+    <p style="margin-top:14px;">
+      本人也在参与大创项目，参加过一些些比赛（不过是个小菜鸡🥺），
+      也喜欢做很多自己想做的小东西，比如这个网站就是；
+      如果想找人组队比赛的话，希望能想到我撒，我会努力的！
+    </p>
+    <p style="margin-top:14px;">
+      对了，对了，欢迎加入天文社呀，虽然各个方面有很多不完善，
+      但是也正在努力发展(•́⌄•́๑)૭✧，星空真的很好看！！
     </p>
   </div>
 
+  <!-- ========== 爱好 ========== -->
   <div class="section">
     <div class="section-title">爱好 · 日常</div>
     <div class="hobby-grid">
@@ -210,15 +202,29 @@
       </div>
       <div class="hobby-item">
         <span class="emoji">💻</span>
-        搞机 · 数码
-        <div class="label">显示器支架怎么装、宿舍网络怎么布——我都折腾过</div>
+        做自己感兴趣的东西
+        <div class="label">比如这个网站，想做就去做了</div>
+      </div>
+      <div class="hobby-item">
+        <span class="emoji">🚗</span>
+        喜欢车
+        <div class="label">虽然家里没车，但真的很喜欢开车的感觉</div>
       </div>
       <div class="hobby-item">
         <span class="emoji">🎯</span>
         兴趣广泛
-        <div class="label">什么都想试试，什么都想玩明白</div>
+        <div class="label">跟着兴趣走，探索就完事了</div>
       </div>
     </div>
+  </div>
+
+  <!-- ========== 找到我 ========== -->
+  <div class="section">
+    <div class="section-title">📎 找到我</div>
+    <p>
+      全网搜索 <span style="color:rgba(255,255,255,0.75);font-weight:500;">月亮早睡困不醒</span>，
+      应该找不到第二个。
+    </p>
   </div>
 
   <div class="footer-note">Made with 🌙 · 2025</div>
