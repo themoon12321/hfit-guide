@@ -295,13 +295,13 @@ showMyComments();
 
 loadLikes();
 
-// 连点 5 下作者名进入管理后台
+// 连点 3 下作者名进入管理后台
 let _cc = 0, _ct;
 function creditClick() {
   _cc++;
   clearTimeout(_ct);
-  _ct = setTimeout(() => { _cc = 0; }, 800);
-  if (_cc >= 5) { _cc = 0; window.location.href = '/admin.html'; }
+  _ct = setTimeout(() => { _cc = 0; }, 600);
+  if (_cc >= 3) { _cc = 0; window.location.href = '/admin.html'; }
 }
 </script>
 
