@@ -295,14 +295,6 @@ showMyComments();
 
 loadLikes();
 
-// 连续点击 5 下作者名进入管理后台
-(function() {
-  var c=0,t;
-  document.getElementById('credit').addEventListener('click',function(){
-    c++;clearTimeout(t);t=setTimeout(function(){c=0;},1000);
-    if(c>=5){c=0;window.location.href='/admin.html';}
-  });
-})();
 </script>
 
 <script>

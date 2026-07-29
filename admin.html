@@ -85,12 +85,13 @@
 </div>
 
 <script>
-const PASSWORD = 'kww'; // ← 改你的密码！
+const PASSWORD_HASH = 'c1df3c16337b93047c20ae9b3ea6180c0796247a1f9b13ac8f763f42da230a2e'; // SHA-256 of kww
 const API = '';
 
 async function login() {
   const val = document.getElementById('pwdInput').value;
-  if (val !== PASSWORD) {
+  const hash = await sha256(val);
+  if (hash !== PASSWORD_HASH) {
     document.getElementById('loginErr').textContent = '密码错误';
     return;
   }
@@ -141,6 +142,7 @@ async function del(page, id) {
   await loadAll();
 }
 
+async function sha256(s) { const b = new TextEncoder().encode(s); const h = await crypto.subtle.digest('SHA-256', b); return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join(''); }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || '匿名'; return d.innerHTML; }
 </script>
 </body>

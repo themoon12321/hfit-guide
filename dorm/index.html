@@ -921,11 +921,6 @@ console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图
 document.getElementById('footerNote').textContent =
   '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 
-// 连续点击 5 下作者名进入后台
-(function(){
-  var el=document.getElementById('creditDorm'),c=0,t;if(!el)return;
-  el.addEventListener('click',function(){c++;clearTimeout(t);t=setTimeout(function(){c=0;},1000);if(c>=5){c=0;window.location.href='../admin.html';}});
-})();
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lb-close" onclick="closeLightbox(event)">&times;</span>
