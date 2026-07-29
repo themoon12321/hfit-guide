@@ -15,3 +15,5 @@ package-lock.json
 editor.html
 # 文档
 skills-*.md
+# 碎碎念图片（已上传 COS）
+img/tips/
