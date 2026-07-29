@@ -159,7 +159,7 @@
 
   <!-- 留言 -->
   <div class="fb-comments">
-    <div class="fb-c-title">有什么想说的？</div>
+    <div class="fb-c-title" id="fbTitle">有什么想说的？</div>
     <div class="fb-form">
       <textarea id="fbText" placeholder="反馈、建议、或者单纯打个招呼…"></textarea>
       <button class="fb-submit" id="fbSubmit">发送</button>
@@ -288,10 +288,21 @@ document.getElementById('fbSubmit').addEventListener('click', async function() {
 });
 
 showMyComments();
-    el.innerHTML = list.map(c => '<div class="fb-item"><div class="fb-meta"><span class="name">' + esc(c.nickname) + '</span><span class="time">' + fmt(c.time) + '</span></div><div class="fb-text">' + esc(c.text) + '</div></div>').join('');
-  } catch(e) { alert('发送失败'); }
-  finally { this.disabled = false; this.textContent = '发送'; }
-});
+
+// 轮换标题和占位符
+var phrases = [
+  { t: '有什么想说的？', p: '反馈、建议、或者单纯打个招呼…' },
+  { t: '唠唠嗑～', p: '随便说点啥，我在听' },
+  { t: '欢迎留言 ✌️', p: '说说你的想法' },
+  { t: '如果能帮到你，点个赞再走 👍', p: '或者留句话也行' },
+];
+var pi = 0;
+setInterval(function() {
+  pi = (pi + 1) % phrases.length;
+  var ph = phrases[pi];
+  document.getElementById('fbTitle').textContent = ph.t;
+  document.getElementById('fbText').placeholder = ph.p;
+}, 5000);
 
 loadLikes();
 
