@@ -164,6 +164,7 @@
       <textarea id="fbText" placeholder="反馈、建议、或者单纯打个招呼…"></textarea>
       <button class="fb-submit" id="fbSubmit">发送</button>
     </div>
+    <div id="fbMyComments"></div>
   </div>
 </div>
 
@@ -198,6 +199,17 @@
 .fb-like-btn.liked:hover { background: rgba(80,200,120,0.18); border-color: rgba(80,200,120,0.35); }
 
 .fb-c-title { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 12px; margin-top: 8px; }
+.fb-my-item {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55;
+  margin-top: 10px;
+}
+.fb-my-item .fb-my-time {
+  font-size: 11px; color: rgba(255,255,255,0.12);
+  margin-top: 4px;
+}
 .fb-form { display: flex; flex-direction: column; gap: 10px; }
 .fb-form textarea {
   padding: 10px 14px; border-radius: 10px;
@@ -246,6 +258,17 @@ if (localStorage.getItem('liked_portal') === '1') {
   document.getElementById('fbLikeBtn').classList.add('liked');
 }
 
+// 显示自己发过的留言
+function showMyComments() {
+  const el = document.getElementById('fbMyComments');
+  const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
+  if (!saved.length) { el.innerHTML = ''; return; }
+  el.innerHTML = saved.reverse().map(c =>
+    '<div class="fb-my-item">' + esc(c.text) + '<div class="fb-my-time">' + c.time + '</div></div>'
+  ).join('');
+}
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
 document.getElementById('fbSubmit').addEventListener('click', async function() {
   const text = document.getElementById('fbText').value.trim();
   if (!text) return;
@@ -254,9 +277,17 @@ document.getElementById('fbSubmit').addEventListener('click', async function() {
     await fetch('/api/comments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:PAGE_ID, text}) });
     document.getElementById('fbText').value = '';
     this.textContent = '已收到 🎉';
+    // 存本地
+    const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
+    saved.push({ text, time: new Date().toLocaleString('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) });
+    if (saved.length > 10) saved.splice(0, saved.length - 10);
+    localStorage.setItem('my_comments', JSON.stringify(saved));
+    showMyComments();
   } catch(e) { this.textContent = '发送失败'; }
   finally { setTimeout(() => { this.disabled = false; this.textContent = '发送'; }, 2000); }
 });
+
+showMyComments();
     el.innerHTML = list.map(c => '<div class="fb-item"><div class="fb-meta"><span class="name">' + esc(c.nickname) + '</span><span class="time">' + fmt(c.time) + '</span></div><div class="fb-text">' + esc(c.text) + '</div></div>').join('');
   } catch(e) { alert('发送失败'); }
   finally { this.disabled = false; this.textContent = '发送'; }
