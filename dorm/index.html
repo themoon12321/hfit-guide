@@ -1061,12 +1061,17 @@ document.getElementById('footerNote').textContent =
     if (e.clientY <= 0) showExitPopup();
   });
 
-  // 移动端：触摸离开页面
-  let touchEndY = 0;
-  document.addEventListener('touchstart', (e) => { touchEndY = e.changedTouches[0].screenY; });
+  // 移动端：从屏幕边缘左滑/右滑（返回/退出手势）
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  });
   document.addEventListener('touchend', (e) => {
-    const dy = touchEndY - e.changedTouches[0].screenY;
-    if (dy > 150) showExitPopup(); // 快速上滑
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = Math.abs(e.changedTouches[0].screenY - touchStartY);
+    const isEdge = touchStartX < 30 || touchStartX > window.screen.width - 30;
+    if (isEdge && Math.abs(dx) > 60 && dy < Math.abs(dx)) showExitPopup();
   });
 })();
 </script>
