@@ -84,16 +84,6 @@
     border-top: 1px solid rgba(255,255,255,0.04); flex-shrink: 0;
   }
   .card .body .source strong { color: rgba(255,255,255,0.3); font-weight: 500; }
-  .card .body .like-area { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
-  .card .body .like-btn {
-    padding: 4px 12px; border-radius: 14px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.3); font-size: 12px; cursor: pointer;
-    font-family: inherit; transition: background 0.2s, border-color 0.2s, color 0.2s;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
-  .card .body .like-btn:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
-  .card .body .like-btn.liked { background: rgba(80,200,120,0.1); border-color: rgba(80,200,120,0.2); color: #4cd964; }
 
   /* ===== Lightbox ===== */
   .lightbox {
@@ -194,7 +184,7 @@ LAYOUTS.forEach(function(item, cardIdx) {
     card.innerHTML = '<div class="carousel" data-card="' + cardIdx + '"><div class="track">' + slides + '</div>' + arrows + counter + '</div>';
   }
 
-  card.innerHTML += '<div class="body"><div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text">' + esc(item.text) + '</div></div><button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button><div class="source">来源：<strong>' + esc(item.author) + '</strong></div><div class="like-area"><button class="like-btn" id="lb_' + cardIdx + '">👍 <span id="lc_' + cardIdx + '">-</span></button></div></div>';
+  card.innerHTML += '<div class="body"><div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text">' + esc(item.text) + '</div></div><button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button><div class="source">来源：<strong>' + esc(item.author) + '</strong></div></div>';
   feed.appendChild(card);
 
   setTimeout(function() {
@@ -281,27 +271,6 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowLeft') lbNav(-1);
   if (e.key === 'ArrowRight') lbNav(1);
 });
-// 点赞
-LAYOUTS.forEach(function(item, idx) {
-  (function(i) {
-    fetch('/api/likes?page=layout_' + i).then(function(r) { return r.json(); }).then(function(d) {
-      var el = document.getElementById('lc_' + i);
-      if (el) el.textContent = d.count;
-    }).catch(function() {});
-    var btn = document.getElementById('lb_' + i);
-    if (btn) {
-      btn.addEventListener('click', function() {
-        if (btn.classList.contains('liked')) return;
-        btn.classList.add('liked');
-        fetch('/api/likes', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:'layout_' + i}) })
-          .then(function(r) { return r.json(); })
-          .then(function(d) { var el = document.getElementById('lc_' + i); if (el) el.textContent = d.count; })
-          .catch(function() {});
-      });
-    }
-  })(idx);
-});
-
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 </script>
 </body>
