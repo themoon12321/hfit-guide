@@ -295,17 +295,13 @@ showMyComments();
 
 loadLikes();
 
-// 长按 1.5 秒作者名进入管理后台
+// 连续点击 5 下作者名进入管理后台
 (function() {
-  let timer = null;
-  const el = document.getElementById('credit');
-  if (!el) return;
-  el.addEventListener('mousedown', () => { timer = setTimeout(() => { window.location.href = '/admin.html'; }, 1500); });
-  el.addEventListener('mouseup', () => clearTimeout(timer));
-  el.addEventListener('mouseleave', () => clearTimeout(timer));
-  el.addEventListener('touchstart', () => { timer = setTimeout(() => { window.location.href = '/admin.html'; }, 1500); });
-  el.addEventListener('touchend', () => clearTimeout(timer));
-  el.addEventListener('touchmove', () => clearTimeout(timer));
+  var c=0,t;
+  document.getElementById('credit').addEventListener('click',function(){
+    c++;clearTimeout(t);t=setTimeout(function(){c=0;},1000);
+    if(c>=5){c=0;window.location.href='/admin.html';}
+  });
 })();
 </script>
 
