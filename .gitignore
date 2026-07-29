@@ -1,20 +1,24 @@
 node_modules/
-# 原始素材（本地源文件，不上传）
-图片素材-原始未标注/
-照片素材-已标注/
-# 构建产物缓存
 sharp_*/
-# Claude Code 配置
 .agents/
 .claude/
 .codex/
-# npm
 package.json
 package-lock.json
+skills-*.md
+.impeccable/
+
+# 建设素材（设计稿、原始图片、历史文件）
+建设素材/
+
+# 原始素材（本地不上传）
+图片素材-原始未标注/
+照片素材-已标注/
+碎碎念图片/
+
+# 只放 COS 的本地图片
+img/tips/
+img/avatar.jpg
+
 # 开发工具（仅本地）
 editor.html
-# 文档
-skills-*.md
-# 碎碎念图片（已上传 COS）
-img/tips/
-碎碎念图片/
