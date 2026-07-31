@@ -62,7 +62,7 @@
   .item .q .arrow { font-size: 13px; color: rgba(255,255,255,0.15); transition: transform 0.25s; flex-shrink: 0; }
   .item.open .q .arrow { transform: rotate(90deg); }
   .item .a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-  .item.open .a { max-height: 2000px; }
+  .item.open .a { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .item .a .inner {
     padding: 0 18px 18px 50px;
     font-size: 13px; color: rgba(255,255,255,0.55);
@@ -252,7 +252,7 @@ function render() {
       });
       var isOpen = div.classList.toggle('open');
       var a = div.querySelector('.a');
-      a.style.maxHeight = isOpen ? '2000px' : '0px';
+      a.style.maxHeight = isOpen ? '62vh' : '0px';
     });
     list.appendChild(div);
   });
