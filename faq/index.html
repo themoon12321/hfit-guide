@@ -3,98 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ · 常见问题</title>
+<title>常见问题 · 合肥理工学院</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
     background: #0d0d0f; color: #eaeaef;
     -webkit-font-smoothing: antialiased;
-    padding: 48px 16px 40px; max-width: 640px; margin: 0 auto;
+    padding: 32px 16px 48px; max-width: 640px; margin: 0 auto;
   }
-  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding: 0 4px; }
-  .header .back { color: rgba(255,255,255,0.25); text-decoration: none; font-size: 18px; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; }
   .header .back:hover { color: rgba(255,255,255,0.6); }
   .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
-
+  .disclaimer {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 16px; border-radius: 12px;
+    background: rgba(255,200,60,0.06);
+    border: 1px solid rgba(255,200,60,0.12);
+    font-size: 12px; color: rgba(255,215,110,0.55);
+    line-height: 1.6; margin-bottom: 16px;
+  }
+  .disclaimer .icon { flex-shrink: 0; font-size: 14px; }
+  .search {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px;
+  }
+  .search .mag { color: rgba(255,255,255,0.2); font-size: 14px; flex-shrink: 0; }
+  .search input { flex: 1; background: none; border: none; outline: none; color: #eaeaef; font-size: 14px; font-family: inherit; }
+  .search input::placeholder { color: rgba(255,255,255,0.2); }
+  .tags-line { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tags-line .tag-badge { padding: 2px 10px; border-radius: 10px; background: rgba(255,255,255,0.05); font-size: 11px; color: rgba(255,255,255,0.3); }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tab {
+    padding: 6px 16px; border-radius: 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.35); font-size: 12px; cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .tab:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6); }
+  .tab.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
   .item {
-    border-radius: 14px; border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);
     overflow: hidden; margin-bottom: 10px;
+    background: rgba(255,255,255,0.02);
     transition: border-color 0.2s;
   }
   .item:hover { border-color: rgba(255,255,255,0.1); }
   .item .q {
-    padding: 14px 18px; cursor: pointer; user-select: none;
+    padding: 16px 18px; cursor: pointer; user-select: none;
     display: flex; align-items: center; gap: 12px;
-    transition: background 0.15s;
   }
-  .item .q:hover { background: rgba(255,255,255,0.02); }
-  .item .q .icon { font-size: 14px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
-  .item .q .text { font-size: 14px; color: rgba(255,255,255,0.85); flex: 1; line-height: 1.4; }
-  .item .q .arrow {
-    font-size: 12px; color: rgba(255,255,255,0.1);
-    transition: transform 0.25s; flex-shrink: 0;
-  }
+  .item .q .q-mark { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.2); flex-shrink: 0; width: 20px; }
+  .item .q .q-text { font-size: 15px; font-weight: 600; color: #f0f0f5; flex: 1; line-height: 1.5; }
+  .item .q .arrow { font-size: 13px; color: rgba(255,255,255,0.15); transition: transform 0.25s; flex-shrink: 0; }
   .item.open .q .arrow { transform: rotate(90deg); }
-
-  .item .a {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.35s ease, padding 0.3s ease;
-  }
-  .item.open .a {
-    max-height: 600px;
-    padding: 0 18px 16px;
-  }
+  .item .a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .item.open .a { max-height: 2000px; }
   .item .a .inner {
-    font-size: 13px; color: rgba(255,255,255,0.65);
-    line-height: 1.7; padding-top: 4px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    white-space: pre-line;
+    padding: 0 18px 18px 50px;
+    font-size: 13px; color: rgba(255,255,255,0.55);
+    line-height: 1.8; white-space: pre-line;
   }
-
-  .empty {
-    text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.1);
+  .item .a .inner strong { color: #fff; font-weight: 600; }
+  .item .a .inner .hl { font-weight: 500; }
+  .item .a .inner .hl.c-blue { color: #8ab4ff; }
+  .item .a .inner .hl.c-green { color: #7cd98a; }
+  .item .a .inner .hl.c-orange { color: #ffa54d; }
+  .item .a .inner .hl.c-red { color: #ff6b6b; }
+  .item .a .inner .hl.c-yellow { color: #f2d45c; }
+  .item .a .inner .hl.c-purple { color: #c792ea; }
+  .item .a .inner em { color: rgba(255,255,255,0.35); font-style: normal; }
+  .empty { text-align: center; padding: 50px 20px; color: rgba(255,255,255,0.1); font-size: 13px; }
+  .empty.hidden { display: none; }
+  .feedback-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; margin-top: 28px;
+    padding: 14px; border-radius: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.35); font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
   }
-
-  @media (max-width: 480px) {
-    body { padding: 32px 12px 32px; }
-    .item .q { padding: 12px 14px; }
-    .item.open .a { padding: 0 14px 14px; }
+  .feedback-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+  #fbModal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
   }
+  #fbModal.show { opacity: 1; pointer-events: auto; }
+  .fb-box {
+    width: 88%; max-width: 380px;
+    background: #1a1a1e; border-radius: 16px;
+    padding: 24px; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .fb-box h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .fb-box .fb-sub { font-size: 12px; color: rgba(255,255,255,0.25); margin-bottom: 16px; }
+  .fb-box input, .fb-box textarea {
+    width: 100%; padding: 10px 12px;
+    border-radius: 10px; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #eaeaef; font-size: 13px; font-family: inherit;
+    outline: none; margin-bottom: 10px;
+  }
+  .fb-box textarea { min-height: 70px; resize: vertical; }
+  .fb-box .fb-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  .fb-box .fb-btns button { padding: 8px 18px; border-radius: 10px; border: none; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .fb-box .fb-btns .cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
+  .fb-box .fb-btns .send { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .item .a .inner .img-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .item .a .inner .img-list img {
+    width: 72px; height: 72px; object-fit: cover;
+    border-radius: 8px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .item .a .inner .img-list img:hover { transform: scale(1.08); border-color: rgba(255,255,255,0.15); }
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .lightbox.show { opacity: 1; pointer-events: auto; }
+  .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 6px; }
+  .lightbox .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none;
+    color: rgba(255,255,255,0.5); font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox .lb-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
 </style>
 </head>
 <body>
-<div class="header">
-  <a class="back" href="../index.html">←</a>
-  <h1>常见问题</h1>
-</div>
+<div class="header"><a class="back" href="../index.html">←</a><h1>常见问题</h1></div>
+<div class="disclaimer"><span class="icon">⚠️</span><span>以下内容仅根据个人经验回答，仅供参考。实际以学校规定和现实情况为准。</span></div>
+<div class="search"><span class="mag">🔍</span><input type="text" id="searchInput" placeholder="搜索问题关键词…"></div>
+<div class="tabs" id="tabs"></div>
 <div id="list"></div>
-<div style="margin-top: 28px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.2); padding: 0 20px;">
-  有更多问题？欢迎在
-  <a href="../index.html" style="color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">主页底部留言</a>
-</div>
-
+<div class="empty hidden" id="empty">没有找到相关问题</div>
+<button class="feedback-btn" id="fbBtn"><span>❓</span> 有问题没找到？点这里反馈</button>
+<div id="fbModal"><div class="fb-box"><h3>提一个问题</h3><div class="fb-sub">我们会筛选整理后补充到 FAQ 里</div><input type="text" id="fbName" placeholder="昵称（可选）" maxlength="12"><textarea id="fbText" placeholder="说说你遇到的问题…"></textarea><div class="fb-btns"><button class="cancel" onclick="closeFb()">取消</button><button class="send" onclick="sendFb()">提交</button></div></div></div>
+<div class="lightbox" id="lightbox"><button class="lb-close" id="lbClose">&times;</button><img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></div>
 <script>
 const FAQ = [
-  // 示例
-  // { q: '床的尺寸是多少？', a: '床板尺寸约为 90cm × 200cm。' },
+  {
+    "q": "关于选课（抢课）",
+    "a": "目前只有两种课程需要选择，第一种是<span class=\"hl c-blue\">大学体育课</span>，第二种是<span class=\"hl c-blue\">公选课</span>。按照25届的经验来说，大一上学期只有大学体育课需要进行选择，从大二下学期，也就是第二个学期开始，才会涉及到公选课的选课，具体发行的规则以后更新会提到。\n\n\n然后是选课规则，学校选课一共分为三轮，<span class=\"hl c-blue\">第一轮</span>选课为<span class=\"hl c-red\">随机分配</span>，当一门课没有超过人数上限且满足开课人数将全额入选；如果一门课选择人数超过人数上限，则进行随机分配，未被分配到课程内的则进入第二轮选课。<span class=\"hl c-blue\">第二轮选课</span>为先到先得，也就是<span class=\"hl c-red\">需要抢课</span>，大家注意，需要看好时间提前进入抢课；若第二次选择的课程未满足开课条件 ，或者没有选到则进入第三轮选课。第三轮选课应该是候补，但是本人没有经历过第三轮选课，所以不太清楚。\n\n\ntips：选课是需要根据课表时间来的，不能保证所有课程与自己的课表不存在时间冲突，所以并<span class=\"hl c-green\">不是每一门课都在选择范围内。</span>",
+    "tags": [
+      "上课"
+    ]
+  },
+  {
+    "q": "关于校内交通",
+    "a": "校园内学生不允许骑行电瓶车，有交通工具的主流以<span class=\"hl c-green\">自行车</span>为主，也有用滑板通勤和平衡车通勤的案例，但是自行车仍然为最方便、最保险的选择。自行车原则上是不允许停在宿舍楼楼下的，女寝那边情况特殊，可能会相对宽松一点，男寝这边是得停在车棚的。\n\n\ntips：如果经常在校园里面活动的话，个人比较推荐弄一辆自行车，学校虽然不算特别大，但是宿舍到各个学院楼之间的来回往返路程也不近，有辆自行车绝对是一个通勤利器。",
+    "tags": [
+      "校园",
+      "交通"
+    ]
+  },
+  {
+    "q": "关于校外交通（去合肥）",
+    "a": "首先来讲讲去合肥市的交通：\n\n\n1.乘坐黄麓高校专线（发车时刻表见下方图片，如果新学期发车时刻表有变化，应该会更新），这个公交车有的时候起点是合肥师范学院，有的时候是组织干部学院，然后最终到<span class=\"hl c-red\"><span class=\"hl c-blue\">达滨湖融创茂</span></span>，这个线路是往返的，但是都会途经合肥理工学院的南门和西门；如果从西门坐车，车辆一般会比发车时间晚到个10分钟左右，但是建议<span class=\"hl c-red\">提前去</span>，（有的时候<span class=\"hl c-red\"><span class=\"hl c-orange\">10分钟有点极限了</span></span>，别问我怎么知道的，在这个地方也能追公交车≧ ﹏ ≦）；然后如果从滨湖融创茂那边出发的话，一般公交车在不到发车时间的<span class=\"hl c-red\">前一两分钟</span>可能就会准备发车或者是开始发车了，建议尽量提前去（如果坐地铁到融创茂出发的话，直接从万年埠A口下即可，路线图鉴下方图片）然后这个公交车单次的费用是<span class=\"hl c-green\">6元</span>，不支持优惠。\n\n\n2.第二种方式是乘坐周一到周五的学校教师班车，一般早上会从合肥回学校，然后<span class=\"hl c-red\">晚上5点</span>从学校回合肥，上车地点在<span class=\"hl c-blue\">行政楼南边的停车场</span>，具体路线如下：（反过来就是<span class=\"hl c-red\">晚上5点</span>从学校出发的路线，新学期可能会有所变化）\n<span class=\"hl c-yellow\">一号线</span>：安徽大学江淮学院东门（<span class=\"hl c-red\">6：40出发</span>）→燃气大厦（6:45）→蜀山万象汇（望江西路和合作化交叉口）（6:50）→合肥理工学院\n<span class=\"hl c-yellow\">二号线</span>：五里拐（<span class=\"hl c-red\">6：30出发</span>）→白水坝（6:40）→九狮苑（6:55）→沈湾地铁站（7:10）→天津路停车场（7:20）—→合肥理工学院\n<span class=\"hl c-yellow\">三号线</span>：皖AA3610）：井岗路666号（<span class=\"hl c-red\">6：20出发</span>）→樊洼路与西二环交口（6：30）→西二环路与合欢路交口(6:40)→集贤路与伏牛岭路交口停车场(6:50)→合肥理工学院\n<span style=\"font-family: inherit;\">该方式<span class=\"hl c-green\">不收取任何费用</span>；</span>记得上学期坐这个班车的老师没有那么多，车上还有空位，不太确定如果老师坐满了，还有没有给学生预留的位置，可以试试。\ntips：校车开得相对比较快，有的人坐<span class=\"hl c-purple\">容易晕</span>\n\n\n3.第三种方式就是乘坐周末的学校班车，具体时间表如下\n\n每周五  21:00从渡江纪念馆地铁B出口发车回学校。\n每周六  17:30从学校西门发车至渡江纪念馆地铁A出口；21:00从渡江纪念馆地铁B出口发车回学校。\n每周日  17:30从学校西门发车至渡江纪念馆地铁A出口；20:30从渡江纪念馆地铁B出口发车回学校。\n该车<span class=\"hl c-green\">不收取任何费用</span>，师生凭“校园一卡通”乘车\ntips：从B口出来之后，左转再左转，也就是调转180°，就能看到停靠的车辆了\n\n\n3.第三种方式就是乘坐H105\n\n学校停靠站点：合肥理工学院<span class=\"hl c-green\"><span class=\"hl c-orange\"><span class=\"hl c-blue\">东门</span></span></span>（<span class=\"hl c-blue\"><span class=\"hl c-orange\">目前尚无站牌，可招手停</span></span>）\n欧菲光&gt;合肥客运中心站\n（定时发车06:30 08:00 09:00 10:30 12:30 13:30 14:30 15:30 16:00）\n合肥客运中心站&gt;欧菲光<span class=\"hl c-red\">（注意注意注意，从合肥客运中心坐H105需要用身份证买票！！！）</span>\n（定时发车09:00 10:00 11:00 12:30 14:00 15:30 16:30 17:30 18:00）\n价格是单次<span class=\"hl c-green\">10块钱</span>\ntips：从学院去合肥乘坐H105个人目前没试过在校门口招手停，通常是继续向北走到始发站进行乘车（一个没有站台的公交岛，由北向南在道路右侧）；如果从合肥客运中心返回来的话，需要提前跟师傅说你在哪一站下，也就是合肥理工学院，他一般会在靠近学校南门和东门的那个十字路口给你放下来，需要你自己往南门那边走；对了，如果找不到客运中心，一定要及时找志愿者或者工作人员询问，头几次去的话，真比较难找；最后一点就是实际从客运中心出发的时刻列表会和上文或者是地图上的发车列表有所出入，以实际为准。\n\n\n4.合肥公交小程序（如e巴士）乘车（<span class=\"hl c-orange\">节假日专用</span>）\n在类似于国庆、五一等小长假或者是其他法定节假日的时候，一般黄麓高校专线不会运行，从而需要在手机微信小程序上找到<span class=\"hl c-green\"><span class=\"hl c-blue\">合肥公交</span></span>，然后选择高校专线进行乘车，需要<span class=\"hl c-orange\">提前预订票</span>，当购买该班次的票满足一定人数后才会发车，<span class=\"hl c-red\">否则会提前退票</span>，这一点一定要注意（不要问我为什么(╬▔皿▔)╯）一般只有假期开始的前一天或者是当天，以及假期的最后一天有车，前者从合肥理工学院出发，到合肥南站或者是合肥西站（到南站<span class=\"hl c-green\">12元</span>，到西站<span class=\"hl c-green\">14.9元</span>）；后者是从两个车站到学院的车，返程价格和去的一致；具体时刻表可以在小程序上查看。\ntips：大巴车一般会在西门门口等待，但是可能人数比较多，携带的行李数量需要斟酌一下；如果是从合肥南站回来的话，如果你第一次来，大概率是找不到公交车站在哪的，<span class=\"hl c-red\">一定一定一定要询问</span>，我自己也经常容易找不到，可能有点路痴（）；然后不太建议从西站出发，本人也没有从西站出发的经历，据之前的经验，如果去西站的话大概率是不满足人数要求，然后退票的，不清楚下学期的情况如何，大家一定要提前规划好自己的行程\n\n\n5.打车\n这个应该没什么好说的，就是通过手机APP打车，但是好不好打车另说，一般来说应该都是能打到车的，就是价格普遍比较贵，基本上都在百元以内，但是也差不多接近了。\n\n\n6.顺风车\n这个个人没有经历过，但是身边朋友有经常打，比打车会便宜一些，然后据说相对比较好叫。",
+    "tags": [
+      "交通"
+    ],
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/faq/bus-map-01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/faq/bus-map-02.jpg"
+    ]
+  },
+  {
+    "q": "关于学校附近交通",
+    "a": "我这里指的学校附近，主要是半岛商业广场（<span class=\"hl c-blue\">5公里左右</span>），或者是欧菲光（<span class=\"hl c-blue\">2公里左右</span>），这两个应该是学校附近主要会去的地方，一般半岛广场会更多一点1.学校的西门门口是有共享电瓶车的，<span class=\"hl c-green\">2.5元/首20分钟+2.0元/续20分钟，24小时总额封顶25.0元。时长不足一个计费周期，按照一个计费周期计算；需最低账户余额2.5元</span>（这里说明你的账户里面需要提前充钱，所以账户里没有钱的话现场临时充可能需要多花个十几秒到一分钟，然后目前门口的车辆主要有两种，一种是爱尚行，另外一种是诺基亚，两者使用的小程序不同，计费规则应该都是一样的）<font color=\"#7cd98a\"></font>\n\n\n2.下雨天或者是平常多人出行的话，打车也是一个不错的选择，寝室几个人一块出去的话A下来跟骑单车的钱差不多，会拥有相对更好的体验以及运货能力\n\n\n3.自行骑自行车，这个比较适用于那些喜欢骑行的同学\n\n\ntips:到了晚上附近的<span class=\"hl c-red\">路灯都会关掉</span>，所以一般不建议大家晚上自行骑车出行，要注意安全撒",
+    "tags": [
+      "交通"
+    ]
+  }
 ];
-
-var list = document.getElementById('list');
-
-if (FAQ.length === 0) {
-  list.innerHTML = '<div class="empty">暂无问题 · 收集中</div>';
-} else {
-  FAQ.forEach(function(item, i) {
+var allData = FAQ;
+var currentTag = '全部';
+var searchTerm = '';
+function getTags(item) {
+  if (item.tags && item.tags.length) return item.tags;
+  if (item.tag) return [item.tag];
+  return ['其他'];
+}
+(function() {
+  var all = [];
+  FAQ.forEach(function(x) { all = all.concat(getTags(x)); });
+  var tags = ['全部'].concat(all.filter(function(v, i, s) { return s.indexOf(v) === i; }));
+  var tabsEl = document.getElementById('tabs');
+  tags.forEach(function(t) {
+    var b = document.createElement('button');
+    b.className = 'tab' + (t === '全部' ? ' active' : '');
+    b.textContent = t;
+    b.onclick = function() { currentTag = t; document.querySelectorAll('.tab').forEach(function(x) { x.classList.remove('active'); }); b.classList.add('active'); render(); };
+    tabsEl.appendChild(b);
+  });
+})();
+function render() {
+  var list = document.getElementById('list');
+  var filtered = allData.filter(function(item) {
+    var okTag = currentTag === '全部' || getTags(item).indexOf(currentTag) > -1;
+    var okSearch = !searchTerm || item.q.indexOf(searchTerm) > -1 || item.a.indexOf(searchTerm) > -1;
+    return okTag && okSearch;
+  });
+  document.getElementById('empty').classList.toggle('hidden', filtered.length > 0);
+  list.innerHTML = '';
+  filtered.forEach(function(item) {
     var div = document.createElement('div');
     div.className = 'item';
-    div.innerHTML = '<div class="q"><span class="icon">Q</span><span class="text">' + esc(item.q) + '</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + esc(item.a) + '</div></div>';
+    var badges = getTags(item).map(function(t) { return '<span class="tag-badge">' + esc(t) + '</span>'; }).join('');
+    var imgs = '';
+    if (item.images && item.images.length) {
+      imgs = '<div class="img-list">' + item.images.map(function(src) { return '<img src="' + src + '" loading="lazy" data-lb="' + esc(src) + '">'; }).join('') + '</div>';
+    }
+    div.innerHTML = '<div class="q"><span class="q-mark">Q</span><span class="q-text">' + esc(item.q) + '</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + badges + '<br>' + item.a + imgs + '</div></div>';
     div.querySelector('.q').addEventListener('click', function() { div.classList.toggle('open'); });
     list.appendChild(div);
   });
 }
-
+document.getElementById('searchInput').addEventListener('input', function() { searchTerm = this.value.trim(); render(); });
+document.getElementById('fbBtn').onclick = function() { document.getElementById('fbModal').classList.add('show'); };
+function closeFb() { document.getElementById('fbModal').classList.remove('show'); }
+function sendFb() {
+  var text = document.getElementById('fbText').value.trim();
+  var name = document.getElementById('fbName').value.trim();
+  if (!text) return;
+  fetch('/api/comments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:'faq', nickname:name||'匿名', text:text}) })
+    .then(function() { alert('已收到，感谢反馈！'); closeFb(); document.getElementById('fbText').value=''; document.getElementById('fbName').value=''; })
+    .catch(function() { alert('提交失败'); });
+}
+document.getElementById('fbModal').onclick = function(e) { if (e.target === this) closeFb(); };
+document.getElementById('list').addEventListener('click', function(e) {
+  var img = e.target.closest('img[data-lb]');
+  if (!img) return;
+  document.getElementById('lbImg').src = img.dataset.lb;
+  document.getElementById('lightbox').classList.add('show');
+});
+document.getElementById('lbClose').onclick = function() { document.getElementById('lightbox').classList.remove('show'); };
+document.getElementById('lightbox').onclick = function(e) { if (e.target === this) this.classList.remove('show'); };
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show'); });
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+render();
 </script>
 </body>
 </html>

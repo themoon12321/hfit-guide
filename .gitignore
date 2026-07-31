@@ -22,4 +22,6 @@ img/avatar.jpg
 
 # 开发工具（仅本地）
 editor.html
+faq/editor.html
+layouts/editor.html
 layouts/推送.bat
