@@ -62,7 +62,10 @@
   .item .q .arrow { font-size: 13px; color: rgba(255,255,255,0.15); transition: transform 0.25s; flex-shrink: 0; }
   .item.open .q .arrow { transform: rotate(90deg); }
   .item .a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-  .item.open .a { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .item.open .a { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+  .item.open .a::-webkit-scrollbar { width: 6px; }
+  .item.open .a::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  .item.open .a::-webkit-scrollbar-track { background: transparent; }
   .item .a .inner {
     padding: 0 18px 18px 50px;
     font-size: 13px; color: rgba(255,255,255,0.55);
