@@ -73,6 +73,15 @@
   .card .body .text-wrap { position: relative; overflow: hidden; }
   .card .body .text-wrap.collapsed { max-height: 5.1em; }
   .card .body .text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; white-space: pre-line; }
+  .card .body .text strong { color: #fff; font-weight: 600; }
+  .card .body .text .hl { font-weight: 500; }
+  .card .body .text .hl.c-blue { color: #8ab4ff; }
+  .card .body .text .hl.c-green { color: #7cd98a; }
+  .card .body .text .hl.c-orange { color: #ffa54d; }
+  .card .body .text .hl.c-red { color: #ff6b6b; }
+  .card .body .text .hl.c-yellow { color: #f2d45c; }
+  .card .body .text .hl.c-purple { color: #c792ea; }
+  .card .body .text em { color: rgba(255,255,255,0.35); font-style: normal; }
   .card .body .expand-btn {
     background: none; border: none; font-size: 13px; color: rgba(255,255,255,0.2);
     cursor: pointer; padding: 6px 0 0; font-family: inherit; align-self: flex-start;
@@ -184,7 +193,7 @@ LAYOUTS.forEach(function(item, cardIdx) {
     card.innerHTML = '<div class="carousel" data-card="' + cardIdx + '"><div class="track">' + slides + '</div>' + arrows + counter + '</div>';
   }
 
-  card.innerHTML += '<div class="body"><div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text">' + esc(item.text) + '</div></div><button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button><div class="source">来源：<strong>' + esc(item.author) + '</strong></div></div>';
+  card.innerHTML += '<div class="body"><div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text">' + item.text + '</div></div><button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button><div class="source">来源：<strong>' + esc(item.author) + '</strong></div></div>';
   feed.appendChild(card);
 
   setTimeout(function() {
