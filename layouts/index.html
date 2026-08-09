@@ -8,35 +8,23 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
-    background: #0d0d0f;
-    color: #eaeaef;
+    background: #0d0d0f; color: #eaeaef;
     -webkit-font-smoothing: antialiased;
-    padding: 48px 16px 40px;
-    max-width: 600px; margin: 0 auto;
+    padding: 48px 16px 40px; max-width: 600px; margin: 0 auto;
   }
-
-  .header {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 24px; padding: 0 4px;
-  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 0 4px; }
   .header .back { color: rgba(255,255,255,0.25); text-decoration: none; font-size: 18px; transition: color 0.2s; }
   .header .back:hover { color: rgba(255,255,255,0.6); }
   .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
-
-  /* ===== Card ===== */
   .card {
     border-radius: 16px; overflow: hidden;
     background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.05); margin-bottom: 16px;
   }
-
-  /* ===== Carousel ===== */
   .carousel { position: relative; overflow: hidden; user-select: none; }
   .carousel .track { display: flex; transition: transform 0.3s ease, height 0.3s ease; }
   .carousel .track .slide { flex: 0 0 100%; cursor: pointer; line-height: 0; }
   .carousel .track .slide img { width: 100%; display: block; }
-
   .carousel .arr {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 32px; height: 32px; border-radius: 50%;
@@ -48,27 +36,15 @@
   .carousel .arr:hover { background: rgba(0,0,0,0.6); color: #fff; }
   .carousel .arr.prev { left: 8px; }
   .carousel .arr.next { right: 8px; }
-
-  .carousel .dots {
-    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 6px;
-  }
-  .carousel .dots .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transition: background 0.2s;
-  }
+  .carousel .dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+  .carousel .dots .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: background 0.2s; }
   .carousel .dots .dot.active { background: rgba(255,255,255,0.8); }
-
   .carousel .counter {
     position: absolute; top: 10px; right: 10px;
     padding: 3px 10px; border-radius: 10px;
-    background: rgba(0,0,0,0.5);
-    font-size: 11px; color: rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0.5); font-size: 11px; color: rgba(255,255,255,0.5);
     font-feature-settings: "tnum";
   }
-
-  /* ===== Body ===== */
   .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; }
   .card .body .text-wrap { position: relative; overflow: hidden; }
   .card .body .text-wrap.collapsed { max-height: 5.1em; }
@@ -93,8 +69,6 @@
     border-top: 1px solid rgba(255,255,255,0.04); flex-shrink: 0;
   }
   .card .body .source strong { color: rgba(255,255,255,0.3); font-weight: 500; }
-
-  /* ===== Lightbox ===== */
   .lightbox {
     position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,0.92);
@@ -122,7 +96,6 @@
   .lightbox .lb-prev { left: 16px; }
   .lightbox .lb-next { right: 16px; }
   .lightbox.show .lb-nav { display: flex; }
-
   @media (max-width: 480px) {
     body { padding: 32px 12px 32px; }
     .card .body { padding: 14px 14px 16px; }
@@ -132,85 +105,84 @@
 </style>
 </head>
 <body>
-
-<div class="header">
-  <a class="back" href="../index.html">←</a>
-  <h1>宿舍布置参考</h1>
-</div>
-
+<div class="header"><a class="back" href="../index.html">←</a><h1>宿舍布置参考</h1></div>
 <div id="feed"></div>
-
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" id="lbClose">&times;</button>
-  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
-  <img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
-  <button class="lb-nav lb-next" id="lbNext">›</button>
-</div>
-
+<div class="lightbox" id="lightbox"><button class="lb-close" id="lbClose">&times;</button><button class="lb-nav lb-prev" id="lbPrev">‹</button><img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><button class="lb-nav lb-next" id="lbNext">›</button></div>
 <script>
 const LAYOUTS = [
   {
-    "images": ["https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_01.jpg","https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_02.jpg","https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_03.jpg","https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_04.jpg"],
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_02.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_03.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/Yo_04.jpg"
+    ],
     "author": "Yo濛·25级·电子信息工程",
     "text": "1.显示器为27寸，桌子背部有空间和架子可以装机械臂以节省空间。机械臂需要以零部件的形式在后面组装，否则底部部分会卡住无法塞进去。\n2.洞洞板为40*34。想覆盖整个平面可以定制58*56，但商家一般会做大一点所以一定要小1～2cm，上面的部分可以再加装一块40*34的板子（如图，效果不是很好所以还是推荐用小板子，省心且有容错，或者换成白色或许会更好看些）其次，固定部件一定要用无痕贴而不是无痕钉。\n3.鼠标垫为70*40，大多数周边鼠标垫也是这个尺寸，可以刚好塞进书桌（注意如果旁边有洞洞板且鼠标垫有充电接口，空间会不够），只是刚好能塞，实际使用并不推荐这款。"
   },
   {
-    "images": ["https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_01.jpg","https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_02.jpg"],
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/wzew_02.jpg"
+    ],
     "author": "未知饿物·25级·材料物理",
     "text": "床帘是恬梦莱的比较遮光，建议在桌子内侧上方装个灯很实用，最上面我放的书所以加了一层纱布隔开"
   },
   {
-    "images": ["https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_01.jpg","https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_02.jpg"],
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/funk_02.jpg"
+    ],
     "author": "funk·25级·智能制造工程",
     "text": "桌面布置遵循简约，go学长严选"
   },
   {
-    "images": ["https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/zm_01.jpg"],
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/zm_01.jpg"
+    ],
     "author": "志铭·25级·计算机科学与技术",
     "text": "暂无"
+  },
+  {
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/kekokele_01.jpg",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/layouts/kekokele_02.jpg"
+    ],
+    "author": "可口可乐·25级·应用物理",
+    "text": "左边墙壁上是一块洞洞板，洞洞板可以放些东西，东西的摆放也很灵活。右侧最下面是化妆区，中间可以买分隔板，第2层下面是护肤区。上面是一些小袋子是药品区。最上层是书本区。放电脑的下面建议放一个置物架，这样可以做到下面放键盘，上面放电脑，东西放得开。\n右手边还有一个置物架，宽度很窄，买的20㎝刚好放下。外侧有一个铁的床铺支撑架有一定厚度，所以买更宽置物架就推不进去了"
   }
 ];
-
 var feed = document.getElementById('feed');
 var lbImages = [];
 var lbIndex = 0;
-
 LAYOUTS.forEach(function(item, cardIdx) {
   var imgs = item.images || [];
   var total = imgs.length;
   var card = document.createElement('div');
   card.className = 'card';
-
   if (imgs.length > 0) {
     var slides = imgs.map(function(src, i) {
       return '<div class="slide" data-card="' + cardIdx + '" data-idx="' + i + '"><img src="' + src + '" loading="lazy"></div>';
     }).join('');
-    var dots = imgs.map(function(_, i) {
-      return '<span class="dot' + (i === 0 ? ' active' : '') + '"></span>';
-    }).join('');
+    var dots = imgs.map(function(_, i) { return '<span class="dot' + (i === 0 ? ' active' : '') + '"></span>'; }).join('');
     var counter = total > 1 ? '<span class="counter">1/' + total + '</span>' : '';
     var arrows = total > 1 ? '<button class="arr prev">‹</button><button class="arr next">›</button><div class="dots">' + dots + '</div>' : '';
     card.innerHTML = '<div class="carousel" data-card="' + cardIdx + '"><div class="track">' + slides + '</div>' + arrows + counter + '</div>';
   }
-
   card.innerHTML += '<div class="body"><div class="text-wrap collapsed" id="tw_' + cardIdx + '"><div class="text">' + item.text + '</div></div><button class="expand-btn" id="eb_' + cardIdx + '" onclick="toggleText(' + cardIdx + ')">展开全文</button><div class="source">来源：<strong>' + esc(item.author) + '</strong></div></div>';
   feed.appendChild(card);
-
   setTimeout(function() {
     var tw = document.getElementById('tw_' + cardIdx);
     var eb = document.getElementById('eb_' + cardIdx);
     if (tw && eb && tw.scrollHeight <= parseFloat(getComputedStyle(tw).maxHeight) + 2) eb.style.display = 'none';
   }, 100);
 });
-
 function toggleText(idx) {
   var tw = document.getElementById('tw_' + idx);
   var eb = document.getElementById('eb_' + idx);
   var isCollapsed = tw.classList.toggle('collapsed');
   eb.textContent = isCollapsed ? '展开全文' : '收起';
 }
-
-// Carousel
 document.querySelectorAll('.carousel').forEach(function(car) {
   var track = car.querySelector('.track');
   var slides = track.querySelectorAll('.slide');
@@ -219,8 +191,6 @@ document.querySelectorAll('.carousel').forEach(function(car) {
   var total = slides.length;
   if (total <= 1) return;
   var idx = 0;
-
-  // 初始化高度为第一张图的高度
   function setHeight(i) {
     var img = slides[i].querySelector('img');
     if (img && img.offsetHeight > 0) track.style.height = img.offsetHeight + 'px';
@@ -230,7 +200,6 @@ document.querySelectorAll('.carousel').forEach(function(car) {
     if (firstImg.complete) setHeight(0);
     else firstImg.addEventListener('load', function() { setHeight(0); });
   }
-
   function go(i) {
     if (i < 0) i = total - 1;
     if (i >= total) i = 0;
@@ -243,7 +212,6 @@ document.querySelectorAll('.carousel').forEach(function(car) {
   }
   car.querySelector('.arr.prev').addEventListener('click', function(e) { e.stopPropagation(); go(idx - 1); });
   car.querySelector('.arr.next').addEventListener('click', function(e) { e.stopPropagation(); go(idx + 1); });
-  // Touch swipe
   var sx = 0;
   car.addEventListener('touchstart', function(e) { sx = e.changedTouches[0].screenX; });
   car.addEventListener('touchend', function(e) {
@@ -251,8 +219,6 @@ document.querySelectorAll('.carousel').forEach(function(car) {
     if (Math.abs(dx) > 50) go(idx + (dx > 0 ? 1 : -1));
   });
 });
-
-// Lightbox
 document.getElementById('feed').addEventListener('click', function(e) {
   var slide = e.target.closest('.slide');
   if (!slide) return;
