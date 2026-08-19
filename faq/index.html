@@ -210,9 +210,10 @@ function render() {
   });
   document.getElementById('empty').classList.toggle('hidden', filtered.length > 0);
   list.innerHTML = '';
-  filtered.forEach(function(item) {
+  filtered.forEach(function(item, idx) {
     var div = document.createElement('div');
     div.className = 'item';
+    div.id = 'faq-' + idx;
     var badges = getTags(item).map(function(t) { return '<span class="tag-badge">' + esc(t) + '</span>'; }).join('');
     var imgs = '';
     if (item.images && item.images.length) {
@@ -229,6 +230,7 @@ function render() {
       var isOpen = div.classList.toggle('open');
       var a = div.querySelector('.a');
       a.style.maxHeight = isOpen ? '62vh' : '0px';
+      history.replaceState(null, '', '#faq-' + idx);
     });
     list.appendChild(div);
   });
@@ -286,6 +288,16 @@ document.getElementById('lightbox').addEventListener('touchend', function(e) {
 });
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 render();
+// 深链接：打开带 #faq-N 的链接时自动展开对应条目
+function openByHash() {
+  var m = location.hash.match(/^#faq-(\d+)$/);
+  if (!m) return;
+  var target = document.getElementById('faq-' + m[1]);
+  if (!target) return;
+  target.querySelector('.q').click();
+  setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 350);
+}
+openByHash();
 </script>
 </body>
 </html>
