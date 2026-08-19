@@ -154,7 +154,7 @@ async function loadAll() {
   for (var i = 0; i < pages.length; i++) {
     var page = pages[i];
     try {
-      var r = await fetch('/api/comments?page=' + page);
+      var r = await fetch('/api/comments?page=' + page, { headers: { 'Authorization': 'Bearer ' + adminToken } });
       var list = await r.json();
       var titles = { portal: '门户主页', dorm: '宿舍尺寸指南', faq: 'FAQ 提问' };
       html += '<div class="section"><h2>' + (titles[page] || page) + ' · ' + (list ? list.length : 0) + ' 条</h2>';
@@ -185,7 +185,7 @@ async function loadAll() {
 document.getElementById('confirmYes').addEventListener('click', async function() {
   if (!pendingDel) return;
   document.getElementById('confirmModal').classList.remove('show');
-  var r = await fetch('/api/comments?page=' + pendingDel.page);
+  var r = await fetch('/api/comments?page=' + pendingDel.page, { headers: { 'Authorization': 'Bearer ' + adminToken } });
   var list = await r.json();
   var filtered = [];
   for (var i = 0; i < list.length; i++) {

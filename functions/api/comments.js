@@ -1,6 +1,12 @@
 // /api/comments — 留言
 // 部署到 Cloudflare Pages Functions，需要绑定 KV 命名空间
-// 环境变量: ADMIN_SECRET —— 管理操作（_replace）的密钥，只在服务端使用，不要写进前端代码
+// 环境变量: ADMIN_SECRET —— 所有读取/管理操作的密钥，只在服务端使用，不要写进前端代码
+// 权限模型：留言仅管理员可见（GET 需密钥）；匿名用户仍可提交（POST 无需密钥）
+
+function isAuthed(request, env) {
+  const auth = request.headers.get('Authorization') || '';
+  return !!(env.ADMIN_SECRET && auth === 'Bearer ' + env.ADMIN_SECRET);
+}
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -19,6 +25,10 @@ export async function onRequest(context) {
 
   try {
     if (request.method === 'GET') {
+      // 留言仅管理员可见：读取必须携带密钥
+      if (!isAuthed(request, env)) {
+        return new Response(JSON.stringify({ error: '未授权' }), { status: 401, headers });
+      }
       const page = url.searchParams.get('page') || 'default';
       const data = await env.KV.get(`comments:${page}`, 'json');
       return new Response(JSON.stringify(data || []), { headers });
@@ -30,8 +40,7 @@ export async function onRequest(context) {
 
       // _replace 用于后台删除/覆盖 —— 必须携带管理员密钥，否则任何人可清空留言
       if (_replace) {
-        const auth = request.headers.get('Authorization') || '';
-        if (!env.ADMIN_SECRET || auth !== 'Bearer ' + env.ADMIN_SECRET) {
+        if (!isAuthed(request, env)) {
           return new Response(JSON.stringify({ error: '未授权' }), { status: 401, headers });
         }
         await env.KV.put(key, JSON.stringify(_replace));
