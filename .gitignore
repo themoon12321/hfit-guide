@@ -3,6 +3,7 @@ sharp_*/
 .agents/
 .claude/
 .codex/
+.zcode/
 package.json
 package-lock.json
 skills-*.md
