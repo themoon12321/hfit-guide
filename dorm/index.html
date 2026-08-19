@@ -111,7 +111,9 @@
     display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
     padding: 6px 12px;
     pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
+  .cat-bar.hidden { opacity: 0; transform: translateY(-10px); pointer-events: none; }
   .cat-bar > * { pointer-events: auto; }
   .cat-chip {
     padding: 5px 14px; border-radius: 16px;
@@ -446,11 +448,14 @@
       欢迎页
     </button>
   </div>
-  <span class="counter" id="counter">1 / 16</span>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span class="counter" id="counter">1 / 16</span>
+    <button class="btn-home" id="catToggle">🏷️ 分类</button>
+  </div>
 </div>
 
 <!-- Category Bar -->
-<div class="cat-bar" id="catBar">
+<div class="cat-bar hidden" id="catBar">
   <button class="cat-chip active" data-cat="all">全部</button>
   <button class="cat-chip" data-cat="desk">书桌</button>
   <button class="cat-chip" data-cat="bed">床</button>
@@ -659,10 +664,17 @@ function applyCat(cat) {
   document.querySelectorAll('.cat-chip').forEach(el => {
     el.classList.toggle('active', el.dataset.cat === cat);
   });
+  // 选完自动收起，不遮挡图片
+  document.getElementById('catBar').classList.add('hidden');
 }
 
 document.querySelectorAll('.cat-chip').forEach(el => {
   el.addEventListener('click', () => applyCat(el.dataset.cat));
+});
+
+// 分类栏开关：平时收起不挡图片，点「分类」展开
+document.getElementById('catToggle').addEventListener('click', function() {
+  document.getElementById('catBar').classList.toggle('hidden');
 });
 
 let loadToken    = 0;
