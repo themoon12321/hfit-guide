@@ -1,5 +1,6 @@
 // /api/comments — 留言
 // 部署到 Cloudflare Pages Functions，需要绑定 KV 命名空间
+// 环境变量: ADMIN_SECRET —— 管理操作（_replace）的密钥，只在服务端使用，不要写进前端代码
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -8,7 +9,7 @@ export async function onRequest(context) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Content-Type': 'application/json',
   };
 
@@ -27,8 +28,12 @@ export async function onRequest(context) {
       const { page, nickname, text, _replace } = await request.json();
       const key = `comments:${page || 'default'}`;
 
-      // _replace 用于后台删除/覆盖
+      // _replace 用于后台删除/覆盖 —— 必须携带管理员密钥，否则任何人可清空留言
       if (_replace) {
+        const auth = request.headers.get('Authorization') || '';
+        if (!env.ADMIN_SECRET || auth !== 'Bearer ' + env.ADMIN_SECRET) {
+          return new Response(JSON.stringify({ error: '未授权' }), { status: 401, headers });
+        }
         await env.KV.put(key, JSON.stringify(_replace));
         return new Response(JSON.stringify(_replace), { headers });
       }
@@ -38,6 +43,25 @@ export async function onRequest(context) {
           status: 400, headers,
         });
       }
+
+      // 基础过滤：拒绝带链接的内容（防广告刷屏）
+      if (/https?:\/\/|www\./i.test(text)) {
+        return new Response(JSON.stringify({ error: '内容包含链接，已拦截' }), {
+          status: 400, headers,
+        });
+      }
+
+      // 简单限流：同 IP 每小时最多 10 条
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const rlKey = `rl:${ip}:${Math.floor(Date.now() / 3600000)}`;
+      const count = parseInt(await env.KV.get(rlKey) || '0');
+      if (count >= 10) {
+        return new Response(JSON.stringify({ error: '发送太频繁，请稍后再试' }), {
+          status: 429, headers,
+        });
+      }
+      await env.KV.put(rlKey, String(count + 1), { expirationTtl: 3700 });
+
       const list = await env.KV.get(key, 'json') || [];
       list.unshift({
         id: Date.now().toString(36),
