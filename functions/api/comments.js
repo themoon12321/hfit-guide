@@ -8,6 +8,9 @@ function isAuthed(request, env) {
   return !!(env.ADMIN_SECRET && auth === 'Bearer ' + env.ADMIN_SECRET);
 }
 
+// 留言归属页面白名单：新增有留言功能的页面时，把页面 id 加进来
+const ALLOWED_PAGES = ['portal', 'dorm', 'faq'];
+
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -36,6 +39,9 @@ export async function onRequest(context) {
 
     if (request.method === 'POST') {
       const { page, nickname, text, _replace } = await request.json();
+      if (!ALLOWED_PAGES.includes(page || '')) {
+        return new Response(JSON.stringify({ error: '未知页面' }), { status: 400, headers });
+      }
       const key = `comments:${page || 'default'}`;
 
       // _replace 用于后台删除/覆盖 —— 必须携带管理员密钥，否则任何人可清空留言
