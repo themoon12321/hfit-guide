@@ -99,6 +99,26 @@
     color: rgba(255,255,255,0.45);
   }
 
+  /* ========== Category Bar ========== */
+  .cat-bar {
+    position: fixed; top: 56px; left: 0; right: 0; z-index: 18;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    padding: 6px 12px;
+    pointer-events: none;
+  }
+  .cat-bar > * { pointer-events: auto; }
+  .cat-chip {
+    padding: 5px 14px; border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.45);
+    font-size: 12px; font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .cat-chip:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .cat-chip.active { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); color: #fff; }
+
   /* ========== Nav Arrows ========== */
   .nav-btn {
     position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
@@ -423,6 +443,16 @@
   <span class="counter" id="counter">1 / 16</span>
 </div>
 
+<!-- Category Bar -->
+<div class="cat-bar" id="catBar">
+  <button class="cat-chip active" data-cat="all">全部</button>
+  <button class="cat-chip" data-cat="desk">书桌</button>
+  <button class="cat-chip" data-cat="bed">床</button>
+  <button class="cat-chip" data-cat="stairs">楼梯</button>
+  <button class="cat-chip" data-cat="closet">衣柜</button>
+  <button class="cat-chip" data-cat="space">空间</button>
+</div>
+
 <!-- Nav Buttons -->
 <button class="nav-btn prev" id="btnPrev" aria-label="上一张">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -608,6 +638,27 @@ let showAnnotations = true;
 let showHotspots = true;
 let filteredIndices = IMAGES.map((_, i) => i);
 
+// ============================================================
+//  Category filter（分类导航：书桌/床/楼梯/衣柜/空间）
+// ============================================================
+let currentCat = 'all';
+
+function applyCat(cat) {
+  currentCat = cat;
+  filteredIndices = IMAGES.map((img, i) => ({ img, i }))
+    .filter(({ img }) => cat === 'all' || img.cat === cat)
+    .map(({ i }) => i);
+  currentIndex = 0;
+  updateImage();
+  document.querySelectorAll('.cat-chip').forEach(el => {
+    el.classList.toggle('active', el.dataset.cat === cat);
+  });
+}
+
+document.querySelectorAll('.cat-chip').forEach(el => {
+  el.addEventListener('click', () => applyCat(el.dataset.cat));
+});
+
 let loadToken    = 0;
 const cached = {};  // "idx_raw" or "idx_ann"
 
@@ -780,6 +831,7 @@ function enterGallery() {
   currentIndex = 0;
   filteredIndices = IMAGES.map((_, i) => i);
   updateImage();
+  localStorage.setItem('dorm_entered', '1');
 }
 
 function goHome() {
@@ -917,6 +969,12 @@ elImg.addEventListener('load', () => {
 console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
 document.getElementById('footerNote').textContent =
   '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
+
+// 二次访问直接进入画廊（欢迎页仅首次展示），免责提示用 toast 保留
+if (localStorage.getItem('dorm_entered') === '1') {
+  enterGallery();
+  setTimeout(() => showToast('尺寸均为手工测量，仅供参考'), 800);
+}
 
 // ── script end ──
 </script>
