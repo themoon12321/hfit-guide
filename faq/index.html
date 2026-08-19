@@ -66,6 +66,8 @@
   .item .q .q-mark { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.2); flex-shrink: 0; width: 20px; }
   .item .q .q-text { font-size: 15px; font-weight: 600; color: #f0f0f5; flex: 1; line-height: 1.5; }
   .item .q .arrow { font-size: 13px; color: rgba(255,255,255,0.15); transition: transform 0.25s; flex-shrink: 0; }
+  .item .q .q-share { font-size: 13px; color: rgba(255,255,255,0.15); cursor: pointer; flex-shrink: 0; transition: color 0.2s; }
+  .item .q .q-share:hover { color: rgba(255,255,255,0.7); }
   .item.open .q .arrow { transform: rotate(90deg); }
   .item .a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
   .item.open .a { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
@@ -210,10 +212,12 @@ function render() {
   });
   document.getElementById('empty').classList.toggle('hidden', filtered.length > 0);
   list.innerHTML = '';
-  filtered.forEach(function(item, idx) {
+  filtered.forEach(function(item) {
     var div = document.createElement('div');
     div.className = 'item';
-    div.id = 'faq-' + idx;
+    // 用全量索引做锚点：搜索/标签过滤后分享出去的链接仍指向同一条
+    var gIdx = allData.indexOf(item);
+    div.id = 'faq-' + gIdx;
     var badges = getTags(item).map(function(t) { return '<span class="tag-badge">' + esc(t) + '</span>'; }).join('');
     var imgs = '';
     if (item.images && item.images.length) {
@@ -222,7 +226,16 @@ function render() {
       }).join('');
       imgs = '<div class="img-list">' + thumbs + '</div>';
     }
-    div.innerHTML = '<div class="q" tabindex="0" role="button"><span class="q-mark">Q</span><span class="q-text">' + esc(item.q) + '</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + badges + '<br>' + item.a + imgs + '</div></div>';
+    div.innerHTML = '<div class="q" tabindex="0" role="button"><span class="q-mark">Q</span><span class="q-text">' + esc(item.q) + '</span><span class="q-share" title="复制这条的链接">🔗</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + badges + '<br>' + item.a + imgs + '</div></div>';
+    div.querySelector('.q-share').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var self = this;
+      var url = location.origin + location.pathname + '#faq-' + gIdx;
+      navigator.clipboard.writeText(url).then(function() {
+        self.textContent = '✓';
+        setTimeout(function() { self.textContent = '🔗'; }, 1500);
+      });
+    });
     div.querySelector('.q').addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
     });
@@ -233,7 +246,7 @@ function render() {
       var isOpen = div.classList.toggle('open');
       var a = div.querySelector('.a');
       a.style.maxHeight = isOpen ? '62vh' : '0px';
-      history.replaceState(null, '', '#faq-' + idx);
+      history.replaceState(null, '', '#faq-' + gIdx);
     });
     list.appendChild(div);
   });

@@ -149,14 +149,14 @@ async function login() {
 }
 
 async function loadAll() {
-  var pages = ['portal', 'dorm', 'faq'];
+  var pages = ['portal', 'dorm', 'faq', 'layouts'];
   var html = '';
   for (var i = 0; i < pages.length; i++) {
     var page = pages[i];
     try {
       var r = await fetch('/api/comments?page=' + page, { headers: { 'Authorization': 'Bearer ' + adminToken } });
       var list = await r.json();
-      var titles = { portal: '门户主页', dorm: '宿舍尺寸指南', faq: 'FAQ 提问' };
+      var titles = { portal: '门户主页', dorm: '宿舍尺寸指南', faq: 'FAQ 提问', layouts: '布置投稿' };
       html += '<div class="section"><h2>' + (titles[page] || page) + ' · ' + (list ? list.length : 0) + ' 条</h2>';
       if (!list || !list.length) {
         html += '<div class="empty">暂无留言</div>';
