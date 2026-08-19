@@ -441,6 +441,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="data.js"></script>
 <script src="./hotspots.js"></script>
 <script>
 // ============================================================
@@ -451,24 +452,7 @@ const RAW_DIR    = COS_URL + '/img/raw';
 const ANNOT_DIR  = COS_URL + '/img/ann';
 
 // id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
-const IMAGES = [
-  { id: 'D01', ann: true, cat: 'desk',  label: '书桌 — 主正视图' },
-  { id: 'D02', ann: true, cat: 'desk',  label: '书桌下方 — 带柜完整视图' },
-  { id: 'D03', ann: true, cat: 'desk',  label: '书桌下方 — 正视图' },
-  { id: 'D07', ann: true, cat: 'desk',  label: '书桌右下 — 两层小柜图' },
-  { id: 'D09', ann: true, cat: 'desk',  label: '书桌 — 正面后挡板视图' },
-  { id: 'D10', ann: true, cat: 'desk',  label: '书桌 — 线缆开口直径图' },
-  { id: 'B01', ann: true, cat: 'bed',   label: '床板 — 视图' },
-  { id: 'B02', ann: true, cat: 'bed',   label: '床板 — 层高视图' },
-  { id: 'S01', ann: true, cat: 'stairs', label: '楼梯斜视图' },
-  { id: 'S02', ann: true, cat: 'stairs', label: '楼梯柜视图一' },
-  { id: 'C01', ann: true, cat: 'closet', label: '衣柜 — 闭门视图' },
-  { id: 'C02', ann: true, cat: 'closet', label: '衣柜上层开门视图' },
-  { id: 'C03', ann: true, cat: 'closet', label: '衣柜下方开门视图' },
-  { id: 'C04', ann: true, cat: 'closet', label: '衣柜顶部缝隙视图' },
-  { id: 'P01', ann: true, cat: 'space', label: '一四号床位 — 侧边空间示意图' },
-  { id: 'P02', ann: true, cat: 'space', label: '二三号床位 — 侧边空间示意图' },
-];
+// IMAGES 数据已抽离到 data.js
 
 // Derive file path from id
 function fileFor(id) { return id + '.jpg'; }
