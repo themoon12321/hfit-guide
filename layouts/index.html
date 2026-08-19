@@ -102,6 +102,44 @@
   .lightbox .lb-prev { left: 16px; }
   .lightbox .lb-next { right: 16px; }
   .lightbox.show .lb-nav { display: flex; }
+
+  /* ========== Submit ========== */
+  .submit-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; margin-top: 28px;
+    padding: 14px; border-radius: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.45); font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+  }
+  .submit-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
+  #submitModal {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  #submitModal.show { opacity: 1; pointer-events: auto; }
+  .fb-box {
+    width: 88%; max-width: 380px;
+    background: #1a1a1e; border-radius: 16px;
+    padding: 24px; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .fb-box h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .fb-box .fb-sub { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 16px; line-height: 1.6; }
+  .fb-box input, .fb-box textarea {
+    width: 100%; padding: 10px 12px;
+    border-radius: 10px; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #eaeaef; font-size: 13px; font-family: inherit;
+    outline: none; margin-bottom: 10px;
+  }
+  .fb-box textarea { min-height: 80px; resize: vertical; }
+  .fb-box .fb-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  .fb-box .fb-btns button { padding: 8px 18px; border-radius: 10px; border: none; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .fb-box .fb-btns .cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
+  .fb-box .fb-btns .send { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
   @media (max-width: 480px) {
     body { padding: 32px 12px 32px; }
     .card .body { padding: 14px 14px 16px; }
@@ -114,6 +152,14 @@
 <div class="header"><a class="back" href="../index.html">←</a><h1>宿舍布置参考</h1></div>
 <div id="feed"></div>
 <div class="lightbox" id="lightbox"><button class="lb-close" id="lbClose">&times;</button><button class="lb-nav lb-prev" id="lbPrev">‹</button><img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><button class="lb-nav lb-next" id="lbNext">›</button></div>
+<button class="submit-btn" id="submitBtn">🏠 想分享你的宿舍布置？来投稿</button>
+<div id="submitModal"><div class="fb-box">
+  <h3>宿舍布置投稿</h3>
+  <div class="fb-sub">分享你的桌面 / 床铺 / 收纳好物，附上照片和介绍。照片可以传到 COS 或直接联系站长。</div>
+  <input type="text" id="subName" placeholder="昵称（可选）" maxlength="12">
+  <textarea id="subText" placeholder="描述你的布置、好物推荐…"></textarea>
+  <div class="fb-btns"><button class="cancel" onclick="closeSub()">取消</button><button class="send" onclick="sendSub()">提交</button></div>
+</div></div>
 <script src="data.js"></script>
 <script>
 // LAYOUTS 数据已抽离到 data.js
@@ -212,6 +258,19 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight') lbNav(1);
 });
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* ===== 投稿 ===== */
+document.getElementById('submitBtn').onclick = function() { document.getElementById('submitModal').classList.add('show'); };
+function closeSub() { document.getElementById('submitModal').classList.remove('show'); }
+function sendSub() {
+  var text = document.getElementById('subText').value.trim();
+  var name = document.getElementById('subName').value.trim();
+  if (!text) return;
+  fetch('/api/comments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:'layouts', nickname:name||'匿名', text:text}) })
+    .then(function() { alert('投稿已收到，感谢分享！'); closeSub(); document.getElementById('subText').value=''; document.getElementById('subName').value=''; })
+    .catch(function() { alert('提交失败，请稍后再试'); });
+}
+document.getElementById('submitModal').onclick = function(e) { if (e.target === this) closeSub(); };
 </script>
 </body>
 </html>

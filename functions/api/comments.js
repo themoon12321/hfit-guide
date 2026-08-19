@@ -9,7 +9,7 @@ function isAuthed(request, env) {
 }
 
 // 留言归属页面白名单：新增有留言功能的页面时，把页面 id 加进来
-const ALLOWED_PAGES = ['portal', 'dorm', 'faq'];
+const ALLOWED_PAGES = ['portal', 'dorm', 'faq', 'layouts'];
 
 export async function onRequest(context) {
   const { request, env } = context;
