@@ -451,6 +451,7 @@
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="counter" id="counter">1 / 16</span>
     <button class="btn-home" id="catToggle">🏷️ 分类</button>
+    <button class="btn-home" id="shareBtn" title="复制当前图片链接">🔗</button>
   </div>
 </div>
 
@@ -677,6 +678,19 @@ document.getElementById('catToggle').addEventListener('click', function() {
   document.getElementById('catBar').classList.toggle('hidden');
 });
 
+// 分享当前图片链接
+document.getElementById('shareBtn').addEventListener('click', function() {
+  const realIdx = filteredIndices[currentIndex];
+  const meta = IMAGES[realIdx];
+  if (!meta) return;
+  const url = location.origin + location.pathname + '#' + meta.id;
+  navigator.clipboard.writeText(url).then(function() {
+    showToast('链接已复制 ✓');
+  }).catch(function() {
+    showToast('复制失败，请手动复制地址栏');
+  });
+});
+
 let loadToken    = 0;
 const cached = {};  // "idx_raw" or "idx_ann"
 
@@ -710,6 +724,8 @@ function updateImage() {
 
   elCounter.textContent = `${currentIndex + 1} / ${filteredIndices.length}`;
   elTitle.textContent   = `${meta.id} ${meta.label}`;
+  // 地址栏同步当前图片 id（支持分享直达链接 #D01）
+  history.replaceState(null, '', '#' + meta.id);
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
   resetZoom();
@@ -854,6 +870,8 @@ function enterGallery() {
 
 function goHome() {
   document.getElementById('welcome').classList.remove('hidden');
+  // 回到欢迎页时清掉地址栏的图片 id，避免误导
+  history.replaceState(null, '', location.pathname);
 }
 
 // ============================================================
@@ -988,10 +1006,21 @@ console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图
 document.getElementById('footerNote').textContent =
   '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 
-// 二次访问直接进入画廊（欢迎页仅首次展示），免责提示用 toast 保留
-if (localStorage.getItem('dorm_entered') === '1') {
+// 分享直达：带 #D01 这类链接时直接进画廊并定位；否则按访问记忆
+var hashMatch = location.hash.match(/^#([A-Z]\d{2})$/);
+var hashIdx = -1;
+if (hashMatch) {
+  hashIdx = IMAGES.findIndex(function(img) { return img.id === hashMatch[1]; });
+}
+if (hashIdx >= 0) {
+  document.getElementById('welcome').classList.add('hidden');
+  currentIndex = hashIdx;
+  filteredIndices = IMAGES.map(function(_, i) { return i; });
+  updateImage();
+  setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
+} else if (localStorage.getItem('dorm_entered') === '1') {
   enterGallery();
-  setTimeout(() => showToast('尺寸均为手工测量，仅供参考'), 800);
+  setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
 }
 
 // ── script end ──
