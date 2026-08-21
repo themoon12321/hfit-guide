@@ -3,6 +3,7 @@
 // 加固：page 白名单 + delta 只允许 ±1（防刷任意数值）+ 同 IP 每小时限流
 
 const ALLOWED_PAGES = ['portal', 'dorm', 'faq', 'layouts'];
+const ITEM_RE = /^[a-zA-Z0-9_-]{1,32}$/;
 
 export async function onRequest(context) {
   const { request, env } = context;
