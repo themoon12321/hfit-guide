@@ -22,14 +22,33 @@ export async function onRequest(context) {
   try {
     if (request.method === 'GET') {
       const page = url.searchParams.get('page') || 'default';
-      const count = parseInt(await env.KV.get(`likes:${page}`) || '0');
+      const item = url.searchParams.get('item');
+      const wantAll = url.searchParams.get('items') === '1';
+
+      // 批量获取某页下所有条目的赞数（likes:page:* 前缀）
+      if (wantAll) {
+        const list = await env.KV.list({ prefix: `likes:${page}:` });
+        const counts = {};
+        await Promise.all(list.keys.map(async (k) => {
+          const val = parseInt(await env.KV.get(k.name) || '0');
+          counts[k.name.slice(`likes:${page}:`.length)] = val;
+        }));
+        return new Response(JSON.stringify(counts), { headers });
+      }
+
+      const key = item ? `likes:${page}:${item}` : `likes:${page}`;
+      const count = parseInt(await env.KV.get(key) || '0');
       return new Response(JSON.stringify({ count }), { headers });
     }
 
     if (request.method === 'POST') {
-      const { page, delta } = await request.json();
+      const { page, item, delta } = await request.json();
       if (!ALLOWED_PAGES.includes(page || '')) {
         return new Response(JSON.stringify({ error: '未知页面' }), { status: 400, headers });
+      }
+      // 条目 id 格式校验（防写入任意 key）
+      if (item !== undefined && item !== null && !/^[a-zA-Z0-9_-]{1,32}$/.test(item)) {
+        return new Response(JSON.stringify({ error: '参数错误' }), { status: 400, headers });
       }
       // 只允许 +1 / -1，防止一次刷任意数值或清零
       const d = parseInt(delta);
@@ -45,7 +64,7 @@ export async function onRequest(context) {
       }
       await env.KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3700 });
 
-      const key = `likes:${page}`;
+      const key = item ? `likes:${page}:${item}` : `likes:${page}`;
       const current = parseInt(await env.KV.get(key) || '0');
       const next = Math.max(0, current + d);
       await env.KV.put(key, String(next));

@@ -31,6 +31,7 @@
     line-height: 1.6; margin-bottom: 16px;
   }
   .disclaimer .icon { flex-shrink: 0; font-size: 14px; }
+  .faq-updated { font-size: 11px; color: rgba(255,255,255,0.2); margin: -6px 2px 14px; font-feature-settings: "tnum"; }
   .search {
     display: flex; align-items: center; gap: 8px;
     padding: 10px 14px; border-radius: 12px;
@@ -166,18 +167,70 @@
     background: rgba(0,0,0,0.5); padding: 4px 14px; border-radius: 14px;
     font-feature-settings: "tnum";
   }
+  /* 答案更新时间 */
+  .item .a .inner .updated { font-size: 11px; color: rgba(255,255,255,0.18); margin-top: 12px; }
+  /* 置顶标识 */
+  .pinned-tag { font-size: 11px; color: rgba(255,200,60,0.7); flex-shrink: 0; }
+  /* 操作行：点赞按钮 */
+  .ops-row { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+  .like-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.5); font-size: 12px;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .like-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .like-btn.liked { background: rgba(80,200,120,0.12); border-color: rgba(80,200,120,0.25); color: #4cd964; }
+  .like-btn .like-count { font-feature-settings: "tnum"; font-size: 11px; opacity: 0.7; }
+  /* 信号格热度（标题旁，手机信号格样式：等宽、高度递增） */
+  .signal { display: inline-flex; align-items: flex-end; gap: 1.5px; height: 11px; flex-shrink: 0; }
+  .signal i { width: 3px; border-radius: 1px; background: rgba(80,200,120,0.15); transition: background 0.3s; }
+  .signal i.on { background: #4cd964; }
+  /* 排序切换 */
+  .sort-row { display: flex; align-items: center; gap: 8px; margin: -8px 0 16px; padding: 0 4px; }
+  .sort-label { font-size: 11px; color: rgba(255,255,255,0.2); }
+  .sort-btn {
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.35); font-size: 11px;
+    cursor: pointer; font-family: inherit; transition: all 0.2s;
+  }
+  .sort-btn:hover { color: rgba(255,255,255,0.7); }
+  .sort-btn.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.16); color: rgba(255,255,255,0.85); }
+  /* Toast 提示 */
+  .toast {
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 400;
+    padding: 10px 22px; border-radius: 22px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    font-size: 13px; color: rgba(255,255,255,0.85);
+    opacity: 0; transition: opacity 0.3s ease;
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
 </style>
 </head>
 <body>
 <div class="header"><a class="back" href="../index.html">←</a><h1>常见问题</h1></div>
 <div class="disclaimer"><span class="icon">⚠️</span><span>以下内容仅根据个人经验回答，仅供参考。实际以学校规定和现实情况为准。</span></div>
+<div class="faq-updated" id="faqUpdated"></div>
 <div class="search"><span class="mag">🔍</span><input type="text" id="searchInput" placeholder="搜索问题关键词…"></div>
 <div class="tabs" id="tabs"></div>
+<div class="sort-row">
+  <span class="sort-label">排序</span>
+  <button class="sort-btn active" data-sort="default">默认</button>
+  <button class="sort-btn" data-sort="hot">🔥 热度</button>
+</div>
 <div id="list"></div>
 <div class="empty hidden" id="empty">没有找到相关问题</div>
 <button class="feedback-btn" id="fbBtn"><span>❓</span> 有问题没找到？点这里反馈</button>
 <div id="fbModal"><div class="fb-box"><h3>提一个问题</h3><div class="fb-sub">我们会筛选整理后补充到 FAQ 里</div><input type="text" id="fbName" placeholder="昵称（可选）" maxlength="12"><textarea id="fbText" placeholder="说说你遇到的问题…"></textarea><div class="fb-btns"><button class="cancel" onclick="closeFb()">取消</button><button class="send" onclick="sendFb()">提交</button></div></div></div>
 <div class="lightbox" id="lightbox"><button class="lb-close" id="lbClose">&times;</button><button class="lb-nav lb-prev" id="lbPrev">‹</button><img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><button class="lb-nav lb-next" id="lbNext">›</button><div class="lb-counter" id="lbCounter"></div></div>
+<div class="toast" id="toast"></div>
 <script src="data.js"></script>
 <script>
 // FAQ 数据已抽离到 data.js
@@ -185,6 +238,30 @@
 var allData = FAQ;
 var currentTag = '全部';
 var searchTerm = '';
+var likeCounts = {};
+var currentSort = 'default'; // default | hot
+
+// 赞数 → 信号格数（0-5 格）
+function levelOf(n) {
+  if (n >= 21) return 5;
+  if (n >= 11) return 4;
+  if (n >= 6) return 3;
+  if (n >= 3) return 2;
+  if (n >= 1) return 1;
+  return 0;
+}
+
+// 批量拉取该页所有条目的赞数
+function loadLikes() {
+  fetch('/api/likes?page=faq&items=1').then(function(r) { return r.json(); }).then(function(d) {
+    likeCounts = d || {};
+    render();
+  }).catch(function() {});
+}
+// 板块最后更新时间（数据在 data.js 里维护）
+if (typeof FAQ_UPDATED !== 'undefined' && FAQ_UPDATED) {
+  document.getElementById('faqUpdated').textContent = '内容最后更新：' + FAQ_UPDATED;
+}
 function getTags(item) {
   if (item.tags && item.tags.length) return item.tags;
   if (item.tag) return [item.tag];
@@ -211,6 +288,13 @@ function render() {
     return okTag && okSearch;
   });
   document.getElementById('empty').classList.toggle('hidden', filtered.length > 0);
+  // 排序：置顶永远最前；热度模式按赞数降序
+  var pinned = filtered.filter(function(x) { return x.pinned; });
+  var rest = filtered.filter(function(x) { return !x.pinned; });
+  if (currentSort === 'hot') {
+    rest.sort(function(a, b) { return (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0); });
+  }
+  filtered = pinned.concat(rest);
   list.innerHTML = '';
   filtered.forEach(function(item) {
     var div = document.createElement('div');
@@ -226,7 +310,17 @@ function render() {
       }).join('');
       imgs = '<div class="img-list">' + thumbs + '</div>';
     }
-    div.innerHTML = '<div class="q" tabindex="0" role="button"><span class="q-mark">Q</span><span class="q-text">' + esc(item.q) + '</span><span class="q-share" title="复制这条的链接">🔗</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + badges + '<br>' + item.a + imgs + '</div></div>';
+    var updated = item.updated ? '<div class="updated">更新于 ' + esc(item.updated) + '</div>' : '';
+    // 置顶标识 + 信号格（标题旁小尺寸）
+    var pinTag = item.pinned ? '<span class="pinned-tag">📌 置顶</span>' : '';
+    var likes = likeCounts[item.id] || 0;
+    var level = levelOf(likes);
+    var signal = '<div class="signal">' + [1,2,3,4,5].map(function(i) {
+      return '<i class="' + (i <= level ? 'on' : '') + '" style="height:' + (i * 2 + 1) + 'px"></i>';
+    }).join('') + '</div>';
+    var liked = localStorage.getItem('liked_faq_' + item.id) === '1';
+    var ops = '<div class="ops-row"><button class="like-btn' + (liked ? ' liked' : '') + '" data-id="' + item.id + '"><span class="like-txt">有用</span><span class="like-count">' + (likes > 0 ? likes : '') + '</span></button></div>';
+    div.innerHTML = '<div class="q" tabindex="0" role="button"><span class="q-mark">Q</span><span class="q-text">' + esc(item.q) + '</span>' + pinTag + signal + '<span class="q-share" title="复制这条的链接">🔗</span><span class="arrow">›</span></div><div class="a"><div class="inner">' + badges + '<br>' + item.a + imgs + updated + ops + '</div></div>';
     div.querySelector('.q-share').addEventListener('click', function(e) {
       e.stopPropagation();
       var self = this;
@@ -234,6 +328,9 @@ function render() {
       navigator.clipboard.writeText(url).then(function() {
         self.textContent = '✓';
         setTimeout(function() { self.textContent = '🔗'; }, 1500);
+        showToast('链接已复制 ✓');
+      }).catch(function() {
+        showToast('复制失败，请手动复制地址栏链接');
       });
     });
     div.querySelector('.q').addEventListener('keydown', function(e) {
@@ -253,6 +350,38 @@ function render() {
 }
 document.getElementById('searchInput').addEventListener('input', function() { searchTerm = this.value.trim(); render(); });
 document.getElementById('fbBtn').onclick = function() { document.getElementById('fbModal').classList.add('show'); };
+
+/* ===== 点赞（条目级，信号格热度） ===== */
+document.getElementById('list').addEventListener('click', function(e) {
+  var btn = e.target.closest('.like-btn');
+  if (!btn) return;
+  e.preventDefault();
+  var id = btn.dataset.id;
+  var liked = btn.classList.toggle('liked');
+  localStorage.setItem('liked_faq_' + id, liked ? '1' : '0');
+  fetch('/api/likes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ page: 'faq', item: id, delta: liked ? 1 : -1 })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      likeCounts[id] = d.count;
+      var c = btn.querySelector('.like-count');
+      c.textContent = d.count > 0 ? d.count : '';
+      if (currentSort === 'hot') render();
+    })
+    .catch(function() { btn.classList.toggle('liked'); });
+});
+
+/* ===== 排序切换 ===== */
+document.querySelectorAll('.sort-btn').forEach(function(b) {
+  b.addEventListener('click', function() {
+    currentSort = b.dataset.sort;
+    document.querySelectorAll('.sort-btn').forEach(function(x) { x.classList.toggle('active', x === b); });
+    render();
+  });
+});
 function closeFb() { document.getElementById('fbModal').classList.remove('show'); }
 function sendFb() {
   var text = document.getElementById('fbText').value.trim();
@@ -303,7 +432,18 @@ document.getElementById('lightbox').addEventListener('touchend', function(e) {
   if (Math.abs(dx) > 50) lbNav(dx > 0 ? 1 : -1);
 });
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* ===== Toast 提示 ===== */
+var toastTimer;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('show'); }, 1800);
+}
 render();
+loadLikes();
 // 深链接：打开带 #faq-N 的链接时自动展开对应条目
 function openByHash() {
   var m = location.hash.match(/^#faq-(\d+)$/);

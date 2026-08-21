@@ -52,6 +52,15 @@
     font-size: 16px; color: rgba(255,255,255,0.45);
     line-height: 1.7;
   }
+  .hero .about-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 22px; padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.4);
+    font-size: 12px; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .hero .about-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
   /* ========== Grid ========== */
   .grid {
@@ -142,15 +151,15 @@
   <div class="disclaimer"><span class="icon">⚠️</span><span>本站为个人公益项目，纯为爱发电，任何借此为资料进行收费、私自引流宣传的行为均不合理，谨防诈骗。</span></div>
   <h1>合肥理工学院指南</h1>
   <p>从宿舍到教室，从食堂到图书馆——<br>你想知道的，都在这里。</p>
+  <a class="about-link" href="about.html">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    关于我
+  </a>
 </div>
 
 <div class="grid" id="cardGrid"></div>
 
 <div class="footer">
-  <a href="about.html">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    关于我
-  </a>
   <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
