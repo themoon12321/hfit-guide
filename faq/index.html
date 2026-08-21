@@ -241,14 +241,11 @@ var searchTerm = '';
 var likeCounts = {};
 var currentSort = 'default'; // default | hot
 
-// 赞数 → 信号格数（0-5 格）
-function levelOf(n) {
-  if (n >= 21) return 5;
-  if (n >= 11) return 4;
-  if (n >= 6) return 3;
-  if (n >= 3) return 2;
-  if (n >= 1) return 1;
-  return 0;
+// 赞数 → 信号格数（0-5 格）：按最高值的比例计算，有赞至少 1 格
+function levelOf(n, max) {
+  if (!max || n <= 0) return 0;
+  var l = Math.round(n / max * 5);
+  return Math.max(1, Math.min(5, l));
 }
 
 // 批量拉取所有条目的赞数（页面知道全部 id，逐个强一致读取）
@@ -289,6 +286,9 @@ function render() {
     return okTag && okSearch;
   });
   document.getElementById('empty').classList.toggle('hidden', filtered.length > 0);
+  // 最高赞数（信号格按相对比例计算）
+  var maxLikes = 0;
+  Object.keys(likeCounts).forEach(function(k) { if (likeCounts[k] > maxLikes) maxLikes = likeCounts[k]; });
   // 排序：置顶永远最前；热度模式按赞数降序
   var pinned = filtered.filter(function(x) { return x.pinned; });
   var rest = filtered.filter(function(x) { return !x.pinned; });
@@ -315,7 +315,7 @@ function render() {
     // 置顶标识 + 信号格（标题旁小尺寸）
     var pinTag = item.pinned ? '<span class="pinned-tag">📌 置顶</span>' : '';
     var likes = likeCounts[item.id] || 0;
-    var level = levelOf(likes);
+    var level = levelOf(likes, maxLikes);
     var signal = '<div class="signal">' + [1,2,3,4,5].map(function(i) {
       return '<i class="' + (i <= level ? 'on' : '') + '" style="height:' + (i * 2 + 1) + 'px"></i>';
     }).join('') + '</div>';
