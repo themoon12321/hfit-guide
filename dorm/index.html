@@ -398,6 +398,29 @@
     .thumb-bar { bottom: 82px; }
   }
 
+  /* ========== Lightbox（点击主图放大） ========== */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.94);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .lightbox.show { opacity: 1; pointer-events: auto; }
+  .lightbox img {
+    max-width: 94vw; max-height: 92vh; object-fit: contain;
+    border-radius: 4px;
+  }
+  .lightbox .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 26px; line-height: 1; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lightbox .lb-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
   /* ========== Toast ========== */
   .toast {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
@@ -538,6 +561,12 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLb()">
+  <span class="lb-close" onclick="closeLb(event)">&times;</span>
+  <img id="lbImg" src="" alt="放大查看">
+</div>
 
 <script src="data.js"></script>
 <script src="./hotspots.js"></script>
@@ -971,6 +1000,11 @@ function showToast(msg) {
 //  Keyboard
 // ============================================================
 document.addEventListener('keydown', (e) => {
+  // 放大查看打开时：Escape 只关闭放大，不影响画廊
+  if (elLightbox.classList.contains('show')) {
+    if (e.key === 'Escape') closeLb();
+    return;
+  }
   // ignore when welcome is visible
   if (!document.getElementById('welcome').classList.contains('hidden')) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGallery(); }
@@ -991,6 +1025,8 @@ let touchOnHotspot = false;
 document.addEventListener('touchstart', (e) => {
   touchOnHotspot = !!e.target.closest('.hotspot-dot, .hotspot-bubble');
   if (touchOnHotspot) { touchStartX = 0; return; }
+  // 在缩略图条上滑动 = 滚动缩略图，不是翻页
+  if (e.target.closest('.thumb-inner')) { touchStartX = 0; return; }
   if (e.touches.length > 1) { multiTouch = true; touchStartX = 0; return; }
   touchStartX = e.changedTouches[0].screenX;
 });
@@ -1084,9 +1120,22 @@ document.getElementById('hotspotBtn').addEventListener('click', toggleHotspots);
 document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
 
 // 图片加载完成后重新定位热点
-// 主图点击（非缩放模式下）→ 新标签打开原图，可自由放大查看
+// ============================================================
+//  Lightbox（点击主图放大查看，避免新标签打开被下载）
+// ============================================================
+const elLightbox = document.getElementById('lightbox');
+function openLb() {
+  document.getElementById('lbImg').src = elImg.src;
+  elLightbox.classList.add('show');
+}
+function closeLb(e) {
+  if (e) e.stopPropagation();
+  elLightbox.classList.remove('show');
+}
+
+// 主图点击（非缩放模式下）→ 页面内放大查看
 elImg.addEventListener('click', function() {
-  if (!zoomEnabled) window.open(elImg.src, '_blank');
+  if (!zoomEnabled) openLb();
 });
 
 elImg.addEventListener('load', () => {
