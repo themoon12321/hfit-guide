@@ -70,8 +70,9 @@
   .item .q .q-share { font-size: 13px; color: rgba(255,255,255,0.15); cursor: pointer; flex-shrink: 0; transition: color 0.2s; }
   .item .q .q-share:hover { color: rgba(255,255,255,0.7); }
   .item.open .q .arrow { transform: rotate(90deg); }
-  .item .a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-  .item.open .a { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+  .item .a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease; }
+  .item.open .a { grid-template-rows: 1fr; max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+  .item .a .inner { overflow: hidden; }
   .item.open .a::-webkit-scrollbar { width: 6px; }
   .item.open .a::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
   .item.open .a::-webkit-scrollbar-track { background: transparent; }
@@ -351,11 +352,9 @@ function render() {
     });
     div.querySelector('.q').addEventListener('click', function() {
       list.querySelectorAll('.item.open').forEach(function(o) {
-        if (o !== div) { o.classList.remove('open'); o.querySelector('.a').style.maxHeight = '0px'; }
+        if (o !== div) { o.classList.remove('open'); }
       });
-      var isOpen = div.classList.toggle('open');
-      var a = div.querySelector('.a');
-      a.style.maxHeight = isOpen ? '62vh' : '0px';
+      div.classList.toggle('open');
       history.replaceState(null, '', '#faq-' + gIdx);
     });
     list.appendChild(div);

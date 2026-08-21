@@ -26,6 +26,12 @@
     border-radius: 16px; overflow: hidden;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.05); margin-bottom: 16px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .card.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .card { opacity: 1; transform: none; transition: none; }
   }
   .carousel { position: relative; overflow: hidden; user-select: none; }
   .carousel .track { display: flex; transition: transform 0.3s ease, height 0.3s ease; }
@@ -194,9 +200,19 @@ function toggleText(idx) {
   var isCollapsed = tw.classList.toggle('collapsed');
   eb.textContent = isCollapsed ? '展开全文' : '收起';
 }
+/* ===== 滚动进场：卡片进入视口时浮现 ===== */
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(en) {
+    if (en.isIntersecting) {
+      en.target.classList.add('visible');
+      observer.unobserve(en.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.card').forEach(function(c) { observer.observe(c); });
+
 document.querySelectorAll('.carousel').forEach(function(car) {
-  var track = car.querySelector('.track');
-  var slides = track.querySelectorAll('.slide');
+  var track = car.querySelector('.track');  var slides = track.querySelectorAll('.slide');
   var dots = car.querySelectorAll('.dot');
   var counter = car.querySelector('.counter');
   var total = slides.length;
