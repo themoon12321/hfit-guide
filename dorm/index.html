@@ -147,8 +147,8 @@
   .bottom-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px;
-    gap: 12px;
+    padding: 10px 14px;
+    gap: 10px;
   }
   .bottom-bar .title {
     font-size: 13px; font-weight: 500;
@@ -159,10 +159,10 @@
 
   /* ========== Toggle ========== */
   .toggle-annotations {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 14px; border-radius: 20px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 16px;
     background: rgba(255,255,255,0.05);
-    font-size: 12px; font-weight: 500;
+    font-size: 11px; font-weight: 500;
     color: rgba(255,255,255,0.35);
     transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
@@ -193,9 +193,9 @@
   /* ========== Zoom Toggle ========== */
   .toggle-zoom {
     display: flex; align-items: center; gap: 6px;
-    padding: 6px 14px; border-radius: 20px;
+    padding: 4px 10px; border-radius: 16px;
     background: rgba(255,255,255,0.06);
-    font-size: 12px; font-weight: 500;
+    font-size: 11px; font-weight: 500;
     color: rgba(255,255,255,0.45);
     transition: background 0.3s, color 0.3s;
     flex-shrink: 0;
@@ -213,6 +213,9 @@
   .image-wrapper.zooming { cursor: grab; }
   .image-wrapper.zooming:active { cursor: grabbing; }
   .image-wrapper.zooming img { transition: opacity 0.25s ease; }
+  /* 主图可点击放大提示（缩放模式下变为拖动光标） */
+  .image-wrapper img { cursor: zoom-in; }
+  .image-wrapper.zooming img { cursor: grab; }
 
   /* ========== Hotspot ========== */
   .hotspot-layer {
@@ -360,7 +363,7 @@
 
   /* ========== Thumbnail Bar ========== */
   .thumb-bar {
-    position: fixed; bottom: 66px; left: 0; right: 0; z-index: 19;
+    position: fixed; bottom: 46px; left: 0; right: 0; z-index: 19;
     padding: 6px 10px;
     pointer-events: none;
     opacity: 0.45;
@@ -392,7 +395,7 @@
     color: rgba(255,255,255,0.15); font-size: 10px;
   }
   @media (max-width: 640px) {
-    .thumb-bar { bottom: 104px; }
+    .thumb-bar { bottom: 82px; }
   }
 
   /* ========== Toast ========== */
@@ -420,8 +423,8 @@
     .bottom-bar .title { font-size: 12px; flex-basis: 100%; order: -1; text-align: center; }
     .top-bar { padding: 12px 14px; }
     .image-wrapper img { padding: 8px; }
-    .toggle-annotations { padding: 5px 12px; font-size: 11px; }
-    .toggle-zoom { padding: 5px 12px; font-size: 11px; }
+    .toggle-annotations { padding: 3px 9px; font-size: 10px; }
+    .toggle-zoom { padding: 3px 9px; font-size: 10px; }
     .btn-home { padding: 5px 12px; font-size: 11px; }
   }
 </style>
@@ -980,23 +983,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================================
-//  Touch swipe
+//  Touch swipe（已移除：手机上放大时容易误触翻页，改为仅按钮翻页）
 // ============================================================
-let touchStartX = 0;
-let touchOnHotspot = false;
-document.addEventListener('touchstart', (e) => {
-  touchOnHotspot = !!e.target.closest('.hotspot-dot, .hotspot-bubble');
-  if (touchOnHotspot) { touchStartX = 0; return; }
-  touchStartX = e.changedTouches[0].screenX;
-});
-document.addEventListener('touchend', (e) => {
-  if (touchOnHotspot) { touchOnHotspot = false; return; }
-  if (touchStartX === 0) return;
-  const diff = touchStartX - e.changedTouches[0].screenX;
-  if (Math.abs(diff) > 60) {
-    diff > 0 ? nextImage() : prevImage();
-  }
-});
 
 // ============================================================
 //  Lightbox
