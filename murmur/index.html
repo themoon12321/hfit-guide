@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>碎碎念 · 合肥理工学院指南</title>
+<meta name="description" content="一些想法、日常、经验分享——来自月亮早睡困不醒。">
+<meta property="og:title" content="碎碎念 · 合肥理工学院指南">
+<meta property="og:description" content="一些想法、日常、经验分享——来自月亮早睡困不醒。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f; color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px 60px; max-width: 640px; margin: 0 auto;
+  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
+  .sub { font-size: 12px; color: rgba(255,255,255,0.25); padding: 0 6px; margin-bottom: 20px; }
+
+  /* ========== Tabs ========== */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .tab {
+    padding: 6px 14px; border-radius: 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.35); font-size: 12px; cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .tab:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6); }
+  .tab.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
+
+  /* ========== Timeline（无卡片，内容直挂竖线右侧） ========== */
+  .timeline { position: relative; padding-left: 34px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 11px; top: 10px; bottom: 10px;
+    width: 2px; background: rgba(255,255,255,0.1);
+  }
+  .tl-item { position: relative; margin-bottom: 32px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -30px; top: 3px;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: #0d0d0f; border: 2.5px solid rgba(255,255,255,0.38);
+  }
+  .tl-item .meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .tl-item .meta .m-date { font-size: 12px; color: rgba(255,255,255,0.35); font-feature-settings: "tnum"; letter-spacing: 0.3px; }
+  .tl-item .meta .m-mood { font-size: 14px; }
+  .tl-item .meta .tag-badge { padding: 1px 8px; border-radius: 8px; background: rgba(255,255,255,0.05); font-size: 10px; color: rgba(255,255,255,0.3); }
+
+  .tl-item .text { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.8; white-space: pre-line; }
+  .tl-item .text strong { color: #fff; font-weight: 600; }
+  .tl-item .imgs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .tl-item .imgs img {
+    width: 76px; height: 76px; object-fit: cover;
+    border-radius: 8px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .tl-item .imgs img:hover { transform: scale(1.06); border-color: rgba(255,255,255,0.2); }
+
+  /* 长文（时间线上的文章形态） */
+  .tl-item .post-title { font-size: 15px; font-weight: 600; color: #f0f0f5; line-height: 1.5; margin-bottom: 4px; }
+  .tl-item .post-summary { font-size: 13px; color: rgba(255,255,255,0.42); line-height: 1.7; }
+  .tl-item .read-more {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 6px; font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.5); cursor: pointer;
+    transition: color 0.2s;
+  }
+  .tl-item .read-more:hover { color: rgba(255,255,255,0.9); }
+
+  /* ========== 长文板块（独立视图） ========== */
+  .post-list { display: flex; flex-direction: column; gap: 14px; }
+  .post-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px; padding: 18px 20px;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .post-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+  .post-item .p-title { font-size: 16px; font-weight: 600; color: #f0f0f5; line-height: 1.5; }
+  .post-item .p-date { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 6px; font-feature-settings: "tnum"; }
+  .post-item .p-summary { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-top: 8px; }
+
+  /* ========== 文章视图 ========== */
+  .post-view .pv-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.35); font-size: 13px; cursor: pointer;
+    margin-bottom: 20px; transition: color 0.2s;
+  }
+  .post-view .pv-back:hover { color: rgba(255,255,255,0.7); }
+  .post-view .pv-title { font-size: 22px; font-weight: 650; color: #f5f5fa; line-height: 1.4; letter-spacing: -0.2px; margin-bottom: 10px; }
+  .post-view .pv-meta { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .post-view .pv-body { font-size: 14px; color: rgba(255,255,255,0.72); line-height: 1.95; white-space: pre-line; }
+  .post-view .pv-body strong { color: #fff; font-weight: 600; }
+  .post-view .pv-imgs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .post-view .pv-imgs img {
+    width: 110px; height: 110px; object-fit: cover;
+    border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ========== Lightbox ========== */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .lightbox.show { opacity: 1; pointer-events: auto; }
+  .lightbox img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
+  .lightbox .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none;
+    color: rgba(255,255,255,0.5); font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .empty { text-align: center; padding: 50px 20px; color: rgba(255,255,255,0.1); font-size: 13px; }
+  .hidden { display: none; }
+
+  @media (max-width: 480px) {
+    body { padding: 24px 12px 48px; }
+    .timeline { padding-left: 28px; }
+    .tl-item::before { left: -24px; }
+  }
+</style>
+</head>
+<body>
+<div class="header"><a class="back" href="../index.html">←</a><h1>碎碎念</h1></div>
+<div class="sub">想法 · 日常 · 经验分享</div>
+
+<div class="tabs" id="tabs"></div>
+
+<!-- 时间线视图 -->
+<div id="timeline"></div>
+
+<!-- 长文板块视图 -->
+<div id="postsView" class="hidden"><div class="post-list" id="postList"></div></div>
+
+<!-- 文章视图 -->
+<div id="postView" class="post-view hidden">
+  <span class="pv-back" id="pvBack">← 返回</span>
+  <div class="pv-title" id="pvTitle"></div>
+  <div class="pv-meta" id="pvMeta"></div>
+  <div class="pv-body" id="pvBody"></div>
+  <div class="pv-imgs" id="pvImgs"></div>
+</div>
+
+<div class="empty hidden" id="empty">这里还没有内容</div>
+
+<div class="lightbox" id="lightbox"><button class="lb-close" id="lbClose">&times;</button><img id="lbImg" src="" alt=""></div>
+
+<script src="data.js"></script>
+<script>
+var POSTS = (typeof MURMUR !== 'undefined') ? MURMUR : [];
+var currentTag = 'all';
+var currentView = 'timeline'; // timeline | posts
+
+/* ===== 标签收集 ===== */
+var allTags = [];
+POSTS.forEach(function(p) {
+  (p.tags || []).forEach(function(t) { if (allTags.indexOf(t) < 0) allTags.push(t); });
+});
+
+/* ===== Tabs ===== */
+function renderTabs() {
+  var el = document.getElementById('tabs');
+  var html = '<button class="tab active" data-tab="all">全部</button>';
+  html += '<button class="tab" data-tab="posts">📖 长文</button>';
+  allTags.forEach(function(t) {
+    html += '<button class="tab" data-tab="tag:' + t + '">#' + t + '</button>';
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.tab').forEach(function(b) {
+    b.addEventListener('click', function() { switchTab(b.dataset.tab); });
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(function(b) { b.classList.remove('active'); });
+  var btn = document.querySelector('.tab[data-tab="' + tab + '"]');
+  if (btn) btn.classList.add('active');
+  if (tab === 'posts') {
+    currentView = 'posts';
+    currentTag = 'all';
+    showView('posts');
+    renderPosts();
+  } else if (tab.indexOf('tag:') === 0) {
+    currentView = 'timeline';
+    currentTag = tab.slice(4);
+    showView('timeline');
+    renderTimeline();
+  } else {
+    currentView = 'timeline';
+    currentTag = 'all';
+    showView('timeline');
+    renderTimeline();
+  }
+  history.replaceState(null, '', 'murmur/');
+}
+
+/* ===== 视图切换 ===== */
+function showView(v) {
+  document.getElementById('timeline').classList.toggle('hidden', v !== 'timeline');
+  document.getElementById('postsView').classList.toggle('hidden', v !== 'posts');
+  document.getElementById('postView').classList.add('hidden');
+  document.getElementById('empty').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+/* ===== 时间线 ===== */
+function renderTimeline() {
+  var el = document.getElementById('timeline');
+  var list = POSTS.filter(function(p) {
+    return currentTag === 'all' || (p.tags || []).indexOf(currentTag) >= 0;
+  });
+  if (!list.length) { el.innerHTML = ''; document.getElementById('empty').classList.remove('hidden'); return; }
+  var html = '<div class="timeline">';
+  list.forEach(function(p) {
+    var gIdx = POSTS.indexOf(p);
+    // 头部行：日期 · 心情 · 标签（一行搞定，省空间）
+    var metaInner = '<span class="m-date">' + p.date + '</span>';
+    if (p.mood) metaInner += '<span class="m-mood">' + p.mood + '</span>';
+    (p.tags || []).forEach(function(t) { metaInner += '<span class="tag-badge">#' + t + '</span>'; });
+    var meta = '<div class="meta">' + metaInner + '</div>';
+    var imgs = p.images && p.images.length
+      ? '<div class="imgs">' + p.images.map(function(src) {
+          return '<img src="' + src + '" loading="lazy" data-src="' + src + '">';
+        }).join('') + '</div>'
+      : '';
+    if (p.title) {
+      html += '<div class="tl-item">' + meta +
+        '<div class="post-title">' + esc(p.title) + '</div>' +
+        (p.summary ? '<div class="post-summary">' + esc(p.summary) + '</div>' : '') +
+        '<span class="read-more" data-idx="' + gIdx + '">阅读全文 →</span></div>';
+    } else {
+      html += '<div class="tl-item">' + meta +
+        // 时间线紧凑显示：连续空行压缩为单换行
+        '<div class="text">' + esc(p.text).replace(/\n{2,}/g, '\n') + '</div>' + imgs + '</div>';
+    }
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  bindReadMore();
+  bindLightbox();
+}
+
+/* ===== 长文板块 ===== */
+function renderPosts() {
+  var el = document.getElementById('postList');
+  var list = POSTS.filter(function(p) { return p.title; });
+  if (!list.length) { el.innerHTML = ''; document.getElementById('empty').classList.remove('hidden'); return; }
+  var html = list.map(function(p) {
+    var gIdx = POSTS.indexOf(p);
+    return '<div class="post-item" data-idx="' + gIdx + '">' +
+      '<div class="p-title">' + esc(p.title) + '</div>' +
+      '<div class="p-date">' + p.date + '</div>' +
+      (p.summary ? '<div class="p-summary">' + esc(p.summary) + '</div>' : '') +
+      '</div>';
+  }).join('');
+  el.innerHTML = html;
+  el.querySelectorAll('.post-item').forEach(function(it) {
+    it.addEventListener('click', function() { openPost(parseInt(it.dataset.idx)); });
+  });
+}
+
+/* ===== 文章视图 ===== */
+function openPost(idx) {
+  var p = POSTS[idx];
+  if (!p) return;
+  showView('post');
+  document.getElementById('postView').classList.remove('hidden');
+  document.getElementById('pvTitle').textContent = p.title || '';
+  var meta = p.date;
+  if (p.mood) meta = p.mood + ' · ' + meta;
+  if (p.tags && p.tags.length) meta += ' · ' + p.tags.map(function(t) { return '#' + t; }).join(' ');
+  document.getElementById('pvMeta').textContent = meta;
+  document.getElementById('pvBody').innerHTML = esc(p.text).replace(/\n/g, '<br>');
+  var imgs = p.images && p.images.length
+    ? p.images.map(function(src) { return '<img src="' + src + '" data-src="' + src + '">'; }).join('')
+    : '';
+  document.getElementById('pvImgs').innerHTML = imgs;
+  bindLightbox();
+  history.replaceState(null, '', 'murmur/#post-' + idx);
+}
+
+function bindReadMore() {
+  document.querySelectorAll('.read-more').forEach(function(el) {
+    el.addEventListener('click', function() { openPost(parseInt(el.dataset.idx)); });
+  });
+}
+
+document.getElementById('pvBack').addEventListener('click', function() {
+  if (currentView === 'posts') { showView('posts'); renderPosts(); }
+  else { showView('timeline'); renderTimeline(); }
+  history.replaceState(null, '', 'murmur/');
+});
+
+/* ===== 图片放大 ===== */
+function bindLightbox() {
+  document.querySelectorAll('.imgs img, .pv-imgs img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      document.getElementById('lbImg').src = img.dataset.src || img.src;
+      document.getElementById('lightbox').classList.add('show');
+    });
+  });
+}
+document.getElementById('lbClose').onclick = function() { document.getElementById('lightbox').classList.remove('show'); };
+document.getElementById('lightbox').onclick = function(e) { if (e.target === this) this.classList.remove('show'); };
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('lightbox').classList.contains('show')) {
+    document.getElementById('lightbox').classList.remove('show');
+  }
+});
+
+/* ===== 深链接 ===== */
+function handleHash() {
+  var m = location.hash.match(/^#post-(\d+)$/);
+  if (m && POSTS[parseInt(m[1])]) { openPost(parseInt(m[1])); return true; }
+  return false;
+}
+
+/* ===== 工具 ===== */
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* ===== 初始化 ===== */
+renderTabs();
+if (!handleHash()) { showView('timeline'); renderTimeline(); }
+</script>
+</body>
+</html>
