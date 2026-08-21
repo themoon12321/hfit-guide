@@ -358,6 +358,34 @@
     .lightbox .lb-close { top: 12px; right: 14px; width: 36px; height: 36px; font-size: 22px; }
   }
 
+  /* ========== Thumbnail Bar ========== */
+  .thumb-bar {
+    position: fixed; bottom: 66px; left: 0; right: 0; z-index: 19;
+    display: flex; gap: 6px; overflow-x: auto;
+    padding: 8px 14px;
+    pointer-events: none;
+    scrollbar-width: none;
+  }
+  .thumb-bar::-webkit-scrollbar { display: none; }
+  .thumb-bar.hidden { display: none; }
+  .thumb-bar > * { pointer-events: auto; flex-shrink: 0; }
+  .thumb-item {
+    width: 40px; height: 40px; border-radius: 8px; overflow: hidden;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+    background: rgba(255,255,255,0.04);
+  }
+  .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb-item:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.06); }
+  .thumb-item.active { border-color: #4cd964; }
+  .thumb-item.img-fallback {
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.15); font-size: 10px;
+  }
+  @media (max-width: 640px) {
+    .thumb-bar { bottom: 104px; }
+  }
+
   /* ========== Toast ========== */
   .toast {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
@@ -493,6 +521,9 @@
   </button>
 </div>
 
+<!-- Thumbnail Bar -->
+<div class="thumb-bar hidden" id="thumbBar"></div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -505,6 +536,7 @@
 const COS_URL    = 'https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com';
 const RAW_DIR    = COS_URL + '/img/raw';
 const ANNOT_DIR  = COS_URL + '/img/ann';
+const THUMB_DIR  = COS_URL + '/img/thumbs';
 
 // id pattern: D=书桌 B=床 S=楼梯 C=衣柜 P=空间示意
 // IMAGES 数据已抽离到 data.js
@@ -651,6 +683,30 @@ let showHotspots = true;
 let filteredIndices = IMAGES.map((_, i) => i);
 
 // ============================================================
+//  Thumbnail bar（底部缩略图条）
+// ============================================================
+function renderThumbs() {
+  const bar = document.getElementById('thumbBar');
+  bar.innerHTML = '';
+  filteredIndices.forEach((realIdx, i) => {
+    const meta = IMAGES[realIdx];
+    const div = document.createElement('div');
+    div.className = 'thumb-item' + (i === currentIndex ? ' active' : '');
+    div.innerHTML = '<img src="' + THUMB_DIR + '/' + fileFor(meta.id) + '" loading="lazy" alt="">';
+    div.addEventListener('click', () => {
+      currentIndex = i;
+      updateImage();
+    });
+    // 缩略图加载失败：显示文字占位
+    div.querySelector('img').onerror = function() {
+      div.innerHTML = '图';
+      div.classList.add('img-fallback');
+    };
+    bar.appendChild(div);
+  });
+}
+
+// ============================================================
 //  Category filter（分类导航：书桌/床/楼梯/衣柜/空间）
 // ============================================================
 let currentCat = 'all';
@@ -698,6 +754,13 @@ const cached = {};  // "idx_raw" or "idx_ann"
 //  DOM refs
 // ============================================================
 const elImg      = document.getElementById('mainImage');
+// 主图加载失败：替换为占位图（灰色底 + 提示文字）
+elImg.onerror = function() {
+  elImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">' +
+    '<rect width="100%" height="100%" fill="#1a1a1e"/>' +
+    '<text x="50%" y="50%" fill="#555" font-size="15" text-anchor="middle" dominant-baseline="middle">图片加载失败</text></svg>');
+};
 const elCounter  = document.getElementById('counter');
 const elTitle    = document.getElementById('imageTitle');
 const elToggle   = document.getElementById('toggleBtn');
@@ -726,6 +789,7 @@ function updateImage() {
   elTitle.textContent   = `${meta.id} ${meta.label}`;
   // 地址栏同步当前图片 id（支持分享直达链接 #D01）
   history.replaceState(null, '', '#' + meta.id);
+  renderThumbs();
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
   resetZoom();
@@ -862,6 +926,7 @@ elWrapper.addEventListener('dblclick', (e) => {
 // ============================================================
 function enterGallery() {
   document.getElementById('welcome').classList.add('hidden');
+  document.getElementById('thumbBar').classList.remove('hidden');
   currentIndex = 0;
   filteredIndices = IMAGES.map((_, i) => i);
   updateImage();
@@ -870,6 +935,7 @@ function enterGallery() {
 
 function goHome() {
   document.getElementById('welcome').classList.remove('hidden');
+  document.getElementById('thumbBar').classList.add('hidden');
   // 回到欢迎页时清掉地址栏的图片 id，避免误导
   history.replaceState(null, '', location.pathname);
 }
@@ -1014,6 +1080,7 @@ if (hashMatch) {
 }
 if (hashIdx >= 0) {
   document.getElementById('welcome').classList.add('hidden');
+  document.getElementById('thumbBar').classList.remove('hidden');
   currentIndex = hashIdx;
   filteredIndices = IMAGES.map(function(_, i) { return i; });
   updateImage();
