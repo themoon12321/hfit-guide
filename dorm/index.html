@@ -22,53 +22,6 @@
   }
   button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
 
-  /* ========== Welcome Screen ========== */
-  #welcome {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #131314;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-  }
-  #welcome::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 55% at 50% 35%, rgba(255,255,255,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 25% 70%, rgba(255,255,255,0.02) 0%, transparent 50%);
-    pointer-events: none;
-  }
-  #welcome.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .welcome-card {
-    position: relative; text-align: center;
-    max-width: 600px; padding: 80px 48px;
-    animation: fadeUp 0.6s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .welcome-card .badge {
-    display: inline-block;
-    padding: 6px 18px; border-radius: 20px;
-    background: rgba(255,255,255,0.07);
-    font-size: 12px; letter-spacing: 0.4px;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 24px;
-  }
-  .welcome-card h1 { font-size: 44px; font-weight: 650; margin-bottom: 20px; line-height: 1.22; color: #f5f5fa; letter-spacing: -0.3px; }
-  .welcome-card p  { font-size: 17px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 40px; }
-  .welcome-card .highlight { color: rgba(255,255,255,0.75); font-weight: 500; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 15px 40px; border-radius: 28px;
-    background: #f5f5fa; color: #0d0d0f;
-    font-size: 17px; font-weight: 620;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  }
-  .btn-primary:hover { transform: scale(1.03); background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
-  .btn-primary:active { transform: scale(0.97); }
-  .welcome-card .footer-note {
-    margin-top: 32px; font-size: 13px; color: rgba(255,255,255,0.2);
-  }
-
   /* ========== Gallery ========== */
   #gallery {
     position: fixed; inset: 0; z-index: 1;
@@ -436,8 +389,6 @@
 
   /* ========== Responsive ========== */
   @media (max-width: 640px) {
-    .welcome-card { padding: 40px 28px; }
-    .welcome-card h1 { font-size: 28px; }
     .nav-btn { width: 34px; height: 34px; font-size: 14px; margin: 0 2px; background: rgba(255,255,255,0.04); }
     .hotspot-bubble { width: calc(100vw - 32px); max-width: calc(100vw - 32px); padding: 14px 16px; font-size: 12px; }
     .hotspot-bubble .bubble-title { font-size: 13px; }
@@ -453,42 +404,6 @@
 </style>
 </head>
 <body>
-
-<!-- ==================== Welcome ==================== -->
-<div id="welcome">
-  <div class="welcome-card">
-    <div class="badge">🏠 新生指南</div>
-    <h1>合肥理工学院<br>宿舍尺寸指南</h1>
-    <p>
-      床有多宽？书桌能放多大显示器？衣柜能挂多长的衣服？<br>
-      提前了解宿舍各处的<span class="highlight">实际尺寸</span>，买对东西不踩坑。
-    </p>
-    <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:-16px;margin-bottom:24px;">
-      ⚠️ 所有尺寸均为手工测量，实际可能有所出入，仅供参考。<br>对尺寸精度要求较高的部件，建议开学后自行复测。
-    </p>
-    <button class="btn-primary" id="btnEnter">
-      <span>开始浏览</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </button>
-    <div class="footer-note" id="footerNote">
-      共 16 张示意图 · 均含尺寸标注
-    </div>
-    <div style="margin-top:24px; width:48px; height:2px; background:rgba(255,255,255,0.15); margin-left:auto;margin-right:auto;border-radius:1px;"></div>
-    <div id="creditDorm" class="footer-note" style="margin-top:14px;font-size:18px;color:rgba(255,255,255,0.35);font-weight:450;letter-spacing:0.3px;">
-      @月亮早睡困不醒
-    </div>
-    <div style="display:flex;justify-content:center;gap:10px;margin-top:18px;">
-      <a href="../index.html" style="display:inline-flex;align-items:center;gap:5px;padding:7px 18px;border-radius:18px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.4)'">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        返回指南
-      </a>
-      <a href="../about.html" style="display:inline-flex;align-items:center;gap:5px;padding:7px 18px;border-radius:18px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.4)'">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        关于我
-      </a>
-    </div>
-  </div>
-</div>
 
 <!-- ==================== Gallery ==================== -->
 <div id="gallery">
@@ -506,10 +421,6 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       指南
     </a>
-    <button class="btn-home" id="btnHome">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      欢迎页
-    </button>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="counter" id="counter">1 / 16</span>
@@ -966,22 +877,14 @@ elWrapper.addEventListener('dblclick', (e) => {
 });
 
 // ============================================================
-//  Welcome → Gallery
+//  Gallery（欢迎页已移除，直接进入画廊）
 // ============================================================
 function enterGallery() {
-  document.getElementById('welcome').classList.add('hidden');
   document.getElementById('thumbBar').classList.remove('hidden');
   currentIndex = 0;
   filteredIndices = IMAGES.map((_, i) => i);
   updateImage();
   localStorage.setItem('dorm_entered', '1');
-}
-
-function goHome() {
-  document.getElementById('welcome').classList.remove('hidden');
-  document.getElementById('thumbBar').classList.add('hidden');
-  // 回到欢迎页时清掉地址栏的图片 id，避免误导
-  history.replaceState(null, '', location.pathname);
 }
 
 // ============================================================
@@ -1005,14 +908,8 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLb();
     return;
   }
-  // ignore when welcome is visible
-  if (!document.getElementById('welcome').classList.contains('hidden')) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGallery(); }
-    return;
-  }
   if (e.key === 'ArrowLeft')  { e.preventDefault(); prevImage(); }
   if (e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
-  if (e.key === 'Escape')     { goHome(); }
   if (e.key === 'a' || e.key === 'A') { toggleAnnotations(); }
 });
 
@@ -1102,7 +999,6 @@ let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (!document.getElementById('welcome').classList.contains('hidden')) return;
     const realIdx = filteredIndices[currentIndex];
     if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
   }, 150);
@@ -1111,10 +1007,8 @@ window.addEventListener('resize', () => {
 // ============================================================
 //  Event Listeners
 // ============================================================
-document.getElementById('btnEnter').addEventListener('click', enterGallery);
 document.getElementById('btnPrev').addEventListener('click', prevImage);
 document.getElementById('btnNext').addEventListener('click', nextImage);
-document.getElementById('btnHome').addEventListener('click', goHome);
 document.getElementById('toggleBtn').addEventListener('click', toggleAnnotations);
 document.getElementById('hotspotBtn').addEventListener('click', toggleHotspots);
 document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
@@ -1139,32 +1033,28 @@ elImg.addEventListener('click', function() {
 });
 
 elImg.addEventListener('load', () => {
-  if (!document.getElementById('welcome').classList.contains('hidden')) return;
   const realIdx = filteredIndices[currentIndex];
   if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
 });
 
 console.log('🏠 宿舍尺寸指南 loaded — 共 ' + IMAGES.length + ' 张图片，' + IMAGES.filter(i => i.ann).length + ' 张已标注');
-document.getElementById('footerNote').textContent =
-  '共 ' + IMAGES.length + ' 张示意图 · 均含尺寸标注';
 
-// 分享直达：带 #D01 这类链接时直接进画廊并定位；否则按访问记忆
+// 直接进入画廊（欢迎页已移除）；带 #D01 链接时定位到对应图
 var hashMatch = location.hash.match(/^#([A-Z]\d{2})$/);
 var hashIdx = -1;
 if (hashMatch) {
   hashIdx = IMAGES.findIndex(function(img) { return img.id === hashMatch[1]; });
 }
 if (hashIdx >= 0) {
-  document.getElementById('welcome').classList.add('hidden');
   document.getElementById('thumbBar').classList.remove('hidden');
   currentIndex = hashIdx;
   filteredIndices = IMAGES.map(function(_, i) { return i; });
   updateImage();
-  setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
-} else if (localStorage.getItem('dorm_entered') === '1') {
+} else {
   enterGallery();
-  setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
 }
+// 免责声明用 toast 保留
+setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
 
 // ── script end ──
 </script>
