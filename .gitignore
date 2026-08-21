@@ -4,6 +4,7 @@ sharp_*/
 .claude/
 .codex/
 .zcode/
+.mimosa/
 package.json
 package-lock.json
 skills-*.md
