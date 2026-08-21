@@ -251,9 +251,10 @@ function levelOf(n) {
   return 0;
 }
 
-// 批量拉取该页所有条目的赞数
+// 批量拉取所有条目的赞数（页面知道全部 id，逐个强一致读取）
 function loadLikes() {
-  fetch('/api/likes?page=faq&items=1').then(function(r) { return r.json(); }).then(function(d) {
+  var ids = allData.map(function(x) { return x.id; }).join(',');
+  fetch('/api/likes?page=faq&ids=' + ids).then(function(r) { return r.json(); }).then(function(d) {
     likeCounts = d || {};
     render();
   }).catch(function() {});

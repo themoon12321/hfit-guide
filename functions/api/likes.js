@@ -23,15 +23,15 @@ export async function onRequest(context) {
     if (request.method === 'GET') {
       const page = url.searchParams.get('page') || 'default';
       const item = url.searchParams.get('item');
-      const wantAll = url.searchParams.get('items') === '1';
+      const ids = url.searchParams.get('ids');
 
-      // 批量获取某页下所有条目的赞数（likes:page:* 前缀）
-      if (wantAll) {
-        const list = await env.KV.list({ prefix: `likes:${page}:` });
+      // 批量获取指定条目 id 的赞数（逐个读取，强一致；避免 KV.list 的最终一致性延迟）
+      if (ids) {
         const counts = {};
-        await Promise.all(list.keys.map(async (k) => {
-          const val = parseInt(await env.KV.get(k.name) || '0');
-          counts[k.name.slice(`likes:${page}:`.length)] = val;
+        const list = ids.split(',').filter(function(x) { return ITEM_RE.test(x); });
+        await Promise.all(list.map(async (id) => {
+          const val = parseInt(await env.KV.get(`likes:${page}:${id}`) || '0');
+          counts[id] = val;
         }));
         return new Response(JSON.stringify(counts), { headers });
       }
