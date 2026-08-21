@@ -361,22 +361,31 @@
   /* ========== Thumbnail Bar ========== */
   .thumb-bar {
     position: fixed; bottom: 66px; left: 0; right: 0; z-index: 19;
-    display: flex; gap: 6px; overflow-x: auto;
-    padding: 8px 14px;
+    padding: 6px 10px;
     pointer-events: none;
-    scrollbar-width: none;
+    opacity: 0.45;
+    transition: opacity 0.25s;
   }
-  .thumb-bar::-webkit-scrollbar { display: none; }
+  .thumb-bar:hover { opacity: 1; }
+  .thumb-inner {
+    display: flex; gap: 5px; overflow-x: auto;
+    width: fit-content; max-width: 100%;
+    margin: 0 auto;
+    padding: 4px;
+    scrollbar-width: none;
+    pointer-events: auto;
+  }
+  .thumb-inner::-webkit-scrollbar { display: none; }
   .thumb-bar.hidden { display: none; }
-  .thumb-bar > * { pointer-events: auto; flex-shrink: 0; }
   .thumb-item {
-    width: 40px; height: 40px; border-radius: 8px; overflow: hidden;
-    border: 1.5px solid rgba(255,255,255,0.1);
+    width: 32px; height: 32px; border-radius: 6px; overflow: hidden;
+    border: 1.5px solid rgba(255,255,255,0.12);
     cursor: pointer; transition: border-color 0.2s, transform 0.15s;
     background: rgba(255,255,255,0.04);
+    flex-shrink: 0;
   }
   .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .thumb-item:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.06); }
+  .thumb-item:hover { border-color: rgba(255,255,255,0.35); transform: scale(1.06); }
   .thumb-item.active { border-color: #4cd964; }
   .thumb-item.img-fallback {
     display: flex; align-items: center; justify-content: center;
@@ -688,6 +697,8 @@ let filteredIndices = IMAGES.map((_, i) => i);
 function renderThumbs() {
   const bar = document.getElementById('thumbBar');
   bar.innerHTML = '';
+  const inner = document.createElement('div');
+  inner.className = 'thumb-inner';
   filteredIndices.forEach((realIdx, i) => {
     const meta = IMAGES[realIdx];
     const div = document.createElement('div');
@@ -702,8 +713,9 @@ function renderThumbs() {
       div.innerHTML = '图';
       div.classList.add('img-fallback');
     };
-    bar.appendChild(div);
+    inner.appendChild(div);
   });
+  bar.appendChild(inner);
 }
 
 // ============================================================
@@ -1062,6 +1074,11 @@ document.getElementById('hotspotBtn').addEventListener('click', toggleHotspots);
 document.getElementById('zoomBtn').addEventListener('click', toggleZoom);
 
 // 图片加载完成后重新定位热点
+// 主图点击（非缩放模式下）→ 新标签打开原图，可自由放大查看
+elImg.addEventListener('click', function() {
+  if (!zoomEnabled) window.open(elImg.src, '_blank');
+});
+
 elImg.addEventListener('load', () => {
   if (!document.getElementById('welcome').classList.contains('hidden')) return;
   const realIdx = filteredIndices[currentIndex];
