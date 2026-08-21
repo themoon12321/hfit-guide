@@ -983,8 +983,30 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================================
-//  Touch swipe（已移除：手机上放大时容易误触翻页，改为仅按钮翻页）
+//  Touch swipe（单指滑动翻页；双指=浏览器缩放手势，不翻页）
 // ============================================================
+let touchStartX = 0;
+let multiTouch = false;
+let touchOnHotspot = false;
+document.addEventListener('touchstart', (e) => {
+  touchOnHotspot = !!e.target.closest('.hotspot-dot, .hotspot-bubble');
+  if (touchOnHotspot) { touchStartX = 0; return; }
+  if (e.touches.length > 1) { multiTouch = true; touchStartX = 0; return; }
+  touchStartX = e.changedTouches[0].screenX;
+});
+// 滑动过程中出现第二根手指（放大手势）→ 标记，结束时忽略本次
+document.addEventListener('touchmove', (e) => {
+  if (e.touches.length > 1) multiTouch = true;
+});
+document.addEventListener('touchend', (e) => {
+  if (touchOnHotspot) { touchOnHotspot = false; return; }
+  if (multiTouch) { multiTouch = false; touchStartX = 0; return; }
+  if (touchStartX === 0) return;
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) {
+    diff > 0 ? nextImage() : prevImage();
+  }
+});
 
 // ============================================================
 //  Lightbox
