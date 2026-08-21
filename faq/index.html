@@ -241,11 +241,23 @@ var searchTerm = '';
 var likeCounts = {};
 var currentSort = 'default'; // default | hot
 
-// 赞数 → 信号格数（0-5 格）：按最高值的比例计算，有赞至少 1 格
+// 最高赞数对应的格数上限（绝对门槛：足够多才满格，防止 1 赞满格）
+function maxLevelOf(max) {
+  if (max >= 21) return 5;
+  if (max >= 11) return 4;
+  if (max >= 6) return 3;
+  if (max >= 3) return 2;
+  if (max >= 1) return 1;
+  return 0;
+}
+
+// 赞数 → 信号格数：最高值定上限，其余按比例缩放；有赞至少 1 格
 function levelOf(n, max) {
-  if (!max || n <= 0) return 0;
-  var l = Math.round(n / max * 5);
-  return Math.max(1, Math.min(5, l));
+  if (n <= 0 || max <= 0) return 0;
+  var ml = maxLevelOf(max);
+  if (ml <= 1) return n > 0 ? 1 : 0;
+  var l = Math.round(n / max * ml);
+  return Math.max(1, Math.min(ml, l));
 }
 
 // 批量拉取所有条目的赞数（页面知道全部 id，逐个强一致读取）
