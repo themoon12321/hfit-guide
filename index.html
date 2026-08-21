@@ -46,8 +46,8 @@
   @keyframes meteorFall {
     0%   { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
     8%   { opacity: 1; }
-    55%  { transform: translate(-420px, 290px) rotate(-35deg); opacity: 0.9; }
-    100% { transform: translate(-560px, 390px) rotate(-35deg); opacity: 0; }
+    92%  { opacity: 1; }
+    100% { transform: translate(-520px, 360px) rotate(-35deg); opacity: 0; }
   }
   /* 内容浮在星空之上 */
   body > * { position: relative; z-index: 1; }
@@ -438,14 +438,14 @@ const grid = document.getElementById('cardGrid');
     field.appendChild(s);
   }
   document.body.appendChild(field);
-  // 流星：3 颗随机位置，间隔 8-15 秒错落划过
+  // 流星：3 颗随机位置；第一颗很快出现，之后间隔约 7 秒错落划过（保持稀疏）
   for (let i = 0; i < 3; i++) {
     const m = document.createElement('div');
     m.className = 'meteor';
     m.style.top = (5 + Math.random() * 30).toFixed(1) + '%';
     m.style.left = (60 + Math.random() * 35).toFixed(1) + '%';
     m.style.animationDuration = (4 + Math.random() * 2).toFixed(2) + 's';
-    m.style.animationDelay = (6 + i * 9 + Math.random() * 5).toFixed(2) + 's';
+    m.style.animationDelay = (0.5 + i * 7 + Math.random() * 2).toFixed(2) + 's';
     document.body.appendChild(m);
   }
 })();
