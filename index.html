@@ -201,6 +201,17 @@
     transition: background 0.2s;
   }
   .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+  /* 收款码点击放大 */
+  .reward-col img { cursor: zoom-in; }
+  .reward-zoom {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85);
+    width: min(86vw, 380px); background: #fff; border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    opacity: 0; pointer-events: none; cursor: zoom-out;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 210;
+  }
+  .reward-zoom.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
 
   /* ========== Responsive ========== */
   @media (max-width: 640px) {
@@ -240,16 +251,17 @@
     <div class="reward-sub">内容永远免费，打赏全凭心意 🌙</div>
     <div class="reward-codes">
       <div class="reward-col">
-        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码">
-        <span>支付宝</span>
+        <img id="alipayImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码（点击放大）">
+        <span>支付宝 点击放大</span>
       </div>
       <div class="reward-col">
-        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码">
-        <span>微信</span>
+        <img id="wechatImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码（点击放大）">
+        <span>微信 点击放大</span>
       </div>
     </div>
     <button class="reward-close" id="rewardClose">关闭</button>
   </div>
+  <img id="rewardZoom" class="reward-zoom" src="" alt="收款码大图">
 </div>
 
 <!-- ========== Feedback Widget ========== -->
@@ -550,6 +562,16 @@ document.getElementById('rewardModal').addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
 });
+
+// ===== 收款码点击放大（方便扫码） =====
+var rewardZoomEl = document.getElementById('rewardZoom');
+['alipayImg', 'wechatImg'].forEach(function(id) {
+  document.getElementById(id).addEventListener('click', function() {
+    rewardZoomEl.src = this.src;
+    rewardZoomEl.classList.add('show');
+  });
+});
+rewardZoomEl.addEventListener('click', function() { this.classList.remove('show'); });
 </script>
 </body>
 </html>
