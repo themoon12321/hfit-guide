@@ -190,7 +190,7 @@
     border: 1.5px solid rgba(255,255,255,0.18);
     box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     cursor: pointer; pointer-events: auto;
-    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     display: flex; align-items: center; justify-content: center;
     animation: hotspotBreathe 3s ease-in-out infinite;
   }
@@ -397,11 +397,12 @@
     transition: background 0.2s, color 0.2s;
   }
   .hint-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  /* 提示期间：热点标记点亮（平滑渐入，呼吸动画继续） */
+  /* 提示期间：热点标记点亮（平滑渐入，呼吸继续；光晕加宽营造膨胀感） */
   .hotspot-dot.hint-glow {
-    background: rgba(80,200,120,0.35);
-    border-color: rgba(80,200,120,0.7);
-    box-shadow: 0 0 0 5px rgba(80,200,120,0.18), 0 4px 20px rgba(0,0,0,0.5);
+    background: rgba(80,200,120,0.45);
+    border-color: rgba(80,200,120,0.8);
+    box-shadow: 0 0 0 9px rgba(80,200,120,0.22), 0 0 24px rgba(80,200,120,0.35);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
   }
 
   /* ========== Toast ========== */
@@ -967,7 +968,7 @@ function showHint() {
   // 点亮当前图的全部热点标记（平滑渐入）
   document.querySelectorAll('.hotspot-dot').forEach(d => d.classList.add('hint-glow'));
   clearTimeout(hintTimer);
-  hintTimer = setTimeout(hideHint, 8000);
+  hintTimer = setTimeout(hideHint, 5000);
 }
 function hideHint() {
   document.getElementById('hintBar').classList.remove('show');
