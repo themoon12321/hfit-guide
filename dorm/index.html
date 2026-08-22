@@ -202,6 +202,14 @@
     content: ''; width: 8px; height: 8px; border-radius: 50%;
     background: rgba(255,255,255,0.6);
   }
+  /* 点亮时的绿色勾线圈（光晕外侧一圈描边，平滑淡入） */
+  .hotspot-dot::before {
+    content: ''; position: absolute; inset: -11px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(80,200,120,0.9);
+    opacity: 0; transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
   .hotspot-dot:hover {
     background: rgba(255,255,255,0.2);
     border-color: rgba(255,255,255,0.4);
@@ -404,6 +412,7 @@
     box-shadow: 0 0 0 9px rgba(80,200,120,0.22), 0 0 24px rgba(80,200,120,0.35);
     backdrop-filter: none; -webkit-backdrop-filter: none;
   }
+  .hotspot-dot.hint-glow::before { opacity: 1; }
 
   /* ========== Toast ========== */
   .toast {
