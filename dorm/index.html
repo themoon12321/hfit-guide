@@ -397,22 +397,11 @@
     transition: background 0.2s, color 0.2s;
   }
   .hint-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  /* 提示箭头：从提示条指向图片上的热点标记 */
-  .hint-arrow {
-    position: absolute; bottom: -7px; left: 50%;
-    width: 0; height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 7px solid rgba(30,30,36,0.92);
-    transition: left 0.3s ease;
-  }
-  /* 提示期间：热点标记放大点亮 */
+  /* 提示期间：热点标记点亮（平滑渐入，呼吸动画继续） */
   .hotspot-dot.hint-glow {
     background: rgba(80,200,120,0.35);
     border-color: rgba(80,200,120,0.7);
     box-shadow: 0 0 0 5px rgba(80,200,120,0.18), 0 4px 20px rgba(0,0,0,0.5);
-    animation: none;
-    transform: scale(1.35);
   }
 
   /* ========== Toast ========== */
@@ -518,7 +507,6 @@
 <div class="hint-bar" id="hintBar">
   <div class="hint-text">💡 图片上的标记是作者的一些碎碎念，点开看看</div>
   <button class="hint-close" id="hintClose">清除缓存数据之前不再显示</button>
-  <div class="hint-arrow" id="hintArrow"></div>
 </div>
 
 <!-- Lightbox -->
@@ -976,24 +964,8 @@ let hintTimer;
 function showHint() {
   if (localStorage.getItem('dorm_hotspot_hint_off') === '1') return;
   document.getElementById('hintBar').classList.add('show');
-  // 箭头指向当前图第一个热点，并点亮标记
-  const realIdx = filteredIndices[currentIndex];
-  const meta = IMAGES[realIdx];
-  const spots = (meta && HOTSPOTS[meta.id]) || [];
-  const arrow = document.getElementById('hintArrow');
-  if (spots.length) {
-    // 当前图渲染了热点才高亮（dots 已存在于层中）
-    const dots = document.querySelectorAll('.hotspot-dot');
-    if (dots.length) {
-      dots.forEach(d => d.classList.add('hint-glow'));
-      const x = Math.min(78, Math.max(22, spots[0].x));
-      arrow.style.left = x + '%';
-    } else {
-      arrow.style.left = '50%';
-    }
-  } else {
-    arrow.style.left = '50%';
-  }
+  // 点亮当前图的全部热点标记（平滑渐入）
+  document.querySelectorAll('.hotspot-dot').forEach(d => d.classList.add('hint-glow'));
   clearTimeout(hintTimer);
   hintTimer = setTimeout(hideHint, 8000);
 }
