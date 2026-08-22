@@ -21,6 +21,8 @@ skills-*.md
 # 只放 COS 的本地图片
 img/tips/
 img/avatar.jpg
+# 收款码（敏感资产，本地不上传）
+img/reward/
 
 # 开发工具（仅本地）
 editor.html

@@ -145,6 +145,49 @@
     margin-top: 32px;
     letter-spacing: 0.3px;
   }
+
+  /* ========== 打赏弹窗 ========== */
+  .reward-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 24px; border-radius: 20px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7); font-size: 13px;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+  }
+  .reward-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); transform: translateY(-1px); }
+  .reward-modal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .reward-modal.show { opacity: 1; pointer-events: auto; }
+  .reward-box {
+    width: 88%; max-width: 400px;
+    background: #16161a; border-radius: 18px;
+    padding: 26px 24px 22px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .reward-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+  .reward-sub { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
+  .reward-codes { display: flex; justify-content: center; gap: 18px; margin-bottom: 20px; }
+  .reward-col img {
+    width: 130px; height: 130px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #fff; object-fit: contain;
+  }
+  .reward-col span { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 8px; }
+  .reward-close {
+    padding: 8px 22px; border-radius: 10px; border: none;
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
 </style>
 </head>
 <body>
@@ -233,9 +276,53 @@
     </p>
   </div>
 
+  <!-- ========== 请作者喝咖啡 ========== -->
+  <div class="section" style="text-align:center;">
+    <div class="section-title">☕ 请作者喝咖啡</div>
+    <p style="font-size:13px;text-align:center;line-height:1.8;color:rgba(255,255,255,0.5);margin-bottom:16px;">
+      本站完全免费，内容均为个人手工整理。如果你觉得有帮到你、想支持一下，<br>
+      可以请我喝杯咖啡——<b style="color:rgba(255,255,255,0.75);">完全自愿，不喝也绝对没关系</b>。
+    </p>
+    <button class="reward-btn" id="rewardBtn">☕ 支持一下</button>
+  </div>
+
   <p style="font-size:12px;color:rgba(255,255,255,0.25);text-align:center;margin-bottom:16px;line-height:1.7;">🌱 该网站还有很多不完善的地方，会持续更新完善～</p>
   <div class="footer-note">Made with 🌙 · 2026</div>
 
 </div>
+
+<!-- 打赏弹窗 -->
+<div id="rewardModal" class="reward-modal">
+  <div class="reward-box">
+    <h3>请作者喝咖啡 ☕</h3>
+    <div class="reward-sub">自愿打赏，感谢支持 · 网站内容永久免费，你我喝咖啡的心情都是自愿的</div>
+    <div class="reward-codes">
+      <div class="reward-col">
+        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码">
+        <span>支付宝</span>
+      </div>
+      <div class="reward-col">
+        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码">
+        <span>微信</span>
+      </div>
+    </div>
+    <button class="reward-close" id="rewardClose">关闭</button>
+  </div>
+</div>
+<script>
+// ===== 打赏弹窗开关 =====
+document.getElementById('rewardBtn').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.add('show');
+});
+document.getElementById('rewardClose').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.remove('show');
+});
+document.getElementById('rewardModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
+});
+</script>
 </body>
 </html>

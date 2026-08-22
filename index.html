@@ -155,6 +155,49 @@
     letter-spacing: 0.3px; line-height: 1.9;
   }
 
+  /* ========== 打赏弹窗 ========== */
+  .reward-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5); font-size: 12px;
+    cursor: pointer; font-family: inherit; margin-bottom: 10px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .reward-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+  .reward-modal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .reward-modal.show { opacity: 1; pointer-events: auto; }
+  .reward-box {
+    width: 88%; max-width: 400px;
+    background: #16161a; border-radius: 18px;
+    padding: 26px 24px 22px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .reward-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+  .reward-sub { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
+  .reward-codes { display: flex; justify-content: center; gap: 18px; margin-bottom: 20px; }
+  .reward-col img {
+    width: 130px; height: 130px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #fff; object-fit: contain;
+  }
+  .reward-col span { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 8px; }
+  .reward-close {
+    padding: 8px 22px; border-radius: 10px; border: none;
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+
   /* ========== Responsive ========== */
   @media (max-width: 640px) {
     body { padding: 40px 16px 32px; }
@@ -181,7 +224,27 @@
 <div class="grid" id="cardGrid"></div>
 
 <div class="footer">
+  <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
   <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
+</div>
+
+<!-- 打赏弹窗 -->
+<div id="rewardModal" class="reward-modal">
+  <div class="reward-box">
+    <h3>请作者喝咖啡 ☕</h3>
+    <div class="reward-sub">自愿打赏，感谢支持 · 网站内容永久免费，你我喝咖啡的心情都是自愿的</div>
+    <div class="reward-codes">
+      <div class="reward-col">
+        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码">
+        <span>支付宝</span>
+      </div>
+      <div class="reward-col">
+        <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码">
+        <span>微信</span>
+      </div>
+    </div>
+    <button class="reward-close" id="rewardClose">关闭</button>
+  </div>
 </div>
 
 <!-- ========== Feedback Widget ========== -->
@@ -467,6 +530,20 @@ MODULES.forEach((m, i) => {
   `;
 
   grid.appendChild(card);
+});
+
+// ===== 打赏弹窗开关 =====
+document.getElementById('rewardBtn').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.add('show');
+});
+document.getElementById('rewardClose').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.remove('show');
+});
+document.getElementById('rewardModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
 });
 </script>
 </body>
