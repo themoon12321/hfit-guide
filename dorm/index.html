@@ -374,6 +374,30 @@
   }
   .lightbox .lb-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
+  /* 热点提示条（带关闭按钮） */
+  .hint-bar {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(8px);
+    z-index: 30; width: min(92vw, 340px);
+    padding: 12px 16px; border-radius: 14px;
+    background: rgba(30,30,36,0.92);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .hint-bar.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+  .hint-text { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .hint-close {
+    margin-top: 10px; width: 100%;
+    padding: 7px 0; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.45); font-size: 11px;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .hint-close:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+
   /* ========== Toast ========== */
   .toast {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
@@ -472,6 +496,12 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- 热点提示条 -->
+<div class="hint-bar" id="hintBar">
+  <div class="hint-text">💡 图片上的标记可以点开，有学长学姐的经验分享</div>
+  <button class="hint-close" id="hintClose">清除缓存数据之前不再显示</button>
+</div>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLb()">
@@ -748,12 +778,17 @@ function updateImage() {
   elToggle.classList.toggle('active', showAnnotations);
   elToggleLbl.textContent = showAnnotations ? '隐藏标注' : '显示标注';
   resetZoom();
+  // 换图前先淡出，加载完成后由 load 事件淡入（避免生硬闪变）
+  elImg.style.opacity = 0;
 
   // 缓存命中：直接换图，同时渲染热点（图片已就绪）
   if (cached[cacheKey]) {
     if (token !== loadToken) return;
     elImg.src = src;
     renderHotspots(meta.id);
+    // 缓存图 load 事件可能不触发，下一帧直接淡入兜底
+    requestAnimationFrame(() => { if (token === loadToken) elImg.style.opacity = 1; });
+    preloadNeighbors();
     return;
   }
 
@@ -763,12 +798,29 @@ function updateImage() {
     if (token !== loadToken) return;
     cached[cacheKey] = true;
     elImg.src = src;
-    // elImg load 事件会调用 renderHotspots
+    // elImg load 事件会调用 renderHotspots 并淡入
+    preloadNeighbors();
   };
   preloader.onerror = () => {
     // 静默失败，旧图保留
   };
   preloader.src = src;
+}
+
+// 预加载相邻两张图（缓存命中后切换几乎无等待）
+function preloadNeighbors() {
+  const cur = currentIndex;
+  [-1, 1].forEach((d) => {
+    const idx = cur + d;
+    if (idx < 0 || idx >= filteredIndices.length) return;
+    const realIdx = filteredIndices[idx];
+    if (realIdx === undefined) return;
+    const ck = realIdx + (showAnnotations ? '_ann' : '_raw');
+    if (cached[ck]) return;
+    const p = new Image();
+    p.onload = () => { cached[ck] = true; };
+    p.src = getImagePath(realIdx);
+  });
 }
 
 function navigate(delta) {
@@ -898,6 +950,24 @@ function showToast(msg) {
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
 }
+
+// ============================================================
+//  热点提示条（带「不再显示」按钮）
+// ============================================================
+let hintTimer;
+function showHint() {
+  if (localStorage.getItem('dorm_hotspot_hint_off') === '1') return;
+  document.getElementById('hintBar').classList.add('show');
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(hideHint, 8000);
+}
+function hideHint() {
+  document.getElementById('hintBar').classList.remove('show');
+}
+document.getElementById('hintClose').addEventListener('click', function() {
+  localStorage.setItem('dorm_hotspot_hint_off', '1');
+  hideHint();
+});
 
 // ============================================================
 //  Keyboard
@@ -1033,6 +1103,8 @@ elImg.addEventListener('click', function() {
 });
 
 elImg.addEventListener('load', () => {
+  // 加载完成：淡入 + 渲染热点
+  elImg.style.opacity = 1;
   const realIdx = filteredIndices[currentIndex];
   if (realIdx !== undefined) renderHotspots(IMAGES[realIdx].id);
 });
@@ -1055,6 +1127,9 @@ if (hashIdx >= 0) {
 }
 // 免责声明用 toast 保留
 setTimeout(function() { showToast('尺寸均为手工测量，仅供参考'); }, 800);
+
+// 热点提示：每次进入显示（8 秒自动消失），点「不再显示」按钮永久关闭
+setTimeout(showHint, 3600);
 
 // ── script end ──
 </script>

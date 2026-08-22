@@ -169,6 +169,8 @@
   }
   /* 答案更新时间 */
   .item .a .inner .updated { font-size: 11px; color: rgba(255,255,255,0.18); margin-top: 12px; }
+  /* 搜索关键词高亮 */
+  .hlk { background: rgba(255,200,60,0.22); color: #ffd66e; border-radius: 3px; padding: 0 2px; }
   /* 置顶标识 */
   .pinned-tag { font-size: 11px; color: rgba(255,200,60,0.7); flex-shrink: 0; }
   /* 操作行：点赞按钮 */
@@ -358,6 +360,11 @@ function render() {
       a.style.maxHeight = isOpen ? '62vh' : '0px';
       history.replaceState(null, '', '#faq-' + gIdx);
     });
+    // 搜索关键词高亮（问题 + 答案文本）
+    if (searchTerm) {
+      highlightIn(div.querySelector('.q-text'), searchTerm);
+      highlightIn(div.querySelector('.a .inner'), searchTerm);
+    }
     list.appendChild(div);
   });
 }
@@ -445,6 +452,31 @@ document.getElementById('lightbox').addEventListener('touchend', function(e) {
   if (Math.abs(dx) > 50) lbNav(dx > 0 ? 1 : -1);
 });
 function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* ===== 搜索关键词高亮：遍历文本节点包 mark，不破坏 HTML 结构 ===== */
+function highlightIn(el, term) {
+  if (!term || !el) return;
+  var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  var nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(function(n) {
+    var text = n.textContent;
+    if (text.indexOf(term) < 0) return;
+    var frag = document.createDocumentFragment();
+    var pos = 0, idx = text.indexOf(term);
+    while (idx >= 0) {
+      frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+      var m = document.createElement('mark');
+      m.className = 'hlk';
+      m.textContent = text.slice(idx, idx + term.length);
+      frag.appendChild(m);
+      pos = idx + term.length;
+      idx = text.indexOf(term, pos);
+    }
+    frag.appendChild(document.createTextNode(text.slice(pos)));
+    n.parentNode.replaceChild(frag, n);
+  });
+}
 
 /* ===== Toast 提示 ===== */
 var toastTimer;
