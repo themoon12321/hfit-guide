@@ -26,10 +26,10 @@ export async function onRequest(context) {
       const item = url.searchParams.get('item');
       const ids = url.searchParams.get('ids');
 
-      // 批量获取指定条目 id 的赞数（逐个读取，强一致；避免 KV.list 的最终一致性延迟）
+      // 批量获取指定条目 id 的赞数（逐个读取，强一致；上限 100 防刷读配额）
       if (ids) {
         const counts = {};
-        const list = ids.split(',').filter(function(x) { return ITEM_RE.test(x); });
+        const list = ids.split(',').filter(function(x) { return ITEM_RE.test(x); }).slice(0, 100);
         await Promise.all(list.map(async (id) => {
           const val = parseInt(await env.KV.get(`likes:${page}:${id}`) || '0');
           counts[id] = val;
