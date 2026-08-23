@@ -154,7 +154,6 @@ listEl.addEventListener('click', function(e) {
   var ob = e.target.closest('.opt-btn');
   if (ob) {
     e.stopPropagation();
-    if (!confirm('隐藏这条「' + ob.closest('.item').querySelector('.name').textContent + '」？（清除浏览器数据可恢复）')) return;
     hideState[ob.dataset.key] = true;
     localStorage.setItem('checklist_hide', JSON.stringify(hideState));
     ob.closest('.item').remove();
@@ -182,10 +181,12 @@ document.getElementById('checkAllBtn').addEventListener('click', function() {
   reRender();
 });
 document.getElementById('resetBtn').addEventListener('click', function() {
-  if (!confirm('确定要清空所有勾选吗？')) return;
+  if (!confirm('确定要一键还原吗？（清除所有勾选，并找回之前隐藏的条目）')) return;
   state = {};
+  hideState = {};
   localStorage.setItem('checklist_state', JSON.stringify(state));
-  reRender();
+  localStorage.setItem('checklist_hide', JSON.stringify(hideState));
+  location.reload();
 });
 
 function reRender() {
