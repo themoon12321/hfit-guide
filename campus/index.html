@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校园地图 · 合肥理工学院</title>
+<meta name="description" content="合肥理工学院校园俯瞰图、VR 全景漫游与定位入口。">
+<meta property="og:title" content="校园地图 · 合肥理工学院">
+<meta property="og:description" content="合肥理工学院校园俯瞰图、VR 全景漫游与定位入口。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f; color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px 60px; max-width: 640px; margin: 0 auto;
+  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
+  .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 20px; line-height: 1.6; }
+
+  /* 功能链接 */
+  .links { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .link-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.65); font-size: 12px; text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .link-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15); }
+
+  /* 图片列表 */
+  .map-item { margin-bottom: 18px; }
+  .map-item .mi-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); margin-bottom: 8px; padding: 0 4px; }
+  .map-item img {
+    width: 100%; border-radius: 14px; cursor: zoom-in;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: block; transition: border-color 0.2s;
+  }
+  .map-item img:hover { border-color: rgba(255,255,255,0.2); }
+  .map-item .mi-source { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 6px; padding: 0 4px; }
+
+  .note { font-size: 11px; color: rgba(255,255,255,0.18); text-align: center; margin-top: 28px; line-height: 1.8; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.94);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    cursor: zoom-out;
+  }
+  .lightbox.show { opacity: 1; pointer-events: auto; }
+  .lightbox img { max-width: 95vw; max-height: 92vh; object-fit: contain; border-radius: 6px; }
+  .lightbox .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 26px; line-height: 1; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+</style>
+</head>
+<body>
+<div class="header"><a class="back" href="../index.html">←</a><h1>校园地图</h1></div>
+<div class="sub" id="subText">俯瞰图与信息整理自学校官网 · 标注式平面图待官方发布后更新</div>
+
+<div class="links">
+  <a class="link-btn" href="https://www.720yun.com/t/93akuepmdr7" target="_blank" rel="noopener">🎥 VR 漫游校园</a>
+  <a class="link-btn" href="https://www.amap.com/search?query=%E5%90%88%E8%82%A5%E7%90%86%E5%B7%A5%E5%AD%A6%E9%99%A2" target="_blank" rel="noopener">🗺 高德定位</a>
+  <a class="link-btn" href="https://map.baidu.com/search/%E5%90%88%E8%82%A5%E7%90%86%E5%B7%A5%E5%AD%A6%E9%99%A2" target="_blank" rel="noopener">🗺 百度定位</a>
+</div>
+
+<div id="gallery"></div>
+
+<div class="note">图片来源：合肥理工学院官网 · 图片具体以现场为准</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLb()">
+  <span class="lb-close" onclick="closeLb(event)">&times;</span>
+  <img id="lbImg" src="" alt="放大查看">
+</div>
+
+<script src="data.js"></script>
+<script>
+var IMGS = (typeof CAMPUS_IMAGES !== 'undefined') ? CAMPUS_IMAGES : [];
+
+// 渲染图片列表 → 点击放大
+var gallery = document.getElementById('gallery');
+IMGS.forEach(function(item) {
+  var div = document.createElement('div');
+  div.className = 'map-item';
+  div.innerHTML = '<div class="mi-title">' + esc(item.title) + '</div>' +
+    '<img src="' + item.src + '" alt="' + esc(item.title) + '">' +
+    '<div class="mi-source">' + esc(item.source || '') + '</div>';
+  div.querySelector('img').addEventListener('click', function() {
+    document.getElementById('lbImg').src = this.src;
+    document.getElementById('lightbox').classList.add('show');
+  });
+  gallery.appendChild(div);
+});
+
+function closeLb(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('lightbox').classList.remove('show');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLb();
+});
+
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+</script>
+</body>
+</html>
