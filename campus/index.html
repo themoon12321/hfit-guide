@@ -31,7 +31,7 @@
   .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 20px; line-height: 1.6; }
 
   /* 功能链接 */
-  .links { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .links { margin-bottom: 20px; }
   .link-btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 8px 16px; border-radius: 16px;
@@ -42,6 +42,28 @@
   }
   .link-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15); }
   .link-note { font-size: 11px; color: rgba(255,255,255,0.25); align-self: center; }
+
+  /* VR 大卡片入口 */
+  .vr-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 18px; margin-bottom: 24px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none; color: inherit;
+    transition: background 0.25s, border-color 0.25s, transform 0.2s;
+  }
+  .vr-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .vr-card .vr-icon {
+    font-size: 26px; width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .vr-card .vr-title { font-size: 15px; font-weight: 600; color: #f0f0f5; margin-bottom: 4px; }
+  .vr-card .vr-sub { font-size: 12px; color: rgba(255,255,255,0.35); }
+  .vr-card .vr-arrow { margin-left: auto; color: rgba(255,255,255,0.3); font-size: 16px; transition: transform 0.2s; }
+  .vr-card:hover .vr-arrow { transform: translateX(3px); color: rgba(255,255,255,0.7); }
 
   /* 图片列表 */
   .map-item { margin-bottom: 18px; }
@@ -80,10 +102,14 @@
 <div class="header"><a class="back" href="../index.html">←</a><h1>校园地图</h1><span class="testing-badge">测试中</span></div>
 <div class="sub" id="subText">俯瞰图与信息整理自学校官网 · 标注式平面图待官方发布后更新</div>
 
-<div class="links">
-  <a class="link-btn" href="https://www.720yun.com/t/93akuepmdr7" target="_blank" rel="noopener">🎥 VR 漫游校园</a>
-  <span class="link-note">来源：合肥理工学院官网</span>
-</div>
+<a class="vr-card" href="https://www.720yun.com/t/93akuepmdr7" target="_blank" rel="noopener">
+  <div class="vr-icon">🎥</div>
+  <div>
+    <div class="vr-title">VR 漫游校园</div>
+    <div class="vr-sub">720° 全景浏览 · 来源：合肥理工学院官网</div>
+  </div>
+  <span class="vr-arrow">→</span>
+</a>
 
 <div id="gallery"></div>
 
