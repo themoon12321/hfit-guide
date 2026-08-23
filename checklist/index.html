@@ -89,7 +89,10 @@
   .ob-link:hover { color: #a9c7ff; }
   .ob-note { font-size: 11px; color: rgba(255,255,255,0.3); }
 
-  /* 「不需要」隐藏按钮 */
+  /* 「不需要」软隐藏：灰色 + 不可勾选，可点「我需要」恢复 */
+  .item.off { opacity: 0.35; background: rgba(255,255,255,0.015); border-color: rgba(255,255,255,0.03); }
+  .item.off .box { border-color: rgba(255,255,255,0.1); }
+  .item.off .name { color: rgba(255,255,255,0.3); }
   .opt-btn {
     flex-shrink: 0; align-self: center;
     padding: 3px 10px; border-radius: 10px;
@@ -127,7 +130,7 @@ var DATA = (typeof CHECKLIST !== 'undefined') ? CHECKLIST : [];
 var state = JSON.parse(localStorage.getItem('checklist_state') || '{}');
 var hideState = JSON.parse(localStorage.getItem('checklist_hide') || '{}');
 
-// 渲染分组（跳过已隐藏的条目）
+// 渲染分组（不需要的条目灰色显示，可点「我需要」恢复）
 var listEl = document.getElementById('list');
 DATA.forEach(function(group, gi) {
   var g = document.createElement('div');
@@ -135,33 +138,42 @@ DATA.forEach(function(group, gi) {
   var html = '<div class="group-title">' + esc(group.cat) + '</div>';
   group.items.forEach(function(item, ii) {
     var key = gi + '-' + ii;
-    if (hideState[key]) return;
-    var checked = !!state[key];
-    html += '<div class="item' + (checked ? ' checked' : '') + '" data-key="' + key + '">' +
+    var off = !!hideState[key];
+    var checked = !off && !!state[key];
+    html += '<div class="item' + (checked ? ' checked' : '') + (off ? ' off' : '') + '" data-key="' + key + '">' +
       '<div class="box">✓</div>' +
       '<div class="body"><div class="name">' + esc(item.name) + '</div>' +
       (item.note ? '<div class="note">' + esc(item.note) + '</div>' : '') +
       '</div>' +
-      (item.optional ? '<button class="opt-btn" data-key="' + key + '">不需要</button>' : '') +
+      (item.optional ? '<button class="opt-btn" data-key="' + key + '">' + (off ? '我需要' : '不需要') + '</button>' : '') +
       '</div>';
   });
   g.innerHTML = html;
   listEl.appendChild(g);
 });
 
-// 点击勾选/取消 或 「不需要」隐藏
+// 点击：勾选/取消、「我需要⇄不需要」切换
 listEl.addEventListener('click', function(e) {
   var ob = e.target.closest('.opt-btn');
   if (ob) {
     e.stopPropagation();
-    hideState[ob.dataset.key] = true;
+    var key = ob.dataset.key;
+    var itemEl = ob.closest('.item');
+    var nowOff = !hideState[key];
+    if (nowOff) {
+      hideState[key] = true;
+      itemEl.classList.remove('checked'); // 取消勾选
+    } else {
+      delete hideState[key];
+    }
     localStorage.setItem('checklist_hide', JSON.stringify(hideState));
-    ob.closest('.item').remove();
+    itemEl.classList.toggle('off', nowOff);
+    ob.textContent = nowOff ? '我需要' : '不需要';
     updateProgress();
     return;
   }
   var itemEl = e.target.closest('.item');
-  if (!itemEl) return;
+  if (!itemEl || itemEl.classList.contains('off')) return; // 灰色不可勾选
   var key = itemEl.dataset.key;
   state[key] = !state[key];
   if (!state[key]) delete state[key];
@@ -170,12 +182,10 @@ listEl.addEventListener('click', function(e) {
   updateProgress();
 });
 
-// 一键勾选 / 一键还原
+// 一键勾选（只勾显示中的条目，不含「不需要」的灰色项）
 document.getElementById('checkAllBtn').addEventListener('click', function() {
-  DATA.forEach(function(group, gi) {
-    group.items.forEach(function(item, ii) {
-      state[gi + '-' + ii] = true;
-    });
+  document.querySelectorAll('.item:not(.off)').forEach(function(el) {
+    state[el.dataset.key] = true;
   });
   localStorage.setItem('checklist_state', JSON.stringify(state));
   reRender();
@@ -196,7 +206,8 @@ function reRender() {
   updateProgress();
 }
 function updateProgress() {
-  var items = document.querySelectorAll('.item');
+  // 总数/完成数都不含「不需要」的灰色条目
+  var items = document.querySelectorAll('.item:not(.off)');
   var done = document.querySelectorAll('.item.checked').length;
   document.getElementById('doneCount').textContent = done;
   document.getElementById('totalCount').textContent = items.length;
