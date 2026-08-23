@@ -29,6 +29,7 @@
     font-size: 11px; color: #4cd964;
   }
   .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 16px; line-height: 1.6; }
+  .tip { font-size: 12px; color: rgba(255,255,255,0.4); padding: 0 6px; margin-bottom: 12px; line-height: 1.6; }
 
   /* 进度 + 操作 */
   .toolbar {
@@ -89,7 +90,7 @@
   .ob-link:hover { color: #a9c7ff; }
   .ob-note { font-size: 11px; color: rgba(255,255,255,0.3); }
 
-  /* 「不需要」软隐藏：灰色 + 不可勾选，可点「我需要」恢复 */
+  /* 「我不需要」软隐藏：灰色 + 不可勾选，可点「我需要」恢复 */
   .item.off { opacity: 0.35; background: rgba(255,255,255,0.015); border-color: rgba(255,255,255,0.03); }
   .item.off .box { border-color: rgba(255,255,255,0.1); }
   .item.off .name { color: rgba(255,255,255,0.3); }
@@ -108,6 +109,8 @@
 <body>
 <div class="header"><a class="back" href="../index.html">←</a><h1>开学清单</h1><span class="new-badge">新功能</span></div>
 <div class="sub">整理自官方《入学须知》（2026 级）与在校生经验，以学校最新通知为准。勾选状态保存在本机。</div>
+
+<div class="tip">💡 部分条目可点「我不需要」标灰隐藏（比如你没打算买的），随时可点「我需要」恢复。</div>
 
 <div class="official-top">
   <a class="ob-link" href="https://mp.weixin.qq.com/s/2s50z5JjJ4S4iTJpRXVSMg" target="_blank" rel="noopener">📖 官方《入学须知》原文</a>
@@ -145,7 +148,7 @@ DATA.forEach(function(group, gi) {
       '<div class="body"><div class="name">' + esc(item.name) + '</div>' +
       (item.note ? '<div class="note">' + esc(item.note) + '</div>' : '') +
       '</div>' +
-      (item.optional ? '<button class="opt-btn" data-key="' + key + '">' + (off ? '我需要' : '不需要') + '</button>' : '') +
+      (item.optional ? '<button class="opt-btn" data-key="' + key + '">' + (off ? '我需要' : '我不需要') + '</button>' : '') +
       '</div>';
   });
   g.innerHTML = html;
@@ -168,7 +171,7 @@ listEl.addEventListener('click', function(e) {
     }
     localStorage.setItem('checklist_hide', JSON.stringify(hideState));
     itemEl.classList.toggle('off', nowOff);
-    ob.textContent = nowOff ? '我需要' : '不需要';
+    ob.textContent = nowOff ? '我需要' : '我不需要';
     updateProgress();
     return;
   }
