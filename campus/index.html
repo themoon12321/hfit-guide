@@ -94,6 +94,9 @@ var IMGS = (typeof CAMPUS_IMAGES !== 'undefined') ? CAMPUS_IMAGES : [];
 
 // 渲染图片列表 → 点击放大
 var gallery = document.getElementById('gallery');
+if (!IMGS.length) {
+  gallery.innerHTML = '<div class="note" style="padding:40px 0;font-size:13px;color:rgba(255,255,255,0.2);">📷 校园图片整理中，敬请期待～</div>';
+}
 IMGS.forEach(function(item) {
   var div = document.createElement('div');
   div.className = 'map-item';
