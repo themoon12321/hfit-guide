@@ -141,6 +141,14 @@
     background: rgba(255,255,255,0.05);
     font-size: 11px; color: rgba(255,255,255,0.25);
   }
+  /* 测试中标签：醒目黄色 */
+  .card .testing-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,200,60,0.15);
+    border: 1px solid rgba(255,200,60,0.35);
+    font-size: 11px; color: #f2d45c;
+  }
   .card.disabled { opacity: 0.5; }
   .card.disabled .coming-tag { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); }
 
@@ -546,7 +554,7 @@ MODULES.forEach((m, i) => {
   }
 
   const tagHtml = m.status !== 'ready' ? '<span class="coming-tag">即将上线</span>' :
-    (m.tag ? '<span class="coming-tag">' + m.tag + '</span>' : '');
+    (m.tag ? '<span class="' + (m.tag === '测试中' ? 'testing-tag' : 'coming-tag') + '">' + m.tag + '</span>' : '');
 
   card.innerHTML = `
     <div class="icon">${m.icon}</div>
