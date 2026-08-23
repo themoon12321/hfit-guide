@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>更新日志 · 合肥理工学院指南</title>
+<meta name="description" content="网站每次更新都会记录在这里——见证一个学生网站的成长。">
+<meta property="og:title" content="更新日志 · 合肥理工学院指南">
+<meta property="og:description" content="网站每次更新都会记录在这里——见证一个学生网站的成长。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f; color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px 60px; max-width: 640px; margin: 0 auto;
+  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
+  .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 24px; line-height: 1.6; }
+
+  .ver {
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .ver-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ver-tag {
+    font-size: 12px; font-weight: 700;
+    padding: 2px 10px; border-radius: 10px;
+    background: rgba(80,200,120,0.12); border: 1px solid rgba(80,200,120,0.25);
+    color: #4cd964;
+    font-feature-settings: "tnum";
+  }
+  .ver-title { font-size: 15px; font-weight: 600; color: #f0f0f5; flex: 1; }
+  .ver-date { font-size: 11px; color: rgba(255,255,255,0.25); font-feature-settings: "tnum"; }
+  .ver ul { list-style: none; }
+  .ver li {
+    position: relative;
+    padding: 4px 0 4px 18px;
+    font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7;
+  }
+  .ver li::before {
+    content: ''; position: absolute; left: 2px; top: 12px;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(80,200,120,0.6);
+  }
+
+  .foot-line { font-size: 11px; color: rgba(255,255,255,0.18); text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="header"><a class="back" href="../index.html">←</a><h1>更新日志</h1></div>
+<div class="sub">每次内容更新都会记录在这里——见证一个学生公益网站的成长 🌱</div>
+
+<div id="versions"></div>
+
+<div class="foot-line">本站由 @月亮早睡困不醒 自费运营、个人维护 · 感谢每一份支持 🌙</div>
+
+<script src="data.js"></script>
+<script>
+var VERSIONS = (typeof CHANGELOG !== 'undefined') ? CHANGELOG : [];
+var el = document.getElementById('versions');
+VERSIONS.forEach(function(v) {
+  var div = document.createElement('div');
+  div.className = 'ver';
+  div.innerHTML = '<div class="ver-head"><span class="ver-tag">' + esc(v.version) + '</span>' +
+    '<span class="ver-title">' + esc(v.title) + '</span>' +
+    '<span class="ver-date">' + esc(v.date) + '</span></div>' +
+    '<ul>' + v.items.map(function(it) { return '<li>' + esc(it) + '</li>'; }).join('') + '</ul>';
+  el.appendChild(div);
+});
+
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+</script>
+</body>
+</html>

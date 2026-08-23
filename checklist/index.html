@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>开学清单 · 合肥理工学院</title>
+<meta name="description" content="开学物品清单，可勾选标记准备进度，本地自动保存。整理自官方《入学须知》+ 在校生经验。">
+<meta property="og:title" content="开学清单 · 合肥理工学院">
+<meta property="og:description" content="开学物品清单，可勾选标记准备进度，本地自动保存。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f; color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px 60px; max-width: 640px; margin: 0 auto;
+  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
+  .new-badge {
+    padding: 3px 10px; border-radius: 10px;
+    background: rgba(80,200,120,0.12);
+    border: 1px solid rgba(80,200,120,0.3);
+    font-size: 11px; color: #4cd964;
+  }
+  .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 16px; line-height: 1.6; }
+
+  /* 进度 + 操作 */
+  .toolbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .progress { font-size: 13px; color: rgba(255,255,255,0.6); flex: 1; }
+  .progress b { color: #4cd964; font-feature-settings: "tnum"; }
+  .tool-btn {
+    padding: 6px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.55); font-size: 12px;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .tool-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); }
+
+  /* 分组 */
+  .group { margin-bottom: 22px; }
+  .group-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); margin-bottom: 10px; padding: 0 4px; }
+  .item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 8px;
+    cursor: pointer; user-select: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .item:hover { background: rgba(255,255,255,0.05); }
+  .item.checked { background: rgba(80,200,120,0.05); border-color: rgba(80,200,120,0.15); }
+  .item .box {
+    width: 20px; height: 20px; border-radius: 6px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: transparent;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .item.checked .box { background: rgba(80,200,120,0.9); border-color: #4cd964; color: #0d0d0f; }
+  .item .body { flex: 1; }
+  .item .name { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5; transition: color 0.2s; }
+  .item.checked .name { color: rgba(255,255,255,0.35); text-decoration: line-through; }
+  .item .note { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; line-height: 1.6; }
+
+  .foot { font-size: 11px; color: rgba(255,255,255,0.18); text-align: center; margin-top: 30px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="header"><a class="back" href="../index.html">←</a><h1>开学清单</h1><span class="new-badge">新功能</span></div>
+<div class="sub">整理自官方《入学须知》（2026 级）与在校生经验，以学校最新通知为准。勾选状态保存在本机。</div>
+
+<div class="toolbar">
+  <span class="progress">已准备 <b id="doneCount">0</b> / <span id="totalCount">0</span></span>
+  <button class="tool-btn" id="checkAllBtn">✔ 一键勾选</button>
+  <button class="tool-btn" id="resetBtn">↺ 一键还原</button>
+</div>
+
+<div id="list"></div>
+
+<div class="foot">官方案件以学校最新发布为准 · 祝学弟学妹报到顺利 🌙</div>
+
+<script src="data.js"></script>
+<script>
+var DATA = (typeof CHECKLIST !== 'undefined') ? CHECKLIST : [];
+var state = JSON.parse(localStorage.getItem('checklist_state') || '{}');
+
+// 渲染分组
+var listEl = document.getElementById('list');
+var total = 0;
+DATA.forEach(function(group, gi) {
+  var g = document.createElement('div');
+  g.className = 'group';
+  var html = '<div class="group-title">' + esc(group.cat) + '</div>';
+  group.items.forEach(function(item, ii) {
+    var key = gi + '-' + ii;
+    var checked = !!state[key];
+    html += '<div class="item' + (checked ? ' checked' : '') + '" data-key="' + key + '">' +
+      '<div class="box">✓</div>' +
+      '<div class="body"><div class="name">' + esc(item.name) + '</div>' +
+      (item.note ? '<div class="note">' + esc(item.note) + '</div>' : '') +
+      '</div></div>';
+  });
+  g.innerHTML = html;
+  listEl.appendChild(g);
+});
+
+// 点击勾选/取消
+listEl.addEventListener('click', function(e) {
+  var itemEl = e.target.closest('.item');
+  if (!itemEl) return;
+  var key = itemEl.dataset.key;
+  state[key] = !state[key];
+  if (!state[key]) delete state[key];
+  itemEl.classList.toggle('checked', state[key]);
+  localStorage.setItem('checklist_state', JSON.stringify(state));
+  updateProgress();
+});
+
+// 一键勾选 / 一键还原
+document.getElementById('checkAllBtn').addEventListener('click', function() {
+  DATA.forEach(function(group, gi) {
+    group.items.forEach(function(item, ii) {
+      state[gi + '-' + ii] = true;
+    });
+  });
+  localStorage.setItem('checklist_state', JSON.stringify(state));
+  reRender();
+});
+document.getElementById('resetBtn').addEventListener('click', function() {
+  if (!confirm('确定要清空所有勾选吗？')) return;
+  state = {};
+  localStorage.setItem('checklist_state', JSON.stringify(state));
+  reRender();
+});
+
+function reRender() {
+  document.querySelectorAll('.item').forEach(function(el) {
+    el.classList.toggle('checked', !!state[el.dataset.key]);
+  });
+  updateProgress();
+}
+function updateProgress() {
+  var done = Object.keys(state).filter(function(k) { return state[k]; }).length;
+  document.getElementById('doneCount').textContent = done;
+}
+(function init() {
+  var c = 0;
+  DATA.forEach(function(g) { c += g.items.length; });
+  document.getElementById('totalCount').textContent = c;
+  updateProgress();
+})();
+
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+</script>
+</body>
+</html>

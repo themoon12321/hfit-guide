@@ -168,6 +168,13 @@
     font-size: 11px; color: rgba(255,255,255,0.3);
     line-height: 1.8; margin-bottom: 10px;
   }
+  .footer .logs-link {
+    display: inline-block;
+    font-size: 11px; color: rgba(255,255,255,0.25);
+    text-decoration: none; margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .footer .logs-link:hover { color: rgba(255,255,255,0.6); }
 
   /* ========== 打赏弹窗 ========== */
   .reward-btn {
@@ -251,6 +258,7 @@
 <div class="footer">
   <p class="reward-desc">本站完全免费，纯自费运营 🌙 内容都是熬夜肝出来的心血<br>如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——完全自愿，不喝也绝对没关系。</p>
   <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
+  <a class="logs-link" href="logs/index.html">📜 更新日志</a>
   <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
@@ -489,6 +497,14 @@ const MODULES = [
     path: 'campus/index.html',
     status: 'ready',
     tag: '测试中'
+  },
+  {
+    icon: '🗒️',
+    title: '开学清单',
+    desc: '证件、线上办理、宿舍用品——报到要带什么，对着勾就行。',
+    path: 'checklist/index.html',
+    status: 'ready',
+    tag: '新'
   },
   {
     icon: '💬',
