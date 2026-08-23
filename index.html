@@ -92,6 +92,17 @@
   }
   .hero .about-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
+  /* 版本号徽章：主页右上角，随页面滚动 */
+  .version-link {
+    padding: 4px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.4); font-size: 11px; text-decoration: none;
+    font-feature-settings: "tnum";
+    transition: background 0.2s, color 0.2s;
+  }
+  .version-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
   /* ========== Grid ========== */
   .grid {
     display: grid;
@@ -181,16 +192,6 @@
   }
   .reward-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
   .footer-actions { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
-  /* 更新日志链接：与打赏按钮同款，协调统一 */
-  .changelog-link {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 7px 18px; border-radius: 18px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.5); font-size: 12px; text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-  }
-  .changelog-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
   .reward-modal {
     position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,0.75);
@@ -247,6 +248,11 @@
 </head>
 <body>
 
+<!-- 版本号徽章（随页面滚动，点击查看更新日志） -->
+<div style="width:100%;max-width:900px;display:flex;justify-content:flex-end;margin-bottom:8px;padding:0 6px;">
+  <a class="version-link" href="logs/index.html">v1.3</a>
+</div>
+
 <div class="hero">
   <div class="disclaimer"><span class="icon">⚠️</span><span>本站为个人公益项目，纯为爱发电，任何借此为资料进行收费、私自引流宣传的行为均不合理，谨防诈骗。</span></div>
   <h1>合肥理工学院指南</h1>
@@ -263,7 +269,6 @@
   <p class="reward-desc">本站完全免费，纯自费运营 🌙 内容都是熬夜肝出来的心血<br>如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——完全自愿，不喝也绝对没关系。</p>
   <div class="footer-actions">
     <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
-    <a class="changelog-link" href="logs/index.html">📜 更新日志</a>
   </div>
   <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
