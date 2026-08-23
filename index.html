@@ -92,18 +92,6 @@
   }
   .hero .about-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
-  /* 右上角更新日志入口 */
-  .changelog-btn {
-    position: fixed; top: 18px; right: 18px; z-index: 60;
-    padding: 8px 16px; border-radius: 20px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    color: rgba(255,255,255,0.6); font-size: 12px; text-decoration: none;
-    transition: background 0.2s, color 0.2s, transform 0.15s;
-  }
-  .changelog-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); transform: translateY(-1px); }
-
   /* ========== Grid ========== */
   .grid {
     display: grid;
@@ -192,6 +180,17 @@
     transition: background 0.2s, color 0.2s;
   }
   .reward-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+  .footer-actions { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
+  /* 更新日志链接：与打赏按钮同款，协调统一 */
+  .changelog-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5); font-size: 12px; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .changelog-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
   .reward-modal {
     position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,0.75);
@@ -248,9 +247,6 @@
 </head>
 <body>
 
-<!-- 右上角固定入口：更新日志 -->
-<a class="changelog-btn" href="logs/index.html">📜 更新日志</a>
-
 <div class="hero">
   <div class="disclaimer"><span class="icon">⚠️</span><span>本站为个人公益项目，纯为爱发电，任何借此为资料进行收费、私自引流宣传的行为均不合理，谨防诈骗。</span></div>
   <h1>合肥理工学院指南</h1>
@@ -265,7 +261,10 @@
 
 <div class="footer">
   <p class="reward-desc">本站完全免费，纯自费运营 🌙 内容都是熬夜肝出来的心血<br>如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——完全自愿，不喝也绝对没关系。</p>
-  <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
+  <div class="footer-actions">
+    <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
+    <a class="changelog-link" href="logs/index.html">📜 更新日志</a>
+  </div>
   <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
 </div>
 
