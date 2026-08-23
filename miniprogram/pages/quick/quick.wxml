@@ -1,0 +1,18 @@
+<view class="page">
+  <view class="head">
+    <view class="title">宿舍尺寸速查</view>
+    <view class="sub">买东西前看一眼，后续持续补充中</view>
+  </view>
+
+  <view class="q-list">
+    <view class="q-item" wx:for="{{list}}" wx:key="item">
+      <view class="q-row">
+        <view class="q-name">{{item.item}}</view>
+        <view class="q-value">{{item.value}}</view>
+      </view>
+      <view class="q-note">{{item.note}}</view>
+    </view>
+  </view>
+
+  <view class="tip">数据来自实测与经验分享，仅供参考。</view>
+</view>

@@ -1,0 +1,72 @@
+.page {
+  padding: 40rpx 32rpx 60rpx;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.1);
+  margin-bottom: 20rpx;
+}
+.name {
+  font-size: 38rpx;
+  font-weight: 650;
+  color: #f0f0f5;
+}
+.username {
+  font-size: 23rpx;
+  color: rgba(255,255,255,0.35);
+  margin-top: 8rpx;
+}
+.tagline {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.55);
+  margin-top: 14rpx;
+  line-height: 1.7;
+}
+.tags {
+  display: flex;
+  justify-content: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+  margin-top: 18rpx;
+}
+.tag {
+  padding: 8rpx 22rpx;
+  border-radius: 22rpx;
+  background: rgba(255,255,255,0.06);
+  font-size: 21rpx;
+  color: rgba(255,255,255,0.55);
+}
+
+.section {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 22rpx;
+  padding: 28rpx 30rpx;
+  margin-bottom: 18rpx;
+}
+.sec-title {
+  font-size: 23rpx;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1rpx;
+  margin-bottom: 14rpx;
+}
+.text {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.85;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40rpx;
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.15);
+}

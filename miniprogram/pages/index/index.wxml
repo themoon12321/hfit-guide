@@ -1,0 +1,50 @@
+<view class="page">
+  <view class="star-field">
+    <view
+      class="star"
+      wx:for="{{stars}}"
+      wx:key="index"
+      style="left:{{item.left}}%;top:{{item.top}}%;width:{{item.size}}rpx;height:{{item.size}}rpx;animation-duration:{{item.dur}}s;animation-delay:{{item.delay}}s;"
+    ></view>
+    <view
+      class="meteor"
+      wx:for="{{meteors}}"
+      wx:key="index"
+      style="top:{{item.top}}%;left:{{item.left}}%;animation-duration:{{item.dur}}s;animation-delay:{{item.delay}}s;"
+    ></view>
+  </view>
+
+  <view class="content">
+    <view class="hero">
+      <view class="badge">🏠 新生指南</view>
+      <view class="title">合肥理工学院指南</view>
+      <view class="sub">从宿舍到教室，从食堂到图书馆——你想知道的，都在这里。</view>
+      <view class="notice">⚠️ 本站为个人公益项目，纯为爱发电，谨防借资料收费的行为。</view>
+    </view>
+
+    <view class="grid">
+      <view class="entry" bindtap="goDorm">
+        <view class="icon">📏</view>
+        <view class="name">宿舍尺寸</view>
+        <view class="desc">床/书桌/衣柜实测尺寸</view>
+      </view>
+      <view class="entry" bindtap="goQuick">
+        <view class="icon">⚡</view>
+        <view class="name">尺寸速查</view>
+        <view class="desc">买对东西不踩坑</view>
+      </view>
+      <view class="entry" bindtap="goFaq">
+        <view class="icon">❓</view>
+        <view class="name">常见问题</view>
+        <view class="desc">选课/交通/校园</view>
+      </view>
+      <view class="entry" bindtap="goAbout">
+        <view class="icon">🌙</view>
+        <view class="name">关于我</view>
+        <view class="desc">月亮早睡困不醒</view>
+      </view>
+    </view>
+
+    <view class="footer">@月亮早睡困不醒 · Made with 🌙</view>
+  </view>
+</view>

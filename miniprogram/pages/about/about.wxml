@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="hero">
+    <image class="avatar" src="{{avatar}}" mode="aspectFill" />
+    <view class="name">月亮早睡困不醒</view>
+    <view class="username">25 届智能制造工程 · 合肥理工学院天文协会会长</view>
+    <view class="tagline">一个兴趣驱动型选手 ENFP，正在努力脱离低阶向中阶进发</view>
+    <view class="tags">
+      <view class="tag">🔭 热爱天文</view>
+      <view class="tag">🌌 星空摄影</view>
+      <view class="tag">💡 数码探索</view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="sec-title">关于这个指南</view>
+    <view class="text">本站为个人公益项目，为新生提供入学参考信息：宿舍实测尺寸、布置参考、常见问题解答。所有内容均为本人根据实际经验整理，免费公开，无任何收费项目。</view>
+  </view>
+
+  <view class="section">
+    <view class="sec-title">免责声明</view>
+    <view class="text">尺寸均为手工测量，实际可能有所出入，仅供参考。对尺寸精度要求较高的部件，建议开学后自行复测。学校政策随时可能变化，请以官方信息为准。</view>
+  </view>
+
+  <view class="footer">@月亮早睡困不醒 · Made with 🌙</view>
+</view>

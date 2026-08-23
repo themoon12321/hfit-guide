@@ -1,5 +1,5 @@
 // FAQ 板块最后更新时间（内容更新时同步修改）
-const FAQ_UPDATED = '2026-08-21';
+const FAQ_UPDATED = "2026-08-23";
 const FAQ = [
   {
     "id": "q1",
@@ -37,5 +37,29 @@ const FAQ = [
     "tags": [
       "交通"
     ]
+  },
+  {
+    "q": "关于快递地址",
+    "a": "我平常用的快递地址是：\n<span class=\"hl c-green\">安徽省合肥市巢湖市合肥理工学院本科生宿舍楼</span>\n理论上来说地址差不多就行\n咱们学校的快递站是在<span class=\"hl c-blue\">女生宿舍楼下</span>，在合理文图和理发店的对面（这两个在男生宿舍楼下）\n记得提前在手机里下一个<span class=\"hl c-red\">拼多多</span>，取快递的时候需要在<strong><span class=\"hl c-yellow\"></span></strong><span class=\"hl c-yellow\"><strong><span class=\"hl c-yellow\">拼多多里面打开扫码</span></strong>，扫墙上的二维码</span>，然后会出现你的快递信息，根据快递信息，拿到快递之后，需要通过拼多多下方的导航栏找到身份码，同时，把<span class=\"hl c-orange\">快递条形码和身份码</span>放在出库机摄像头下等待播报出库成功就可以了。\ntips：有的快递比如顺丰快递，他可能不会在拼多多上显示，你看不到取件码（<span class=\"hl c-purple\">xx-x-xxxx，架号-层号-序号</span>），这个时候可以问一下快递站的工作人员。",
+    "tags": [
+      "生活",
+      "校园"
+    ],
+    "id": "q5xngod",
+    "updated": "2026-08-23"
+  },
+  {
+    "q": "关于社团",
+    "a": "现在我们学校一共<span class=\"hl c-green\">20个社团</span>，具体名单如下 ：\n按照要求，每个人最<span class=\"hl c-red\">多只能加两个</span>社团",
+    "tags": [
+      "校园",
+      "社团"
+    ],
+    "id": "q5xw3xk",
+    "images": [
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/faq/club-01.png",
+      "https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/faq/club-02.png"
+    ],
+    "updated": "2026-08-23"
   }
-];
+] ;

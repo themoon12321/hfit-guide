@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/dorm/dorm",
+    "pages/quick/quick",
+    "pages/faq/faq",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0d0d0f",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "合肥理工学院指南",
+    "backgroundColor": "#0d0d0f",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
