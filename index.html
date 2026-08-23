@@ -149,8 +149,17 @@
   .card .coming-tag {
     position: absolute; top: 16px; right: 16px;
     padding: 3px 12px; border-radius: 12px;
-    background: rgba(255,255,255,0.05);
-    font-size: 11px; color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 11px; color: rgba(255,255,255,0.65);
+  }
+  /* 「新」标签：绿色高亮 */
+  .card .new-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(80,200,120,0.15);
+    border: 1px solid rgba(80,200,120,0.4);
+    font-size: 11px; color: #4cd964;
   }
   /* 测试中标签：醒目黄色 */
   .card .testing-tag {
@@ -247,7 +256,7 @@
     .card h2 { font-size: 14px; margin-bottom: 6px; }
     .card p { font-size: 11px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card .action { margin-top: 10px; font-size: 11px; }
-    .card .coming-tag, .card .testing-tag { top: 10px; right: 10px; padding: 2px 8px; font-size: 10px; }
+    .card .coming-tag, .card .testing-tag, .card .new-tag { top: 10px; right: 10px; padding: 2px 8px; font-size: 10px; }
   }
 </style>
 </head>
@@ -586,7 +595,7 @@ MODULES.forEach((m, i) => {
   }
 
   const tagHtml = m.status !== 'ready' ? '<span class="coming-tag">即将上线</span>' :
-    (m.tag ? '<span class="' + (m.tag === '测试中' ? 'testing-tag' : 'coming-tag') + '">' + m.tag + '</span>' : '');
+    (m.tag ? '<span class="' + (m.tag === '测试中' ? 'testing-tag' : (m.tag === '新' ? 'new-tag' : 'coming-tag')) + '">' + m.tag + '</span>' : '');
 
   card.innerHTML = `
     <div class="icon">${m.icon}</div>
