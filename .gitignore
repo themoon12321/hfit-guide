@@ -31,3 +31,7 @@ layouts/editor.html
 murmur/editor.html
 推送.bat
 */推送.bat
+
+# 本地详细开发日志（自己看，不跟随上传）
+DEVLOG.md
+CHANGELOG.md

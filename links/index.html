@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>常用导航 · 合肥理工学院指南</title>
+<meta name="description" content="新生常用网址与电脑软件导航：学校官网、四六级报名、学习资源、装机推荐。">
+<meta property="og:title" content="常用导航 · 合肥理工学院指南">
+<meta property="og:description" content="新生常用网址与电脑软件导航。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f; color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px 60px; max-width: 640px; margin: 0 auto;
+  }
+  @media (min-width: 720px) {
+    body { max-width: 880px; }
+  }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; padding: 0 4px; }
+  .header .back { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 18px; transition: color 0.2s; }
+  .header .back:hover { color: rgba(255,255,255,0.6); }
+  .header h1 { font-size: 20px; font-weight: 600; flex: 1; }
+  .sub { font-size: 12px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 16px; line-height: 1.6; }
+  .disclaimer {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 16px; border-radius: 12px;
+    background: rgba(255,200,60,0.06);
+    border: 1px solid rgba(255,200,60,0.12);
+    font-size: 12px; color: rgba(255,215,110,0.55);
+    line-height: 1.6; margin-bottom: 20px;
+  }
+  .disclaimer .icon { flex-shrink: 0; font-size: 14px; }
+
+  /* ===== 场景套装（手机横滑 / 电脑 4 列网格） ===== */
+  .sec-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.55); margin: 2px 4px 8px; }
+  .scenes {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding: 2px 2px 10px; margin-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .scenes::-webkit-scrollbar { display: none; }
+  .scene-card {
+    flex: 0 0 224px; scroll-snap-align: start;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 11px 12px 10px;
+  }
+  .scene-card .sc-head { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+  .scene-card .sc-icon { font-size: 17px; }
+  .scene-card .sc-name { font-size: 12px; font-weight: 650; color: rgba(255,255,255,0.85); }
+  .scene-card .sc-desc { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+  .scene-card .sc-items { display: flex; flex-wrap: wrap; gap: 4px; }
+  .scene-card .sc-item {
+    font-size: 10px; color: rgba(80,200,120,0.85);
+    background: rgba(80,200,120,0.08); border: 1px solid rgba(80,200,120,0.2);
+    padding: 2px 8px; border-radius: 9px; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .scene-card .sc-item:hover { background: rgba(80,200,120,0.16); }
+  .scene-card .sc-item:active { transform: scale(0.95); }
+  @media (min-width: 720px) {
+    .scenes { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
+    .scene-card { flex: none; }
+  }
+
+  /* ===== 别用 ❌ → 改用 ✅ 对照 ===== */
+  .swap-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .swap-row {
+    display: flex; align-items: stretch; gap: 8px;
+  }
+  .swap-cell {
+    flex: 1; min-width: 0; padding: 8px 11px; border-radius: 10px;
+    font-size: 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  }
+  .swap-cell .sw-name { font-weight: 600; line-height: 1.4; }
+  .swap-cell .sw-why { font-size: 10px; opacity: 0.65; line-height: 1.4; }
+  .swap-cell.bad { background: rgba(255,107,107,0.07); border: 1px solid rgba(255,107,107,0.2); color: rgba(255,140,140,0.8); }
+  .swap-cell.good { background: rgba(80,200,120,0.08); border: 1px solid rgba(80,200,120,0.25); color: rgba(140,220,165,0.9); }
+  .swap-arrow { align-self: center; color: rgba(255,255,255,0.25); font-size: 14px; flex-shrink: 0; }
+
+  /* 套装成员点击定位时的高亮闪烁 */
+  @keyframes siteFlash {
+    0%, 100% { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+    30% { background: rgba(80,200,120,0.18); border-color: rgba(80,200,120,0.6); }
+  }
+  .site.flash { animation: siteFlash 1.2s ease; }
+
+  .group { margin-bottom: 22px; }
+  .group-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); margin-bottom: 10px; padding: 0 4px; }
+  /* 条目容器：手机单列；宽屏两列 */
+  .items { display: block; }
+  .items .site { margin-bottom: 8px; }
+  @media (min-width: 720px) {
+    .items { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .items .site { margin-bottom: 0; height: 100%; }
+  }
+  .group-note {
+    font-size: 11px; color: rgba(255,200,60,0.55);
+    background: rgba(255,200,60,0.06); border: 1px solid rgba(255,200,60,0.15);
+    border-radius: 10px; padding: 8px 12px; margin: -4px 2px 10px; line-height: 1.6;
+  }
+  .site {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 8px;
+    text-decoration: none; color: inherit; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .site:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .site:active { transform: scale(0.98); }
+  .site .ico {
+    width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .site .body { flex: 1; min-width: 0; }
+  .site .name { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .site .name .badge {
+    font-size: 9px; padding: 1px 7px; border-radius: 8px; font-weight: 500; flex-shrink: 0;
+    background: rgba(255,200,60,0.15); border: 1px solid rgba(255,200,60,0.3); color: #f2d45c;
+  }
+  .site .name .badge.wechat { background: rgba(80,200,120,0.12); border-color: rgba(80,200,120,0.3); color: #4cd964; }
+  .site .name .badge.fresh { background: rgba(138,180,255,0.14); border-color: rgba(138,180,255,0.3); color: #8ab4ff; }
+  .site .desc {
+    font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 3px; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .site .arrow { color: rgba(255,255,255,0.2); font-size: 14px; flex-shrink: 0; transition: transform 0.2s, color 0.2s; }
+  .site:hover .arrow { transform: translateX(3px); color: rgba(255,255,255,0.6); }
+  .site.disabled { opacity: 0.55; }
+  .site.disabled:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); transform: none; }
+
+  .foot { font-size: 11px; color: rgba(255,255,255,0.18); text-align: center; margin-top: 22px; line-height: 1.8; }
+
+  /* 推荐入口按钮 */
+  .rec-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; margin-top: 28px;
+    padding: 14px; border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px dashed rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.4); font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+  }
+  .rec-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); color: rgba(255,255,255,0.65); }
+  .rec-btn:active { transform: scale(0.98); }
+
+  /* 推荐弹窗输入框 */
+  .note-box .rec-hint { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.6; margin-bottom: 14px; }
+  .note-box input, .note-box textarea {
+    width: 100%; padding: 10px 12px;
+    border-radius: 10px; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #eaeaef; font-size: 13px; font-family: inherit;
+    outline: none; margin-bottom: 10px; resize: vertical;
+  }
+  .note-box input::placeholder, .note-box textarea::placeholder { color: rgba(255,255,255,0.15); }
+  .note-box input:focus, .note-box textarea:focus { border-color: rgba(255,255,255,0.18); }
+  .note-box textarea { min-height: 70px; }
+
+  /* 说明弹窗（知网等：进站前须知） */
+  .note-modal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease; padding: 20px;
+  }
+  .note-modal.show { opacity: 1; pointer-events: auto; }
+  .note-box {
+    width: 100%; max-width: 380px;
+    background: #16161a; border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 24px 22px 20px;
+    display: flex; flex-direction: column;
+    max-height: 80vh;
+    transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .note-modal.show .note-box { transform: scale(1); }
+  .note-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 14px; flex-shrink: 0; }
+  /* 内容区：超高可滚动，深色滚动条配主题 */
+  #noteLines {
+    flex: 1; min-height: 0; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.22) transparent;
+    padding-right: 6px; margin-right: -6px;
+  }
+  #noteLines::-webkit-scrollbar { width: 6px; }
+  #noteLines::-webkit-scrollbar-track { background: transparent; }
+  #noteLines::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 3px; }
+  #noteLines::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+  .note-box .n-line { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 10px; padding-left: 14px; position: relative; }
+  .note-box .n-line::before { content: '·'; position: absolute; left: 2px; color: #4cd964; font-weight: 700; }
+  .note-box .n-line b { color: rgba(255,255,255,0.85); font-weight: 600; }
+  .note-box .n-row { display: flex; align-items: center; gap: 8px; margin: 16px 0 14px; cursor: pointer; user-select: none; flex-shrink: 0; }
+  .note-box .n-line.exp {
+    background: rgba(80,200,120,0.07); border: 1px solid rgba(80,200,120,0.18);
+    border-radius: 10px; padding: 9px 12px;
+  }
+  .note-box .n-line.exp::before { content: none; padding-left: 0; }
+  .note-box .n-row input { accent-color: #4cd964; width: 15px; height: 15px; cursor: pointer; }
+  .note-box .n-row label { font-size: 12px; color: rgba(255,255,255,0.45); cursor: pointer; }
+  .note-box .n-btns button {
+    flex: 1; padding: 11px; border-radius: 12px; border: none;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .note-box .n-btns button:active { transform: scale(0.97); }
+  .note-box .n-cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
+  .note-box .n-go { background: rgba(80,200,120,0.16); border: 1px solid rgba(80,200,120,0.35); color: #4cd964; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="header"><a class="back" href="../index.html">←</a><h1>常用导航</h1></div>
+<div class="sub">新生常用的网站和应用，长期更新。网址有误或想补充，欢迎在主页留言。</div>
+
+<div class="disclaimer"><span class="icon">⚠️</span><span>以下内容均为站长个人使用经验整理，仅供参考。软件一律从官方渠道下载，请按需选择、自行判断——带「💡 站长使用」的条目是站长的真实使用案例，其余为通用建议。</span></div>
+
+<div class="sec-title">🎒 场景套装</div>
+<div class="scenes" id="scenes"></div>
+
+<div class="sec-title">⚔️ 别用 ❌ → 改用 ✅</div>
+<div class="swap-list" id="swapList"></div>
+
+<div id="list"></div>
+
+<button class="rec-btn" id="recBtn">💡 有好用的软件 / 网站？推荐给站长</button>
+
+<div class="foot">标「待确认」的网址请以实际为准 · 持续更新 🌙</div>
+
+<!-- 推荐留言弹窗 -->
+<div class="note-modal" id="recModal">
+  <div class="note-box">
+    <h3>推荐一个软件 / 网站</h3>
+    <div class="rec-hint">你推荐的好东西，站长试用后可能会收录进来，帮助更多同学。</div>
+    <input type="text" id="recName" placeholder="你的昵称（可选）" maxlength="12">
+    <textarea id="recText" placeholder="推荐什么？一句话说明它好用在哪…"></textarea>
+    <div class="n-btns">
+      <button class="n-cancel" id="recCancel">取消</button>
+      <button class="n-go" id="recSend">发送</button>
+    </div>
+  </div>
+</div>
+
+<!-- 说明弹窗 -->
+<div class="note-modal" id="noteModal">
+  <div class="note-box">
+    <h3 id="noteTitle"></h3>
+    <div id="noteLines"></div>
+    <div class="n-row"><input type="checkbox" id="noteSkip"><label for="noteSkip">不再显示（下次直接打开）</label></div>
+    <div class="n-btns">
+      <button class="n-cancel" id="noteCancel">取消</button>
+      <button class="n-go" id="noteGo">知道了，前往 ↗</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+var DATA = (typeof LINK_SITES !== 'undefined') ? LINK_SITES : [];
+var ICO_MAP = { '🏫 学校相关': '理', '📝 考试报名': '考', '📚 学习网站': '学', '🧰 效率工具': '效', '🖥️ 装机软件': '装', '🎮 游戏娱乐': '游' };
+var pendingNote = null; // 当前弹窗对应的站点
+
+// ===== 场景套装（横滑卡片，点成员名定位到条目） =====
+(function() {
+  if (typeof SCENES === 'undefined') return;
+  var box = document.getElementById('scenes');
+  SCENES.forEach(function(sc) {
+    var card = document.createElement('div');
+    card.className = 'scene-card';
+    var chips = sc.items.map(function(n) {
+      return '<span class="sc-item" data-name="' + esc(n) + '">' + esc(n) + '</span>';
+    }).join('');
+    card.innerHTML = '<div class="sc-head"><span class="sc-icon">' + sc.icon + '</span><span class="sc-name">' + esc(sc.name) + '</span></div>' +
+      '<div class="sc-desc">' + esc(sc.desc) + '</div>' +
+      '<div class="sc-items">' + chips + '</div>';
+    box.appendChild(card);
+  });
+  // 点成员名 → 滚动到对应条目并闪烁高亮
+  box.addEventListener('click', function(e) {
+    var chip = e.target.closest('.sc-item');
+    if (!chip) return;
+    var name = chip.getAttribute('data-name');
+    var target = document.querySelector('.site[data-name="' + name.replace(/"/g, '\\"') + '"]');
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.remove('flash');
+    void target.offsetWidth;
+    target.classList.add('flash');
+  });
+})();
+
+// ===== 别用 ❌ → 改用 ✅ =====
+(function() {
+  if (typeof SWAP_LIST === 'undefined') return;
+  var box = document.getElementById('swapList');
+  SWAP_LIST.forEach(function(s) {
+    var row = document.createElement('div');
+    row.className = 'swap-row';
+    row.innerHTML = '<div class="swap-cell bad"><span class="sw-name">❌ ' + esc(s.bad) + '</span></div>' +
+      '<span class="swap-arrow">→</span>' +
+      '<div class="swap-cell good"><span class="sw-name">✅ ' + esc(s.good) + '</span><span class="sw-why">' + esc(s.why) + '</span></div>';
+    box.appendChild(row);
+  });
+})();
+
+var list = document.getElementById('list');
+DATA.forEach(function(group) {
+  var g = document.createElement('div');
+  g.className = 'group';
+  var html = '<div class="group-title">' + esc(group.cat) + '</div>';
+  if (group.groupNote) {
+    html += '<div class="group-note">' + esc(group.groupNote) + '</div>';
+  }
+  html += '<div class="items">';
+  group.items.forEach(function(item) {
+    // 新生期专属：过了 until 日期自动隐藏
+    if (item.until && new Date() > new Date(item.until + 'T23:59:59')) return;
+    var hasUrl = item.url && item.url.indexOf('http') === 0;
+    var badge = '';
+    if (item.wechat) badge = '<span class="badge wechat">微信公众号</span>';
+    else if (item.app) badge = '<span class="badge fresh">新生专用</span>';
+    else if (item.noLink) badge = '<span class="badge">自行搜索</span>';
+    else if (item.confirm) badge = '<span class="badge">待确认</span>';
+    var cls = 'site' + (hasUrl ? '' : ' disabled');
+    html += '<a class="' + cls + '" data-name="' + esc(item.name) + '">' +
+      '<div class="ico">' + esc(item.icon || ICO_MAP[group.cat] || '链') + '</div>' +
+      '<div class="body"><div class="name">' + esc(item.name) + badge + '</div>' +
+      '<div class="desc">' + esc(item.desc) + '</div></div>' +
+      '<span class="arrow">' + (hasUrl ? '↗' : '·') + '</span></a>';
+  });
+  html += '</div>';
+  g.innerHTML = html;
+  list.appendChild(g);
+});
+
+// 点击分发：有 note 弹说明；否则新窗口打开
+list.addEventListener('click', function(e) {
+  var el = e.target.closest('.site');
+  if (!el) return;
+  var name = el.getAttribute('data-name');
+  var site = findSite(name);
+  if (!site) return;
+  if (site.note && site.url) {
+    var skipped = localStorage.getItem('links_note_off_' + name) === '1';
+    if (skipped) { window.open(site.url, '_blank', 'noopener'); return; }
+    showNote(site);
+  } else if (site.url && site.url.indexOf('http') === 0) {
+    window.open(site.url, '_blank', 'noopener');
+  }
+});
+
+function findSite(name) {
+  for (var i = 0; i < DATA.length; i++) {
+    var items = DATA[i].items;
+    for (var j = 0; j < items.length; j++) if (items[j].name === name) return items[j];
+  }
+  return null;
+}
+
+var modal = document.getElementById('noteModal');
+function showNote(site) {
+  pendingNote = site;
+  document.getElementById('noteTitle').textContent = site.name + ' · 使用建议';
+  document.getElementById('noteLines').innerHTML = site.note.map(function(l) {
+    // 💡 开头的是站长使用/建议段，绿色卡片样式突出显示
+    var cls = l.indexOf('💡') === 0 ? 'n-line exp' : 'n-line';
+    return '<div class="' + cls + '">' + l + '</div>'; // note 内容是站内写死的富文本，非用户输入
+  }).join('');
+  document.getElementById('noteSkip').checked = false;
+  modal.classList.add('show');
+}
+document.getElementById('noteCancel').addEventListener('click', function() { modal.classList.remove('show'); });
+modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('show'); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.classList.remove('show'); });
+document.getElementById('noteGo').addEventListener('click', function() {
+  if (document.getElementById('noteSkip').checked && pendingNote) {
+    localStorage.setItem('links_note_off_' + pendingNote.name, '1');
+  }
+  if (pendingNote && pendingNote.url) window.open(pendingNote.url, '_blank', 'noopener');
+  modal.classList.remove('show');
+});
+
+/* ===== 推荐留言（同 FAQ / 布置页模式，page='links'） ===== */
+(function() {
+  var recModal = document.getElementById('recModal');
+  document.getElementById('recBtn').addEventListener('click', function() { recModal.classList.add('show'); });
+  document.getElementById('recCancel').addEventListener('click', function() { recModal.classList.remove('show'); });
+  recModal.addEventListener('click', function(e) { if (e.target === recModal) recModal.classList.remove('show'); });
+  document.getElementById('recSend').addEventListener('click', function() {
+    var btn = this;
+    var text = document.getElementById('recText').value.trim();
+    var name = document.getElementById('recName').value.trim();
+    if (!text) return;
+    btn.disabled = true; btn.textContent = '发送中…';
+    fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'links', nickname: name || '匿名', text: text })
+    })
+      .then(function(r) {
+        if (!r.ok) throw new Error('fail');
+        document.getElementById('recText').value = '';
+        document.getElementById('recName').value = '';
+        btn.textContent = '已收到 🎉';
+        setTimeout(function() {
+          btn.disabled = false; btn.textContent = '发送';
+          recModal.classList.remove('show');
+        }, 1200);
+      })
+      .catch(function() {
+        btn.disabled = false; btn.textContent = '发送失败，稍后再试';
+        setTimeout(function() { btn.textContent = '发送'; }, 1800);
+      });
+  });
+})();
+
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+</script>
+</body>
+</html>
