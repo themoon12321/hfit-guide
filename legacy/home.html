@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>合肥理工学院指南</title>
+<meta name="description" content="从宿舍到教室，从食堂到图书馆——新生想知道的一切：宿舍实测尺寸、布置参考、常见问题。">
+<meta property="og:title" content="合肥理工学院指南">
+<meta property="og:description" content="从宿舍到教室，从食堂到图书馆——新生想知道的一切：宿舍实测尺寸、布置参考、常见问题。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f;
+    color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 60px 24px 40px;
+  }
+
+  /* ========== 星空背景（JS 生成，逐颗独立闪烁） ========== */
+  .star-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .star-field i {
+    position: absolute; border-radius: 50%;
+    background: #fff;
+    opacity: 0.3;
+    animation: starTwinkle ease-in-out infinite alternate;
+  }
+  @keyframes starTwinkle {
+    from { opacity: 0.12; transform: scale(0.8); }
+    to { opacity: 0.95; transform: scale(1.15); }
+  }
+  /* 流星：带拖尾，从右上方随机划过 */
+  .meteor {
+    position: fixed; z-index: 0; pointer-events: none;
+    width: 140px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 30%, transparent);
+    transform: rotate(-35deg);
+    opacity: 0;
+    animation: meteorFall linear infinite;
+  }
+  @keyframes meteorFall {
+    0%   { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { transform: translate(-520px, 360px) rotate(-35deg); opacity: 0; }
+  }
+  /* 内容浮在星空之上 */
+  body > * { position: relative; z-index: 1; }
+
+  /* ========== Hero ========== */
+  .hero {
+    text-align: center;
+    max-width: 640px;
+    margin-bottom: 56px;
+    animation: fadeUp 0.6s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero .disclaimer {
+    display: inline-flex; align-items: flex-start; gap: 8px;
+    padding: 10px 16px; border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px; color: rgba(255,255,255,0.55);
+    line-height: 1.6; margin-bottom: 20px;
+    text-align: left; max-width: 100%;
+  }
+  .hero .disclaimer .icon { flex-shrink: 0; font-size: 13px; }
+  .hero h1 {
+    font-size: 40px; font-weight: 650; line-height: 1.22;
+    color: #f5f5fa; letter-spacing: -0.3px;
+    margin-bottom: 14px;
+  }
+  .hero p {
+    font-size: 16px; color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+  }
+  .hero .about-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 22px; padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.4);
+    font-size: 12px; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .hero .about-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+  /* 版本号徽章：主页右上角，随页面滚动（亮绿色） */
+  .version-link {
+    padding: 4px 12px; border-radius: 12px;
+    background: rgba(80,200,120,0.12);
+    border: 1px solid rgba(80,200,120,0.3);
+    color: #4cd964; font-size: 11px; text-decoration: none;
+    font-feature-settings: "tnum";
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .version-link:hover { background: rgba(80,200,120,0.2); color: #6fe785; border-color: rgba(80,200,120,0.45); }
+
+  /* ========== Grid ========== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 56px;
+  }
+  .card {
+    position: relative;
+    padding: 32px 28px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.3s, border-color 0.3s, transform 0.25s;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+  }
+  .card.ready { cursor: pointer; }
+  .card.ready:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-3px);
+  }
+  .card.ready:active { transform: translateY(-1px); }
+  .card .icon {
+    font-size: 32px; margin-bottom: 16px;
+    width: 48px; height: 48px; border-radius: 14px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #f0f0f5; }
+  .card p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; flex: 1; }
+  .card .action {
+    margin-top: 18px;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.3);
+    transition: color 0.25s;
+  }
+  .card.ready .action { color: rgba(255,255,255,0.6); }
+  .card.ready:hover .action { color: rgba(255,255,255,0.9); }
+  .card .coming-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 11px; color: rgba(255,255,255,0.65);
+  }
+  /* 「新」标签：绿色高亮 */
+  .card .new-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(80,200,120,0.15);
+    border: 1px solid rgba(80,200,120,0.4);
+    font-size: 11px; color: #4cd964;
+  }
+  /* 测试中标签：醒目黄色 */
+  .card .testing-tag {
+    position: absolute; top: 16px; right: 16px;
+    padding: 3px 12px; border-radius: 12px;
+    background: rgba(255,200,60,0.15);
+    border: 1px solid rgba(255,200,60,0.35);
+    font-size: 11px; color: #f2d45c;
+  }
+  .card.disabled { opacity: 0.5; }
+  .card.disabled .coming-tag { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); }
+
+  /* ========== Footer ========== */
+  .footer {
+    text-align: center;
+    max-width: 640px; width: 100%;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer .credit {
+    font-size: 12px; color: rgba(255,255,255,0.15);
+    letter-spacing: 0.3px; line-height: 1.9;
+  }
+  .footer .reward-desc {
+    font-size: 11px; color: rgba(255,255,255,0.3);
+    line-height: 1.8; margin-bottom: 10px;
+  }
+
+  /* ========== 打赏弹窗 ========== */
+  .reward-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 18px; border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5); font-size: 12px;
+    cursor: pointer; font-family: inherit; margin-bottom: 10px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .reward-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+  .footer-actions { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .reward-modal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .reward-modal.show { opacity: 1; pointer-events: auto; }
+  .reward-box {
+    width: 88%; max-width: 400px;
+    background: #16161a; border-radius: 18px;
+    padding: 26px 24px 22px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .reward-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+  .reward-sub { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
+  .reward-codes { display: flex; justify-content: center; gap: 18px; margin-bottom: 20px; }
+  .reward-col img {
+    width: 130px; height: 130px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #fff; object-fit: contain;
+  }
+  .reward-col span { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 8px; }
+  .reward-close {
+    padding: 8px 22px; border-radius: 10px; border: none;
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+  /* 收款码点击放大 */
+  .reward-col img { cursor: zoom-in; }
+  .reward-zoom {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85);
+    width: min(86vw, 380px); background: #fff; border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    opacity: 0; pointer-events: none; cursor: zoom-out;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 210;
+  }
+  .reward-zoom.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 640px) {
+    body { padding: 40px 16px 32px; }
+    .hero h1 { font-size: 28px; }
+    .hero { margin-bottom: 40px; }
+    /* 手机端两列紧凑卡片：一屏看更多，滑动次数减半 */
+    .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card { padding: 14px 12px; border-radius: 14px; }
+    .card .icon { width: 34px; height: 34px; font-size: 19px; border-radius: 10px; margin-bottom: 10px; }
+    .card h2 { font-size: 14px; margin-bottom: 6px; }
+    .card p { font-size: 11px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card .action { margin-top: 10px; font-size: 11px; }
+    .card .coming-tag, .card .testing-tag, .card .new-tag { top: 10px; right: 10px; padding: 2px 8px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 版本号徽章（随页面滚动，点击查看更新日志） -->
+<div style="width:100%;max-width:900px;display:flex;justify-content:flex-end;margin-bottom:8px;padding:0 6px;">
+  <a class="version-link" href="logs/index.html">v1.4</a>
+</div>
+
+<div class="hero">
+  <div class="disclaimer"><span class="icon">⚠️</span><span>本站为个人公益项目，纯为爱发电，任何借此为资料进行收费、私自引流宣传的行为均不合理，谨防诈骗。</span></div>
+  <h1>合肥理工学院指南</h1>
+  <p>从宿舍到教室，从食堂到图书馆——<br>你想知道的，都在这里。</p>
+  <a class="about-link" href="/legacy/about.html">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    关于我
+  </a>
+</div>
+
+<div class="grid" id="cardGrid"></div>
+
+<div class="footer">
+  <p class="reward-desc">本站完全免费，纯自费运营 🌙 内容都是熬夜肝出来的心血<br>如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——完全自愿，不喝也绝对没关系。</p>
+  <div class="footer-actions">
+    <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
+  </div>
+  <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
+</div>
+
+<!-- 打赏弹窗 -->
+<div id="rewardModal" class="reward-modal">
+  <div class="reward-box">
+    <h3>请作者喝咖啡 ☕</h3>
+    <div class="reward-sub">内容永远免费，打赏全凭心意 🌙</div>
+    <div class="reward-codes">
+      <div class="reward-col">
+        <img id="alipayImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码（点击放大）">
+        <span>支付宝 点击放大</span>
+      </div>
+      <div class="reward-col">
+        <img id="wechatImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码（点击放大）">
+        <span>微信 点击放大</span>
+      </div>
+    </div>
+    <button class="reward-close" id="rewardClose">关闭</button>
+  </div>
+  <img id="rewardZoom" class="reward-zoom" src="" alt="收款码大图">
+</div>
+
+<!-- ========== Feedback Widget ========== -->
+<div class="feedback">
+  <!-- 点赞 -->
+  <div class="fb-like">
+    <span class="fb-label">这个页面有帮助吗？</span>
+    <button class="fb-like-btn" id="fbLikeBtn">
+      <span>👍</span>
+      <span class="fb-count" id="fbLikeCount">-</span>
+    </button>
+  </div>
+
+  <!-- 留言 -->
+  <div class="fb-comments">
+    <div class="fb-c-title" id="fbTitle">有什么想说的？</div>
+    <div class="fb-form">
+      <input type="text" id="fbName" placeholder="你的昵称（可选）" maxlength="12">
+      <textarea id="fbText" placeholder="反馈、建议、或者单纯打个招呼…"></textarea>
+      <button class="fb-submit" id="fbSubmit">发送</button>
+    </div>
+    <div id="fbMyComments"></div>
+  </div>
+</div>
+
+<style>
+/* ========== Feedback Widget ========== */
+.feedback {
+  width: 100%; max-width: 640px; margin-top: 48px;
+  padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.fb-like { margin-bottom: 36px; }
+.fb-label { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 12px; }
+.fb-like-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 22px; border-radius: 22px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+.fb-like-btn:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7);
+}
+.fb-like-btn:active { transform: scale(0.95); }
+.fb-like-btn .fb-count {
+  font-size: 13px; font-feature-settings: "tnum";
+  color: rgba(255,255,255,0.2); min-width: 14px;
+}
+  .fb-like-btn.liked { background: rgba(80,200,120,0.12); border-color: rgba(80,200,120,0.25); color: #4cd964; }
+  .fb-like-btn.liked { animation: pop 0.35s ease; }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+.fb-like-btn.liked .fb-count { color: #4cd964; }
+.fb-like-btn.liked:hover { background: rgba(80,200,120,0.18); border-color: rgba(80,200,120,0.35); }
+
+.fb-c-title { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 12px; margin-top: 8px; }
+.fb-my-item {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55;
+  margin-top: 10px;
+}
+.fb-my-item .fb-my-time {
+  font-size: 11px; color: rgba(255,255,255,0.12);
+  margin-top: 4px;
+}
+.fb-form { display: flex; flex-direction: column; gap: 10px; }
+.fb-form input {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #eaeaef; font-size: 13px;
+  font-family: inherit; outline: none;
+  transition: border-color 0.2s;
+}
+.fb-form input::placeholder { color: rgba(255,255,255,0.15); }
+.fb-form input:focus { border-color: rgba(255,255,255,0.15); }
+.fb-form textarea {
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #eaeaef; font-size: 13px;
+  font-family: inherit; outline: none;
+  transition: border-color 0.2s;
+}
+.fb-form input::placeholder, .fb-form textarea::placeholder { color: rgba(255,255,255,0.15); }
+.fb-form input:focus, .fb-form textarea:focus { border-color: rgba(255,255,255,0.15); }
+.fb-form textarea { min-height: 64px; resize: vertical; }
+.fb-submit {
+  align-self: flex-end;
+  padding: 8px 20px; border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  border: none; color: rgba(255,255,255,0.5); font-size: 13px;
+  cursor: pointer; transition: background 0.2s, color 0.2s;
+  font-family: inherit;
+}
+.fb-submit:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+.fb-submit:disabled { opacity: 0.3; cursor: default; }
+
+</style>
+
+<script>
+// ========== Feedback API ==========
+const PAGE_ID = 'portal';
+
+async function loadLikes() {
+  const r = await fetch('/api/likes?page=' + PAGE_ID);
+  const d = await r.json();
+  document.getElementById('fbLikeCount').textContent = d.count;
+}
+
+document.getElementById('fbLikeBtn').addEventListener('click', async function() {
+  const liked = this.classList.toggle('liked');
+  localStorage.setItem('liked_portal', liked ? '1' : '0');
+  const r = await fetch('/api/likes', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page: PAGE_ID, delta: liked ? 1 : -1}) });
+  const d = await r.json();
+  document.getElementById('fbLikeCount').textContent = d.count;
+});
+
+// 初始化时恢复点赞状态
+if (localStorage.getItem('liked_portal') === '1') {
+  document.getElementById('fbLikeBtn').classList.add('liked');
+}
+
+// 显示自己发过的留言
+function showMyComments() {
+  const el = document.getElementById('fbMyComments');
+  const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
+  if (!saved.length) { el.innerHTML = ''; return; }
+  el.innerHTML = saved.reverse().map(c =>
+    '<div class="fb-my-item">' + esc(c.text) + '<div class="fb-my-time">' + c.time + '</div></div>'
+  ).join('');
+}
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+document.getElementById('fbSubmit').addEventListener('click', async function() {
+  const text = document.getElementById('fbText').value.trim();
+  const name = document.getElementById('fbName').value.trim();
+  if (!text) return;
+  this.disabled = true; this.textContent = '发送中…';
+  try {
+    await fetch('/api/comments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:PAGE_ID, text, nickname: name || '匿名'}) });
+    document.getElementById('fbText').value = '';
+    this.textContent = '已收到 🎉';
+    // 存本地
+    const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
+    saved.push({ text: (name ? name + '：' : '') + text, time: new Date().toLocaleString('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) });
+    if (saved.length > 10) saved.splice(0, saved.length - 10);
+    localStorage.setItem('my_comments', JSON.stringify(saved));
+    showMyComments();
+  } catch(e) { this.textContent = '发送失败'; }
+  finally { setTimeout(() => { this.disabled = false; this.textContent = '发送'; }, 2000); }
+});
+
+showMyComments();
+
+// 随机标题
+var likeLabels = [
+  '这个页面有帮助吗？',
+  '如果能帮到你，点个赞再走 👍',
+  '觉得有用的话，点个赞吧',
+  '内容还满意吗？',
+];
+var commentTitles = [
+  '有什么想说的？',
+  '唠唠嗑～',
+  '欢迎留言 ✌️',
+  '来都来了，说两句呗',
+  '键盘交给你了',
+  '随便说点啥',
+];
+var placeholders = [
+  '反馈、建议、或者单纯打个招呼…',
+  '随便说点啥，我在听',
+  '说说你的想法',
+  '畅所欲言～',
+];
+document.querySelector('.fb-label').textContent = likeLabels[Math.floor(Math.random() * likeLabels.length)];
+document.getElementById('fbTitle').textContent = commentTitles[Math.floor(Math.random() * commentTitles.length)];
+document.getElementById('fbText').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
+
+loadLikes();
+
+</script>
+
+<script>
+const MODULES = [
+  {
+    icon: '🏠',
+    title: '宿舍尺寸指南',
+    desc: '床有多宽？书桌能放多大显示器？提前了解宿舍各处的实际尺寸，买对东西不踩坑。',
+    path: 'dorm/index.html',
+    status: 'ready',
+    tag: '16 张示意图'
+  },
+  {
+    icon: '🛋️',
+    title: '宿舍布置参考',
+    desc: '看看学长学姐们是怎么布置宿舍的——收纳、装饰、布局灵感。',
+    path: 'layouts/index.html',
+    status: 'ready',
+    tag: '布置灵感'
+  },
+  {
+    icon: '🗺️',
+    title: '校园地图',
+    desc: '校园俯瞰全景、VR 漫游、定位入口——新同学不迷路。',
+    path: 'campus/index.html',
+    status: 'ready',
+    tag: '测试中'
+  },
+  {
+    icon: '🗒️',
+    title: '开学清单',
+    desc: '证件、线上办理、宿舍用品——报到要带什么，对着勾就行。',
+    path: 'checklist/index.html',
+    status: 'ready',
+    tag: '新'
+  },
+  {
+    icon: '💬',
+    title: '个人碎碎念',
+    desc: '一些想法、日常、经验分享……',
+    path: 'murmur/index.html',
+    status: 'ready',
+    tag: '随笔'
+  },
+  {
+    icon: '❓',
+    title: '常见问题',
+    desc: '关于宿舍、校园、选课那些事——常见问题解答。',
+    path: 'faq/index.html',
+    status: 'ready',
+    tag: 'FAQ'
+  },
+  {
+    icon: '🔗',
+    title: '常用导航',
+    desc: '网址 + 电脑软件——新生常用的网站和装机推荐，一页搞定。',
+    path: 'links/index.html',
+    status: 'ready',
+    tag: '新'
+  }
+];
+
+const grid = document.getElementById('cardGrid');
+
+// ===== 星空：随机生成星星，每颗独立闪烁（大小分三档） =====
+(function makeStars() {
+  const field = document.createElement('div');
+  field.className = 'star-field';
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('i');
+    const r = Math.random();
+    const size = r < 0.78 ? 1 : (r < 0.95 ? 2 : 3); // 1/2/3px 三档
+    s.style.left = (Math.random() * 100).toFixed(2) + '%';
+    s.style.top = (Math.random() * 100).toFixed(2) + '%';
+    s.style.width = s.style.height = size + 'px';
+    // 每颗星的闪烁节奏随机：2-5 秒周期 + 随机延迟（此起彼伏）
+    s.style.animationDuration = (2 + Math.random() * 3).toFixed(2) + 's';
+    s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
+    field.appendChild(s);
+  }
+  document.body.appendChild(field);
+  // 流星：3 颗随机位置；第一颗很快出现，之后间隔约 7 秒错落划过（保持稀疏）
+  for (let i = 0; i < 3; i++) {
+    const m = document.createElement('div');
+    m.className = 'meteor';
+    m.style.top = (5 + Math.random() * 30).toFixed(1) + '%';
+    m.style.left = (60 + Math.random() * 35).toFixed(1) + '%';
+    m.style.animationDuration = (4 + Math.random() * 2).toFixed(2) + 's';
+    m.style.animationDelay = (0.5 + i * 7 + Math.random() * 2).toFixed(2) + 's';
+    document.body.appendChild(m);
+  }
+})();
+
+MODULES.forEach((m, i) => {
+  const card = document.createElement('a');
+  card.className = 'card' + (m.status === 'ready' ? ' ready' : ' disabled');
+  // 依次入场：每张卡片延迟 80ms 淡入上浮
+  card.style.animation = 'fadeUp 0.5s ease both';
+  card.style.animationDelay = (i * 0.08) + 's';
+
+  if (m.status === 'ready') {
+    card.href = m.path;
+  } else {
+    card.href = 'javascript:void(0)';
+    card.addEventListener('click', (e) => e.preventDefault());
+  }
+
+  const tagHtml = m.status !== 'ready' ? '<span class="coming-tag">即将上线</span>' :
+    (m.tag ? '<span class="' + (m.tag === '测试中' ? 'testing-tag' : (m.tag === '新' ? 'new-tag' : 'coming-tag')) + '">' + m.tag + '</span>' : '');
+
+  card.innerHTML = `
+    <div class="icon">${m.icon}</div>
+    <h2>${m.title}</h2>
+    <p>${m.desc}</p>
+    <span class="action">${m.status === 'ready' ? '开始浏览 →' : '即将推出'}</span>
+    ${tagHtml}
+  `;
+
+  grid.appendChild(card);
+});
+
+// ===== 打赏弹窗开关 =====
+document.getElementById('rewardBtn').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.add('show');
+});
+document.getElementById('rewardClose').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.remove('show');
+});
+document.getElementById('rewardModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
+});
+
+// ===== 收款码点击放大（方便扫码） =====
+var rewardZoomEl = document.getElementById('rewardZoom');
+['alipayImg', 'wechatImg'].forEach(function(id) {
+  document.getElementById(id).addEventListener('click', function() {
+    rewardZoomEl.src = this.src;
+    rewardZoomEl.classList.add('show');
+  });
+});
+rewardZoomEl.addEventListener('click', function() { this.classList.remove('show'); });
+</script>
+</body>
+</html>

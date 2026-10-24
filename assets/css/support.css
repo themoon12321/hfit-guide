@@ -1,0 +1,113 @@
+.support-page {
+  padding-top: var(--head-h);
+  padding-bottom: clamp(40px, 6vw, 90px);
+}
+
+.support-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+  padding-block: clamp(44px, 7vw, 92px) clamp(34px, 5vw, 58px);
+  border-bottom: 1px solid var(--ink);
+}
+
+.support-title {
+  margin-top: 18px;
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6.8vw, 7rem);
+  font-weight: 520;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.support-title span {
+  color: var(--red);
+}
+
+.support-intro .lede {
+  max-width: 34em;
+  margin-top: 24px;
+}
+
+.support-stamp {
+  display: grid;
+  width: clamp(150px, 16vw, 190px);
+  aspect-ratio: 1;
+  place-content: center;
+  justify-self: end;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  color: var(--red-dark);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+  transform: rotate(-7deg);
+}
+
+.support-stamp b {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 560;
+  letter-spacing: 0;
+}
+
+.support-main {
+  margin-top: 0;
+  border-top: 0;
+}
+
+.support-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.support-foot a {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.support-foot a:hover {
+  border-color: var(--red);
+  color: var(--red-dark);
+}
+
+@media (max-width: 900px) {
+  .support-intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .support-stamp {
+    justify-self: start;
+    width: 140px;
+  }
+}
+
+@media (max-width: 620px) {
+  .support-intro {
+    padding-top: 34px;
+  }
+
+  .support-title {
+    font-size: clamp(2.6rem, 12vw, 3.7rem);
+  }
+
+  .support-stamp {
+    width: 124px;
+    font-size: 9px;
+  }
+}
