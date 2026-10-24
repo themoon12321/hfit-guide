@@ -1,644 +1,413 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>合肥理工学院指南</title>
-<meta name="description" content="从宿舍到教室，从食堂到图书馆——新生想知道的一切：宿舍实测尺寸、布置参考、常见问题。">
-<meta property="og:title" content="合肥理工学院指南">
-<meta property="og:description" content="从宿舍到教室，从食堂到图书馆——新生想知道的一切：宿舍实测尺寸、布置参考、常见问题。">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; min-height: 100%; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
-    background: #0d0d0f;
-    color: #eaeaef;
-    -webkit-font-smoothing: antialiased;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 60px 24px 40px;
-  }
-
-  /* ========== 星空背景（JS 生成，逐颗独立闪烁） ========== */
-  .star-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-  .star-field i {
-    position: absolute; border-radius: 50%;
-    background: #fff;
-    opacity: 0.3;
-    animation: starTwinkle ease-in-out infinite alternate;
-  }
-  @keyframes starTwinkle {
-    from { opacity: 0.12; transform: scale(0.8); }
-    to { opacity: 0.95; transform: scale(1.15); }
-  }
-  /* 流星：带拖尾，从右上方随机划过 */
-  .meteor {
-    position: fixed; z-index: 0; pointer-events: none;
-    width: 140px; height: 2px; border-radius: 2px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 30%, transparent);
-    transform: rotate(-35deg);
-    opacity: 0;
-    animation: meteorFall linear infinite;
-  }
-  @keyframes meteorFall {
-    0%   { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
-    8%   { opacity: 1; }
-    92%  { opacity: 1; }
-    100% { transform: translate(-520px, 360px) rotate(-35deg); opacity: 0; }
-  }
-  /* 内容浮在星空之上 */
-  body > * { position: relative; z-index: 1; }
-
-  /* ========== Hero ========== */
-  .hero {
-    text-align: center;
-    max-width: 640px;
-    margin-bottom: 56px;
-    animation: fadeUp 0.6s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .hero .disclaimer {
-    display: inline-flex; align-items: flex-start; gap: 8px;
-    padding: 10px 16px; border-radius: 12px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    font-size: 12px; color: rgba(255,255,255,0.55);
-    line-height: 1.6; margin-bottom: 20px;
-    text-align: left; max-width: 100%;
-  }
-  .hero .disclaimer .icon { flex-shrink: 0; font-size: 13px; }
-  .hero h1 {
-    font-size: 40px; font-weight: 650; line-height: 1.22;
-    color: #f5f5fa; letter-spacing: -0.3px;
-    margin-bottom: 14px;
-  }
-  .hero p {
-    font-size: 16px; color: rgba(255,255,255,0.45);
-    line-height: 1.7;
-  }
-  .hero .about-link {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-top: 22px; padding: 7px 18px; border-radius: 18px;
-    background: rgba(255,255,255,0.05);
-    color: rgba(255,255,255,0.4);
-    font-size: 12px; text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-  }
-  .hero .about-link:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
-
-  /* 版本号徽章：主页右上角，随页面滚动（亮绿色） */
-  .version-link {
-    padding: 4px 12px; border-radius: 12px;
-    background: rgba(80,200,120,0.12);
-    border: 1px solid rgba(80,200,120,0.3);
-    color: #4cd964; font-size: 11px; text-decoration: none;
-    font-feature-settings: "tnum";
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-  }
-  .version-link:hover { background: rgba(80,200,120,0.2); color: #6fe785; border-color: rgba(80,200,120,0.45); }
-
-  /* ========== Grid ========== */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 900px;
-    width: 100%;
-    margin-bottom: 56px;
-  }
-  .card {
-    position: relative;
-    padding: 32px 28px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: background 0.3s, border-color 0.3s, transform 0.25s;
-    text-decoration: none; color: inherit;
-    display: flex; flex-direction: column;
-  }
-  .card.ready { cursor: pointer; }
-  .card.ready:hover {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.12);
-    transform: translateY(-3px);
-  }
-  .card.ready:active { transform: translateY(-1px); }
-  .card .icon {
-    font-size: 32px; margin-bottom: 16px;
-    width: 48px; height: 48px; border-radius: 14px;
-    background: rgba(255,255,255,0.06);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .card h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #f0f0f5; }
-  .card p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; flex: 1; }
-  .card .action {
-    margin-top: 18px;
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 13px; font-weight: 500;
-    color: rgba(255,255,255,0.3);
-    transition: color 0.25s;
-  }
-  .card.ready .action { color: rgba(255,255,255,0.6); }
-  .card.ready:hover .action { color: rgba(255,255,255,0.9); }
-  .card .coming-tag {
-    position: absolute; top: 16px; right: 16px;
-    padding: 3px 12px; border-radius: 12px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.18);
-    font-size: 11px; color: rgba(255,255,255,0.65);
-  }
-  /* 「新」标签：绿色高亮 */
-  .card .new-tag {
-    position: absolute; top: 16px; right: 16px;
-    padding: 3px 12px; border-radius: 12px;
-    background: rgba(80,200,120,0.15);
-    border: 1px solid rgba(80,200,120,0.4);
-    font-size: 11px; color: #4cd964;
-  }
-  /* 测试中标签：醒目黄色 */
-  .card .testing-tag {
-    position: absolute; top: 16px; right: 16px;
-    padding: 3px 12px; border-radius: 12px;
-    background: rgba(255,200,60,0.15);
-    border: 1px solid rgba(255,200,60,0.35);
-    font-size: 11px; color: #f2d45c;
-  }
-  .card.disabled { opacity: 0.5; }
-  .card.disabled .coming-tag { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); }
-
-  /* ========== Footer ========== */
-  .footer {
-    text-align: center;
-    max-width: 640px; width: 100%;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .footer .credit {
-    font-size: 12px; color: rgba(255,255,255,0.15);
-    letter-spacing: 0.3px; line-height: 1.9;
-  }
-  .footer .reward-desc {
-    font-size: 11px; color: rgba(255,255,255,0.3);
-    line-height: 1.8; margin-bottom: 10px;
-  }
-
-  /* ========== 打赏弹窗 ========== */
-  .reward-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 18px; border-radius: 18px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.5); font-size: 12px;
-    cursor: pointer; font-family: inherit; margin-bottom: 10px;
-    transition: background 0.2s, color 0.2s;
-  }
-  .reward-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
-  .footer-actions { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .reward-modal {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.75);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  .reward-modal.show { opacity: 1; pointer-events: auto; }
-  .reward-box {
-    width: 88%; max-width: 400px;
-    background: #16161a; border-radius: 18px;
-    padding: 26px 24px 22px;
-    border: 1px solid rgba(255,255,255,0.08);
-    text-align: center;
-  }
-  .reward-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
-  .reward-sub { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
-  .reward-codes { display: flex; justify-content: center; gap: 18px; margin-bottom: 20px; }
-  .reward-col img {
-    width: 130px; height: 130px; border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: #fff; object-fit: contain;
-  }
-  .reward-col span { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 8px; }
-  .reward-close {
-    padding: 8px 22px; border-radius: 10px; border: none;
-    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
-    font-size: 13px; cursor: pointer; font-family: inherit;
-    transition: background 0.2s;
-  }
-  .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
-  /* 收款码点击放大 */
-  .reward-col img { cursor: zoom-in; }
-  .reward-zoom {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85);
-    width: min(86vw, 380px); background: #fff; border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    opacity: 0; pointer-events: none; cursor: zoom-out;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    z-index: 210;
-  }
-  .reward-zoom.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
-
-  /* ========== Responsive ========== */
-  @media (max-width: 640px) {
-    body { padding: 40px 16px 32px; }
-    .hero h1 { font-size: 28px; }
-    .hero { margin-bottom: 40px; }
-    /* 手机端两列紧凑卡片：一屏看更多，滑动次数减半 */
-    .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .card { padding: 14px 12px; border-radius: 14px; }
-    .card .icon { width: 34px; height: 34px; font-size: 19px; border-radius: 10px; margin-bottom: 10px; }
-    .card h2 { font-size: 14px; margin-bottom: 6px; }
-    .card p { font-size: 11px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .card .action { margin-top: 10px; font-size: 11px; }
-    .card .coming-tag, .card .testing-tag, .card .new-tag { top: 10px; right: 10px; padding: 2px 8px; font-size: 10px; }
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3efe6">
+  <meta name="hfit-api" content="https://themoon12321.pages.dev/api">
+  <title>合肥理工学院指南 · 校园使用手册</title>
+  <meta name="description" content="一本由在校生测量、批注、整理的合肥理工学院校园手册。十六张宿舍实测图、三十七项报到清单、常见问答、软件与官网。">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/display.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="assets/js/theme.js"></script>
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/night.css">
+  <link rel="stylesheet" href="assets/css/layout-v5.css">
+  <link rel="stylesheet" href="assets/css/tools-v5.css">
+  <link rel="stylesheet" href="assets/css/feedback.css">
+  <link rel="stylesheet" href="assets/css/reading.css">
 </head>
 <body>
+  <nav class="folio-tabs" aria-label="章节页签">
+    <a href="index.html" aria-current="page"><span class="ft-n">00</span><span class="ft-t">封面</span></a>
+    <a href="dorm.html"><span class="ft-n">01</span><span class="ft-t">宿舍</span></a>
+    <a href="checklist.html"><span class="ft-n">02</span><span class="ft-t">清单</span></a>
+    <a href="faq.html"><span class="ft-n">03</span><span class="ft-t">问答</span></a>
+    <a href="software.html"><span class="ft-n">04</span><span class="ft-t">软件</span></a>
+    <a href="layouts.html"><span class="ft-n">05</span><span class="ft-t">布置</span></a>
+    <a href="murmur.html"><span class="ft-n">06</span><span class="ft-t">碎碎念</span></a>
+    <a href="about.html"><span class="ft-n">07</span><span class="ft-t">关于</span></a>
+    <a href="logs.html"><span class="ft-n">08</span><span class="ft-t">日志</span></a>
+    <a href="support.html"><span class="ft-n">09</span><span class="ft-t">支持</span></a>
+  </nav>
+  <script src="assets/js/entry.js"></script>
+  <a class="skip-link" href="#main">跳到主要内容</a>
 
-<!-- 版本号徽章（随页面滚动，点击查看更新日志） -->
-<div style="width:100%;max-width:900px;display:flex;justify-content:flex-end;margin-bottom:8px;padding:0 6px;">
-  <a class="version-link" href="logs/index.html">v1.4</a>
-</div>
+  <header class="site-head">
+    <a class="brand" href="index.html" aria-label="合肥理工学院指南首页">
+      <span class="brand-mark" aria-hidden="true">合</span>
+      <span class="brand-type"><b>合肥理工学院指南</b><small>CAMPUS MANUAL</small></span>
+    </a>
+    <nav class="desk-nav" aria-label="主导航">
+      <a href="dorm.html">宿舍图集</a>
+      <a href="checklist.html">报到清单</a>
+      <a href="faq.html">常见问答</a>
+      <a href="software.html">软件与官网</a>
+      <a href="about.html">关于</a>
+    </nav>
+    <div class="head-right">
+      <span class="edition">2026 Edition / 在校生维护</span>
+      <button class="menu-btn" type="button" data-menu-open aria-expanded="false" aria-controls="site-menu">
+        <span>索引</span><span class="bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
 
-<div class="hero">
-  <div class="disclaimer"><span class="icon">⚠️</span><span>本站为个人公益项目，纯为爱发电，任何借此为资料进行收费、私自引流宣传的行为均不合理，谨防诈骗。</span></div>
-  <h1>合肥理工学院指南</h1>
-  <p>从宿舍到教室，从食堂到图书馆——<br>你想知道的，都在这里。</p>
-  <a class="about-link" href="about.html">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    关于我
-  </a>
-</div>
-
-<div class="grid" id="cardGrid"></div>
-
-<div class="footer">
-  <p class="reward-desc">本站完全免费，纯自费运营 🌙 内容都是熬夜肝出来的心血<br>如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——完全自愿，不喝也绝对没关系。</p>
-  <div class="footer-actions">
-    <button class="reward-btn" id="rewardBtn">☕ 请作者喝咖啡</button>
+  <div class="menu" id="site-menu" aria-hidden="true">
+    <div class="menu-head">
+      <span class="mono">Index / 2026 Edition</span>
+      <button class="menu-close" type="button" data-menu-close aria-label="关闭索引"><span aria-hidden="true"></span>关闭</button>
+    </div>
+    <div class="menu-body">
+      <nav class="menu-list" aria-label="全部页面">
+        <ul>
+          <li><a href="index.html?cover=1" aria-current="page" style="--i:0"><span class="n">00</span><span class="t">封面</span><span class="e">Cover</span></a></li>
+          <li><a href="dorm.html" style="--i:1"><span class="n">01</span><span class="t">宿舍图集</span><span class="e">Dorm Atlas</span></a></li>
+          <li><a href="checklist.html" style="--i:2"><span class="n">02</span><span class="t">报到清单</span><span class="e">Packing List</span></a></li>
+          <li><a href="faq.html" style="--i:3"><span class="n">03</span><span class="t">常见问答</span><span class="e">FAQ</span></a></li>
+          <li><a href="software.html" style="--i:4"><span class="n">04</span><span class="t">软件与官网</span><span class="e">Software &amp; Sites</span></a></li>
+          <li><a href="about.html" style="--i:5"><span class="n">07</span><span class="t">关于作者</span><span class="e">About</span></a></li>
+        </ul>
+      </nav>
+      <aside class="menu-aside">
+        <nav class="menu-secondary" aria-label="再读">
+          <span class="menu-secondary-label">再读 / More</span>
+          <a href="layouts.html"><span>宿舍布置</span><span class="n">05</span></a>
+          <a href="murmur.html"><span>碎碎念</span><span class="n">06</span></a>
+          <a href="logs.html"><span>更新日志</span><span class="n">08</span></a>
+          <a href="support.html"><span>支持作者</span><span class="n">09</span></a>
+        </nav>
+        <span class="mini-rule" aria-hidden="true"></span>
+        <p><strong>怎么用</strong><br>工具书，不用从头读。翻到你要用的那一页就行。</p>
+        <p>非官方个人公益项目。内容以学校通知和现场实际情况为准，任何借本站资料收费、引流的行为均与作者无关。</p>
+      </aside>
+    </div>
+    <div class="menu-foot">
+      <span>HFIT Campus Manual · 2026</span>
+      <span>16 Plates / 37 Items / 60 Links</span>
+    </div>
   </div>
-  <div class="credit" id="credit" style="cursor:default">@月亮早睡困不醒 · Made with 🌙 2026</div>
-</div>
 
-<!-- 打赏弹窗 -->
-<div id="rewardModal" class="reward-modal">
-  <div class="reward-box">
-    <h3>请作者喝咖啡 ☕</h3>
-    <div class="reward-sub">内容永远免费，打赏全凭心意 🌙</div>
-    <div class="reward-codes">
-      <div class="reward-col">
-        <img id="alipayImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码（点击放大）">
-        <span>支付宝 点击放大</span>
+  <main id="main">
+    <section class="home-hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="kicker" data-enter style="--i:0">校园使用手册 / Campus Manual · 2026</p>
+            <h1 class="hero-title display" aria-label="住在这里，总有些事要查。">
+              <span class="line" data-enter style="--i:1">住在这里，</span>
+              <span class="line" data-enter style="--i:2"><span class="accent">总有些事要查。</span></span>
+            </h1>
+            <p class="hero-lede" data-enter style="--i:5">
+              宿舍尺寸、报到清单、软件入口和现场批注。内容来自在校生的实测与经验，需要时翻到对应那一页。
+            </p>
+            <div class="hero-actions" data-enter style="--i:6">
+              <a class="btn btn-ink" href="#contents">打开目录 <span class="arrow">→</span></a>
+              <a class="text-link" href="dorm.html">宿舍图集 <span>↗</span></a>
+              <a class="text-link" href="about.html">关于作者 <span>↗</span></a>
+            </div>
+            <div class="hero-meta" data-enter style="--i:7">
+              <span>16 张实测图</span>
+              <span>9 条现场批注</span>
+              <span>数据更新 2026.08</span>
+            </div>
+          </div>
+
+          <figure class="hero-figure">
+            <span class="side-label" aria-hidden="true">Plate 01 — Desk / South Elevation</span>
+            <div class="plate-wrap" data-enter style="--i:4">
+              <div class="plate-canvas">
+                <img src="assets/img/plates/D01.webp" width="1400" height="1049" alt="宿舍书桌主正视图，画面上标注了尺寸与局部细节" fetchpriority="high" decoding="async">
+              </div>
+              <div class="plate-stamp" aria-hidden="true">
+                <span>Measured</span><b>16 图</b><span>HFIT · 2026</span>
+              </div>
+            </div>
+            <figcaption>
+              <span><b>D01</b> / 书桌 · 主正视图</span>
+              <span>Scale 1:1 · 合肥理工学院</span>
+            </figcaption>
+          </figure>
+        </div>
+        <span class="hero-cue" aria-hidden="true">向下翻阅 / Scroll to read</span>
       </div>
-      <div class="reward-col">
-        <img id="wechatImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码（点击放大）">
-        <span>微信 点击放大</span>
+    </section>
+
+    <section class="stats" aria-label="内容统计">
+      <div class="wrap stats-grid">
+        <div class="stat"><span class="value">16<small>张</small></span><span class="label">实测图纸 / Plates</span></div>
+        <div class="stat"><span class="value">09<small>条</small></span><span class="label">现场批注 / Notes</span></div>
+        <div class="stat"><span class="value">37<small>项</small></span><span class="label">报到清单 / Items</span></div>
+        <div class="stat"><span class="value">60<small>条</small></span><span class="label">人工筛选链接 / Links</span></div>
+      </div>
+    </section>
+
+    <section class="section contents" id="contents">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div>
+            <p class="kicker">01 — Contents / 目录</p>
+            <h2 class="section-title">七个章节，<br>随手翻。</h2>
+          </div>
+          <p class="section-note">不用从头读。尺寸在图集，手续在清单，问题在问答；需要什么，直接翻到哪一页。</p>
+        </div>
+
+        <div class="contents-grid" data-reveal>
+          <a class="contents-row" href="dorm.html">
+            <span class="contents-num">01</span>
+            <span class="contents-copy"><b>宿舍图集</b><span>十六张带尺寸的实拍图，按书桌、床架、衣柜与侧边空间翻阅。</span></span>
+            <span class="contents-en">Atlas</span>
+            <span class="contents-page">P.01</span>
+          </a>
+          <a class="contents-row" href="checklist.html">
+            <span class="contents-num">02</span>
+            <span class="contents-copy"><b>报到清单</b><span>三十七项物品分成六组，勾选进度保存在本机，也能完整打印。</span></span>
+            <span class="contents-en">Packing</span>
+            <span class="contents-page">P.02</span>
+          </a>
+          <a class="contents-row" href="faq.html">
+            <span class="contents-num">03</span>
+            <span class="contents-copy"><b>常见问答</b><span>选课、交通、快递、社团与校园生活，六条高频问题集中查阅。</span></span>
+            <span class="contents-en">Questions</span>
+            <span class="contents-page">P.03</span>
+          </a>
+          <a class="contents-row" href="software.html">
+            <span class="contents-num">04</span>
+            <span class="contents-copy"><b>软件与官网</b><span>六十条链接与五个必装工具，按场景而非字母排列。</span></span>
+            <span class="contents-en">Field Kit</span>
+            <span class="contents-page">P.04</span>
+          </a>
+          <a class="contents-row" href="layouts.html">
+            <span class="contents-num">05</span>
+            <span class="contents-copy"><b>宿舍布置</b><span>五套真实桌面、十一张现场照片，看看住过的人怎么摆。</span></span>
+            <span class="contents-en">Living</span>
+            <span class="contents-page">P.05</span>
+          </a>
+          <a class="contents-row" href="murmur.html">
+            <span class="contents-num">06</span>
+            <span class="contents-copy"><b>碎碎念</b><span>从图纸边角摘下来的五条现场判断，短句，具体，带出处。</span></span>
+            <span class="contents-en">Marginalia</span>
+            <span class="contents-page">P.06</span>
+          </a>
+          <a class="contents-row" href="about.html">
+            <span class="contents-num">07</span>
+            <span class="contents-copy"><b>关于作者</b><span>这本册子是谁做的，平时在做什么，以及怎么找到我。</span></span>
+            <span class="contents-en">About</span>
+            <span class="contents-page">P.07</span>
+          </a>
+        </div>
+
+        <div class="contents-utility" data-reveal>
+          <a class="contents-log" href="logs.html">
+            <span class="contents-log-kicker">08 / Changelog</span>
+            <span class="contents-log-title">更新日志</span>
+            <span class="contents-log-meta">最近更新 2026.10.24 <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="contents-log" href="support.html">
+            <span class="contents-log-kicker">09 / Support</span>
+            <span class="contents-log-title">支持作者</span>
+            <span class="contents-log-meta">请喝咖啡 · 完全自愿 <span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section atlas-preview">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div>
+            <p class="kicker">02 — The atlas</p>
+            <h2 class="section-title">十六张图，<br>量到厘米。</h2>
+          </div>
+          <p class="section-note">每一张都保留原始标注与比例。点开红点，能看到住过的人当时怎么想、怎么改。</p>
+        </div>
+
+        <div class="contact-grid">
+          <a class="contact" href="dorm.html#D01" data-reveal>
+            <figure>
+              <div class="frame">
+                <img src="assets/img/plates/D01.webp" width="1400" height="1049" alt="书桌主正视图" loading="lazy" decoding="async">
+              </div>
+              <figcaption><span><b>D01</b> / 书桌 · 显示器的极限</span><span>Desk</span></figcaption>
+            </figure>
+          </a>
+          <a class="contact" href="dorm.html#B02" data-reveal style="--delay:90ms">
+            <figure>
+              <div class="frame">
+                <img src="assets/img/plates/B02.webp" width="922" height="1229" alt="床架层高与伸缩杆视图" loading="lazy" decoding="async">
+              </div>
+              <figcaption><span><b>B02</b> / 床架 · 伸缩杆能收到多短</span><span>Bed</span></figcaption>
+            </figure>
+          </a>
+          <a class="contact" href="dorm.html#C02" data-reveal style="--delay:180ms">
+            <figure>
+              <div class="frame">
+                <img src="assets/img/plates/C02.webp" width="1400" height="1050" alt="衣柜上层开门视图" loading="lazy" decoding="async">
+              </div>
+              <figcaption><span><b>C02</b> / 衣柜 · 上层能放什么</span><span>Closet</span></figcaption>
+            </figure>
+          </a>
+        </div>
+
+        <div class="atlas-foot" data-reveal>
+          <span class="mono muted">共 16 张 · 5 个区域 · 9 条批注</span>
+          <a class="text-link" href="dorm.html">进入图集 <span>→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="teaser section">
+      <div class="wrap teaser-grid">
+        <div class="teaser-number" data-reveal>37<sup>项</sup></div>
+        <div class="teaser-copy">
+          <p class="kicker" data-reveal>03 — Packing</p>
+          <h2 data-reveal>别把半个家搬来，<em>也别漏掉一张纸。</em></h2>
+          <p data-reveal>勾选会自动保存在这台设备上，关掉页面也不会丢。完整的清单按报到顺序分成六组，必带与可选分开标出。</p>
+          <div class="mini-list" id="miniList"></div>
+          <div class="teaser-progress">
+            <div class="teaser-bar" aria-hidden="true"><i id="miniBar"></i></div>
+            <span class="teaser-count" id="miniCount">0 / 37</span>
+          </div>
+          <a class="btn" href="checklist.html">打开完整清单 <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section living-teaser">
+      <div class="wrap living-teaser-grid">
+        <div class="living-teaser-media" data-reveal>
+          <img src="assets/img/layouts/kekokele_01.webp" width="1200" height="900" alt="可口可乐的宿舍桌面：洞洞板、笔记本与收纳架" loading="lazy" decoding="async">
+          <span class="living-teaser-stamp">LIVING / 05 SETS</span>
+        </div>
+        <div class="living-teaser-copy">
+          <p class="kicker" data-reveal>04 — Living Notes</p>
+          <h2 data-reveal>同一张桌子，<br><em>有人住成了房间。</em></h2>
+          <p data-reveal>五套真实布置、十一张现场照片；碎碎念则收着那些只有住进去才会写下来的判断。</p>
+          <blockquote data-reveal>“27 寸在这个位置已经是极限。想上竖屏副屏，24 寸会稳一些。”</blockquote>
+          <div class="living-teaser-foot" data-reveal>
+            <span class="mono muted">05 套布置 · 11 张照片 · 05 条摘记</span>
+            <a class="text-link" href="layouts.html">看宿舍布置 <span>→</span></a>
+            <a class="text-link" href="murmur.html">读碎碎念 <span>↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section quote-section">
+      <div class="wrap">
+        <div class="quote-wrap" data-reveal>
+          <span class="quote-mark" aria-hidden="true">“</span>
+          <div>
+            <blockquote>一张桌子怎么摆，住久了自然知道。</blockquote>
+            <cite>本站编者 · 住校笔记</cite>
+          </div>
+        </div>
+        <div class="quote-foot">
+          <span class="mono muted">05 — A note from the editor</span>
+          <a class="text-link" href="about.html">关于作者 <span>↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section closing">
+      <div class="wrap closing-grid">
+        <h2 data-reveal>住久了会知道的事，<span>都记在这里。</span></h2>
+        <div class="closing-side" data-reveal>
+          <p>尺寸在图集，手续在清单，问题在问答。需要的时候翻到那一页；剩下的，住着住着就知道了。</p>
+          <div class="actions">
+            <a class="btn btn-ink" href="dorm.html">去宿舍图集 <span class="arrow">→</span></a>
+            <a class="text-link" href="faq.html">查问答 <span>↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section feedback-section" id="feedback" aria-labelledby="homeFeedbackTitle">
+      <div class="wrap">
+        <div class="feedback">
+          <div class="feedback-head">
+            <p class="kicker">06 — Feedback / 写给编者</p>
+            <h2 id="homeFeedbackTitle">这一页，<span>有帮上忙吗？</span></h2>
+            <p>尺寸、链接、现场情况和这里写的不一样，或者有想补的内容，都可以写在这里。只发给编者，不在页面公开展示。</p>
+          </div>
+          <div class="feedback-body">
+            <div class="feedback-like">
+              <span class="feedback-like-label">这个页面 / This page</span>
+              <button class="like-stamp" type="button" data-like-page="portal" data-like-label="这个页面有用" aria-pressed="false" aria-label="这个页面有用">
+                <span class="like-stamp-plus" aria-hidden="true"></span>
+                <span class="like-stamp-text">有用</span>
+                <span class="like-stamp-count" data-like-count>…</span>
+              </button>
+              <p class="feedback-like-note">不用登录。再点一次可以取消。</p>
+            </div>
+            <form class="feedback-form" data-feedback-form data-page="portal">
+              <div class="feedback-fields">
+                <label class="feedback-field">
+                  <span>称呼 <small>可不填</small></span>
+                  <input type="text" name="nickname" maxlength="12" autocomplete="nickname" placeholder="匿名">
+                </label>
+                <label class="feedback-field">
+                  <span>内容 <small>500 字以内，不带链接</small></span>
+                  <textarea name="text" rows="4" maxlength="500" required placeholder="哪里不对、想补什么，写清楚就行。"></textarea>
+                </label>
+              </div>
+              <div class="feedback-actions">
+                <span class="feedback-status" data-feedback-status role="status" aria-live="polite"></span>
+                <button class="btn btn-ink" type="submit">发送</button>
+              </div>
+            </form>
+          </div>
+          <div class="feedback-sent" data-feedback-sent hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <span class="brand-mark" aria-hidden="true">合</span>
+          <div>
+            <h2>合肥理工学院指南</h2>
+            <p>从宿舍到教室，从软件到快递。由在校生测量、整理、持续修订。</p>
+          </div>
+        </div>
+        <div class="foot-col">
+          <h3>本册 / Guide</h3>
+          <a href="dorm.html">宿舍图集</a>
+          <a href="checklist.html">报到清单</a>
+          <a href="faq.html">常见问答</a>
+          <a href="software.html">软件与官网</a>
+        </div>
+        <div class="foot-col">
+          <h3>更多 / More</h3>
+          <a href="layouts.html">宿舍布置</a>
+          <a href="murmur.html">碎碎念</a>
+          <a href="logs.html">更新日志</a>
+          <a href="about.html">关于作者</a>
+          <a href="support.html">支持作者</a>
+          <a href="/legacy/">旧版索引 ↗</a>
+        </div>
+        <div class="foot-col">
+          <h3>说明 / Note</h3>
+          <p>非官方个人公益项目，内容仅供参考。学校安排、尺寸与链接以官方通知和现场为准；任何借本站资料收费、引流的行为均与作者无关。</p>
+        </div>
+      </div>
+      <div class="foot-base">
+        <span>HFIT Campus Manual · 2026</span>
+        <span>非官方个人项目 · 内容持续修订</span>
       </div>
     </div>
-    <button class="reward-close" id="rewardClose">关闭</button>
-  </div>
-  <img id="rewardZoom" class="reward-zoom" src="" alt="收款码大图">
-</div>
+  </footer>
 
-<!-- ========== Feedback Widget ========== -->
-<div class="feedback">
-  <!-- 点赞 -->
-  <div class="fb-like">
-    <span class="fb-label">这个页面有帮助吗？</span>
-    <button class="fb-like-btn" id="fbLikeBtn">
-      <span>👍</span>
-      <span class="fb-count" id="fbLikeCount">-</span>
-    </button>
-  </div>
-
-  <!-- 留言 -->
-  <div class="fb-comments">
-    <div class="fb-c-title" id="fbTitle">有什么想说的？</div>
-    <div class="fb-form">
-      <input type="text" id="fbName" placeholder="你的昵称（可选）" maxlength="12">
-      <textarea id="fbText" placeholder="反馈、建议、或者单纯打个招呼…"></textarea>
-      <button class="fb-submit" id="fbSubmit">发送</button>
-    </div>
-    <div id="fbMyComments"></div>
-  </div>
-</div>
-
-<style>
-/* ========== Feedback Widget ========== */
-.feedback {
-  width: 100%; max-width: 640px; margin-top: 48px;
-  padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06);
-}
-.fb-like { margin-bottom: 36px; }
-.fb-label { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 12px; }
-.fb-like-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 22px; border-radius: 22px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
-  font-family: inherit;
-}
-.fb-like-btn:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7);
-}
-.fb-like-btn:active { transform: scale(0.95); }
-.fb-like-btn .fb-count {
-  font-size: 13px; font-feature-settings: "tnum";
-  color: rgba(255,255,255,0.2); min-width: 14px;
-}
-  .fb-like-btn.liked { background: rgba(80,200,120,0.12); border-color: rgba(80,200,120,0.25); color: #4cd964; }
-  .fb-like-btn.liked { animation: pop 0.35s ease; }
-  @keyframes pop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.25); }
-    100% { transform: scale(1); }
-  }
-.fb-like-btn.liked .fb-count { color: #4cd964; }
-.fb-like-btn.liked:hover { background: rgba(80,200,120,0.18); border-color: rgba(80,200,120,0.35); }
-
-.fb-c-title { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 12px; margin-top: 8px; }
-.fb-my-item {
-  padding: 10px 14px; border-radius: 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55;
-  margin-top: 10px;
-}
-.fb-my-item .fb-my-time {
-  font-size: 11px; color: rgba(255,255,255,0.12);
-  margin-top: 4px;
-}
-.fb-form { display: flex; flex-direction: column; gap: 10px; }
-.fb-form input {
-  padding: 10px 14px; border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #eaeaef; font-size: 13px;
-  font-family: inherit; outline: none;
-  transition: border-color 0.2s;
-}
-.fb-form input::placeholder { color: rgba(255,255,255,0.15); }
-.fb-form input:focus { border-color: rgba(255,255,255,0.15); }
-.fb-form textarea {
-  padding: 10px 14px; border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #eaeaef; font-size: 13px;
-  font-family: inherit; outline: none;
-  transition: border-color 0.2s;
-}
-.fb-form input::placeholder, .fb-form textarea::placeholder { color: rgba(255,255,255,0.15); }
-.fb-form input:focus, .fb-form textarea:focus { border-color: rgba(255,255,255,0.15); }
-.fb-form textarea { min-height: 64px; resize: vertical; }
-.fb-submit {
-  align-self: flex-end;
-  padding: 8px 20px; border-radius: 10px;
-  background: rgba(255,255,255,0.08);
-  border: none; color: rgba(255,255,255,0.5); font-size: 13px;
-  cursor: pointer; transition: background 0.2s, color 0.2s;
-  font-family: inherit;
-}
-.fb-submit:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-.fb-submit:disabled { opacity: 0.3; cursor: default; }
-
-</style>
-
-<script>
-// ========== Feedback API ==========
-const PAGE_ID = 'portal';
-
-async function loadLikes() {
-  const r = await fetch('/api/likes?page=' + PAGE_ID);
-  const d = await r.json();
-  document.getElementById('fbLikeCount').textContent = d.count;
-}
-
-document.getElementById('fbLikeBtn').addEventListener('click', async function() {
-  const liked = this.classList.toggle('liked');
-  localStorage.setItem('liked_portal', liked ? '1' : '0');
-  const r = await fetch('/api/likes', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page: PAGE_ID, delta: liked ? 1 : -1}) });
-  const d = await r.json();
-  document.getElementById('fbLikeCount').textContent = d.count;
-});
-
-// 初始化时恢复点赞状态
-if (localStorage.getItem('liked_portal') === '1') {
-  document.getElementById('fbLikeBtn').classList.add('liked');
-}
-
-// 显示自己发过的留言
-function showMyComments() {
-  const el = document.getElementById('fbMyComments');
-  const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
-  if (!saved.length) { el.innerHTML = ''; return; }
-  el.innerHTML = saved.reverse().map(c =>
-    '<div class="fb-my-item">' + esc(c.text) + '<div class="fb-my-time">' + c.time + '</div></div>'
-  ).join('');
-}
-function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
-
-document.getElementById('fbSubmit').addEventListener('click', async function() {
-  const text = document.getElementById('fbText').value.trim();
-  const name = document.getElementById('fbName').value.trim();
-  if (!text) return;
-  this.disabled = true; this.textContent = '发送中…';
-  try {
-    await fetch('/api/comments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({page:PAGE_ID, text, nickname: name || '匿名'}) });
-    document.getElementById('fbText').value = '';
-    this.textContent = '已收到 🎉';
-    // 存本地
-    const saved = JSON.parse(localStorage.getItem('my_comments') || '[]');
-    saved.push({ text: (name ? name + '：' : '') + text, time: new Date().toLocaleString('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) });
-    if (saved.length > 10) saved.splice(0, saved.length - 10);
-    localStorage.setItem('my_comments', JSON.stringify(saved));
-    showMyComments();
-  } catch(e) { this.textContent = '发送失败'; }
-  finally { setTimeout(() => { this.disabled = false; this.textContent = '发送'; }, 2000); }
-});
-
-showMyComments();
-
-// 随机标题
-var likeLabels = [
-  '这个页面有帮助吗？',
-  '如果能帮到你，点个赞再走 👍',
-  '觉得有用的话，点个赞吧',
-  '内容还满意吗？',
-];
-var commentTitles = [
-  '有什么想说的？',
-  '唠唠嗑～',
-  '欢迎留言 ✌️',
-  '来都来了，说两句呗',
-  '键盘交给你了',
-  '随便说点啥',
-];
-var placeholders = [
-  '反馈、建议、或者单纯打个招呼…',
-  '随便说点啥，我在听',
-  '说说你的想法',
-  '畅所欲言～',
-];
-document.querySelector('.fb-label').textContent = likeLabels[Math.floor(Math.random() * likeLabels.length)];
-document.getElementById('fbTitle').textContent = commentTitles[Math.floor(Math.random() * commentTitles.length)];
-document.getElementById('fbText').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
-
-loadLikes();
-
-</script>
-
-<script>
-const MODULES = [
-  {
-    icon: '🏠',
-    title: '宿舍尺寸指南',
-    desc: '床有多宽？书桌能放多大显示器？提前了解宿舍各处的实际尺寸，买对东西不踩坑。',
-    path: 'dorm/index.html',
-    status: 'ready',
-    tag: '16 张示意图'
-  },
-  {
-    icon: '🛋️',
-    title: '宿舍布置参考',
-    desc: '看看学长学姐们是怎么布置宿舍的——收纳、装饰、布局灵感。',
-    path: 'layouts/index.html',
-    status: 'ready',
-    tag: '布置灵感'
-  },
-  {
-    icon: '🗺️',
-    title: '校园地图',
-    desc: '校园俯瞰全景、VR 漫游、定位入口——新同学不迷路。',
-    path: 'campus/index.html',
-    status: 'ready',
-    tag: '测试中'
-  },
-  {
-    icon: '🗒️',
-    title: '开学清单',
-    desc: '证件、线上办理、宿舍用品——报到要带什么，对着勾就行。',
-    path: 'checklist/index.html',
-    status: 'ready',
-    tag: '新'
-  },
-  {
-    icon: '💬',
-    title: '个人碎碎念',
-    desc: '一些想法、日常、经验分享……',
-    path: 'murmur/index.html',
-    status: 'ready',
-    tag: '随笔'
-  },
-  {
-    icon: '❓',
-    title: '常见问题',
-    desc: '关于宿舍、校园、选课那些事——常见问题解答。',
-    path: 'faq/index.html',
-    status: 'ready',
-    tag: 'FAQ'
-  },
-  {
-    icon: '🔗',
-    title: '常用导航',
-    desc: '网址 + 电脑软件——新生常用的网站和装机推荐，一页搞定。',
-    path: 'links/index.html',
-    status: 'ready',
-    tag: '新'
-  }
-];
-
-const grid = document.getElementById('cardGrid');
-
-// ===== 星空：随机生成星星，每颗独立闪烁（大小分三档） =====
-(function makeStars() {
-  const field = document.createElement('div');
-  field.className = 'star-field';
-  for (let i = 0; i < 70; i++) {
-    const s = document.createElement('i');
-    const r = Math.random();
-    const size = r < 0.78 ? 1 : (r < 0.95 ? 2 : 3); // 1/2/3px 三档
-    s.style.left = (Math.random() * 100).toFixed(2) + '%';
-    s.style.top = (Math.random() * 100).toFixed(2) + '%';
-    s.style.width = s.style.height = size + 'px';
-    // 每颗星的闪烁节奏随机：2-5 秒周期 + 随机延迟（此起彼伏）
-    s.style.animationDuration = (2 + Math.random() * 3).toFixed(2) + 's';
-    s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
-    field.appendChild(s);
-  }
-  document.body.appendChild(field);
-  // 流星：3 颗随机位置；第一颗很快出现，之后间隔约 7 秒错落划过（保持稀疏）
-  for (let i = 0; i < 3; i++) {
-    const m = document.createElement('div');
-    m.className = 'meteor';
-    m.style.top = (5 + Math.random() * 30).toFixed(1) + '%';
-    m.style.left = (60 + Math.random() * 35).toFixed(1) + '%';
-    m.style.animationDuration = (4 + Math.random() * 2).toFixed(2) + 's';
-    m.style.animationDelay = (0.5 + i * 7 + Math.random() * 2).toFixed(2) + 's';
-    document.body.appendChild(m);
-  }
-})();
-
-MODULES.forEach((m, i) => {
-  const card = document.createElement('a');
-  card.className = 'card' + (m.status === 'ready' ? ' ready' : ' disabled');
-  // 依次入场：每张卡片延迟 80ms 淡入上浮
-  card.style.animation = 'fadeUp 0.5s ease both';
-  card.style.animationDelay = (i * 0.08) + 's';
-
-  if (m.status === 'ready') {
-    card.href = m.path;
-  } else {
-    card.href = 'javascript:void(0)';
-    card.addEventListener('click', (e) => e.preventDefault());
-  }
-
-  const tagHtml = m.status !== 'ready' ? '<span class="coming-tag">即将上线</span>' :
-    (m.tag ? '<span class="' + (m.tag === '测试中' ? 'testing-tag' : (m.tag === '新' ? 'new-tag' : 'coming-tag')) + '">' + m.tag + '</span>' : '');
-
-  card.innerHTML = `
-    <div class="icon">${m.icon}</div>
-    <h2>${m.title}</h2>
-    <p>${m.desc}</p>
-    <span class="action">${m.status === 'ready' ? '开始浏览 →' : '即将推出'}</span>
-    ${tagHtml}
-  `;
-
-  grid.appendChild(card);
-});
-
-// ===== 打赏弹窗开关 =====
-document.getElementById('rewardBtn').addEventListener('click', function() {
-  document.getElementById('rewardModal').classList.add('show');
-});
-document.getElementById('rewardClose').addEventListener('click', function() {
-  document.getElementById('rewardModal').classList.remove('show');
-});
-document.getElementById('rewardModal').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('show');
-});
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
-});
-
-// ===== 收款码点击放大（方便扫码） =====
-var rewardZoomEl = document.getElementById('rewardZoom');
-['alipayImg', 'wechatImg'].forEach(function(id) {
-  document.getElementById(id).addEventListener('click', function() {
-    rewardZoomEl.src = this.src;
-    rewardZoomEl.classList.add('show');
-  });
-});
-rewardZoomEl.addEventListener('click', function() { this.classList.remove('show'); });
-</script>
+  <script src="data/checklist.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/search.js" defer></script>
+  <script src="assets/js/quickbar.js" defer></script>
+  <script src="assets/js/feedback.js" defer></script>
+  <script src="assets/js/frame.js" defer></script>
 </body>
 </html>

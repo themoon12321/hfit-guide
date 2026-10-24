@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于我 — 月亮早睡困不醒</title>
+<meta name="description" content="25 届智能制造工程 · 合肥理工学院天文协会会长，兴趣驱动型选手。">
+<meta property="og:title" content="关于我 — 月亮早睡困不醒">
+<meta property="og:description" content="25 届智能制造工程 · 合肥理工学院天文协会会长，兴趣驱动型选手。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/ann/D01.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+    background: #0d0d0f;
+    color: #eaeaef;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 40px 20px 60px;
+  }
+
+  .container { max-width: 600px; width: 100%; }
+
+  /* ========== Back ========== */
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.35);
+    font-size: 14px; text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: rgba(255,255,255,0.7); }
+
+  /* ========== Hero ========== */
+  .hero {
+    position: relative;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 24px;
+    padding: 48px 40px 40px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 30% 20%, rgba(100,180,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 70% 80%, rgba(255,200,100,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .avatar-wrap {
+    width: 80px; height: 80px; border-radius: 50%;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.1);
+    background: linear-gradient(135deg, rgba(100,180,255,0.15), rgba(200,150,255,0.1));
+  }
+  .avatar-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+
+  .hero h1 {
+    font-size: 28px; font-weight: 650;
+    color: #f0f0f5; letter-spacing: -0.2px;
+    margin-bottom: 2px;
+  }
+  .hero .username {
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 400;
+    margin-bottom: 18px;
+  }
+  .hero .tagline {
+    font-size: 15px; line-height: 1.7;
+    color: rgba(255,255,255,0.6);
+  }
+  .hero .tagline strong {
+    color: rgba(255,255,255,0.82);
+    font-weight: 500;
+  }
+
+  .tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 20px;
+  }
+  .tag {
+    padding: 4px 14px; border-radius: 14px;
+    font-size: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* ========== Sections ========== */
+  .section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+  .section p {
+    font-size: 14px; line-height: 1.9;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ========== Hobby grid ========== */
+  .hobby-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .hobby-item {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px; color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+  .hobby-item .emoji { font-size: 18px; display: block; margin-bottom: 6px; }
+  .hobby-item .label { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 2px; }
+
+  @media (max-width: 500px) {
+    body { padding: 24px 16px 40px; }
+    .hero { padding: 32px 24px; }
+    .hero h1 { font-size: 24px; }
+    .section { padding: 22px 20px; }
+    .hobby-grid { grid-template-columns: 1fr; }
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 13px; color: rgba(255,255,255,0.2);
+    margin-top: 32px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ========== 打赏弹窗 ========== */
+  .reward-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 24px; border-radius: 20px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7); font-size: 13px;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+  }
+  .reward-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); transform: translateY(-1px); }
+  .reward-modal {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .reward-modal.show { opacity: 1; pointer-events: auto; }
+  .reward-box {
+    width: 88%; max-width: 400px;
+    background: #16161a; border-radius: 18px;
+    padding: 26px 24px 22px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .reward-box h3 { font-size: 16px; font-weight: 650; margin-bottom: 6px; }
+  .reward-sub { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
+  .reward-codes { display: flex; justify-content: center; gap: 18px; margin-bottom: 20px; }
+  .reward-col img {
+    width: 130px; height: 130px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #fff; object-fit: contain;
+  }
+  .reward-col span { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 8px; }
+  .reward-close {
+    padding: 8px 22px; border-radius: 10px; border: none;
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .reward-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+  /* 收款码点击放大 */
+  .reward-col img { cursor: zoom-in; }
+  .reward-zoom {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85);
+    width: min(86vw, 380px); background: #fff; border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    opacity: 0; pointer-events: none; cursor: zoom-out;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 210;
+  }
+  .reward-zoom.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a class="back-link" href="/legacy/">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    返回
+  </a>
+
+  <!-- ========== Hero ========== -->
+  <div class="hero">
+    <div class="avatar-wrap">
+      <img src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/avatar.jpg" alt="avatar">
+    </div>
+    <h1>月亮早睡困不醒</h1>
+    <div class="username">25 届智能制造工程 · 合肥理工学院天文协会会长</div>
+    <div class="tagline">
+      一个兴趣驱动型选手，正在努力脱离低阶向中阶进发的 <strong>ENFP</strong>
+    </div>
+    <div class="tags">
+      <span class="tag">🔭 热爱天文</span>
+      <span class="tag">🌌 星空摄影</span>
+      <span class="tag">💡 数码探索</span>
+      <span class="tag">🤝 很好相处</span>
+    </div>
+  </div>
+
+  <!-- ========== 关于我 ========== -->
+  <div class="section">
+    <div class="section-title">关于我</div>
+    <p>
+      个人兴趣非常广泛，喜欢跟着兴趣探索各种东西，很愿意接受新鲜事物，
+      性格也挺不错喔，非常好跟别人相处（感觉有点自夸😗，不过身边朋友都这么说🥰）。
+      是一只正在努力脱离低阶向中阶进发的 enfp，欢迎来找我玩呀，虽然可能平时有点忙（）
+    </p>
+    <p style="margin-top:14px;">
+      本人也在参与大创项目，参加过一些些比赛（不过是个小菜鸡🥺），
+      也喜欢做很多自己想做的小东西，比如这个网站就是；
+      如果想找人组队比赛的话，希望能想到我撒，我会努力的！
+    </p>
+    <p style="margin-top:14px;">
+      对了，对了，欢迎加入天文社呀，虽然各个方面有很多不完善，
+      但是也正在努力发展(•́⌄•́๑)૭✧，星空真的很好看！！
+    </p>
+  </div>
+
+  <!-- ========== 爱好 ========== -->
+  <div class="section">
+    <div class="section-title">爱好 · 日常</div>
+    <div class="hobby-grid">
+      <div class="hobby-item">
+        <span class="emoji">🔭</span>
+        天文观测
+        <div class="label">从望远镜里看土星环，每次看都还是会感叹</div>
+      </div>
+      <div class="hobby-item">
+        <span class="emoji">📷</span>
+        星空摄影
+        <div class="label">延时、星轨、银河——等等，这又是一个新坑</div>
+      </div>
+      <div class="hobby-item">
+        <span class="emoji">💻</span>
+        做自己感兴趣的东西
+        <div class="label">比如这个网站，想做就去做了</div>
+      </div>
+      <div class="hobby-item">
+        <span class="emoji">🚗</span>
+        喜欢车
+        <div class="label">虽然家里没车，但真的很喜欢开车的感觉</div>
+      </div>
+      <div class="hobby-item">
+        <span class="emoji">🎯</span>
+        兴趣广泛
+        <div class="label">跟着兴趣走，探索就完事了</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 找到我 ========== -->
+  <div class="section">
+    <div class="section-title">📎 找到我</div>
+    <p>
+      <span style="color:rgba(255,255,255,0.75);font-weight:500;">月亮早睡困不醒</span> 这个名字会出现在很多社群里的，<br>
+      找一找，应该都能找到我撒——全网应该找不到第二个同名的。
+    </p>
+  </div>
+
+  <!-- ========== 请作者喝咖啡 ========== -->
+  <div class="section" style="text-align:center;">
+    <div class="section-title">☕ 请作者喝咖啡</div>
+    <p style="font-size:13px;text-align:center;line-height:1.8;color:rgba(255,255,255,0.5);margin-bottom:16px;">
+      本站完全免费，纯自费运营、熬夜肝内容，每一页都是心血 🌙<br>
+      如果你觉得有帮到你、想支持一下，可以请我喝杯咖啡——<b style="color:rgba(255,255,255,0.75);">完全自愿，不喝也绝对没关系</b>。
+    </p>
+    <button class="reward-btn" id="rewardBtn">☕ 支持一下</button>
+  </div>
+
+  <p style="font-size:12px;color:rgba(255,255,255,0.25);text-align:center;margin-bottom:16px;line-height:1.7;">🌱 该网站还有很多不完善的地方，会持续更新完善～</p>
+  <div class="footer-note">Made with 🌙 · 2026</div>
+
+</div>
+
+<!-- 打赏弹窗 -->
+<div id="rewardModal" class="reward-modal">
+  <div class="reward-box">
+    <h3>请作者喝咖啡 ☕</h3>
+    <div class="reward-sub">内容永远免费，打赏全凭心意 🌙</div>
+    <div class="reward-codes">
+      <div class="reward-col">
+        <img id="alipayImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/alipay.jpg" alt="支付宝收款码（点击放大）">
+        <span>支付宝 点击放大</span>
+      </div>
+      <div class="reward-col">
+        <img id="wechatImg" src="https://hfit-guide-1459922161.cos.ap-nanjing.myqcloud.com/img/reward/wechat.jpg" alt="微信收款码（点击放大）">
+        <span>微信 点击放大</span>
+      </div>
+    </div>
+    <button class="reward-close" id="rewardClose">关闭</button>
+  </div>
+  <img id="rewardZoom" class="reward-zoom" src="" alt="收款码大图">
+</div>
+<script>
+// ===== 打赏弹窗开关 =====
+document.getElementById('rewardBtn').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.add('show');
+});
+document.getElementById('rewardClose').addEventListener('click', function() {
+  document.getElementById('rewardModal').classList.remove('show');
+});
+document.getElementById('rewardModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('rewardModal').classList.remove('show');
+});
+
+// ===== 收款码点击放大（方便扫码） =====
+var rewardZoomEl = document.getElementById('rewardZoom');
+['alipayImg', 'wechatImg'].forEach(function(id) {
+  document.getElementById(id).addEventListener('click', function() {
+    rewardZoomEl.src = this.src;
+    rewardZoomEl.classList.add('show');
+  });
+});
+rewardZoomEl.addEventListener('click', function() { this.classList.remove('show'); });
+</script>
+</body>
+</html>

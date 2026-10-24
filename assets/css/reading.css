@@ -1,0 +1,392 @@
+/* Reading comfort pass.
+   Loaded last so the size floor and font stack apply to every component. */
+
+:root {
+  --sans: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei",
+    "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --serif: "HFIT Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, serif;
+  --mono: "Cascadia Mono", "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--sans);
+  font-kerning: normal;
+  font-synthesis: none;
+  font-optical-sizing: auto;
+  font-size: 16.5px;
+}
+
+/* Small mono labels were the main source of the "pixel" feeling. */
+
+.kicker {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.mono {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+}
+
+.desk-nav a[href="about.html"] {
+  color: var(--red-dark);
+}
+
+.desk-nav a[href="about.html"]::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  vertical-align: 2px;
+}
+
+:is(
+  .brand-type small,
+  .edition,
+  .menu-list .n,
+  .menu-list .e,
+  .menu-foot,
+  .menu-secondary-label,
+  .menu-secondary a .n,
+  .btn-sm,
+  .foot-col h3,
+  .foot-base,
+  .entry-brand small,
+  .entry-issue,
+  .entry-close,
+  .entry-hint,
+  .entry-theme-label,
+  .entry-nav-label,
+  .entry-n,
+  .entry-e,
+  .entry-foot,
+  .entry-secondary,
+  .page-end,
+  .folio-now,
+  .folio-tabs a,
+  .folio-tabs .ft-n,
+  .contents-num,
+  .contents-en,
+  .contents-page,
+  .contents-log-kicker,
+  .contents-log-meta,
+  .hero-meta,
+  .hero-figure .side-label,
+  .hero-figure figcaption,
+  .hero-cue,
+  .stat .label,
+  .q-num,
+  .contact .frame::after,
+  .contact figcaption,
+  .mini-check .note,
+  .teaser-count,
+  .living-teaser-stamp,
+  .quote-wrap cite,
+  .key-hint,
+  .plate-current,
+  .tool-btn,
+  .plate-item .id,
+  .hotspot,
+  .note-source,
+  .note-switch .chip,
+  .ledger-item .n,
+  .ledger-item .p,
+  .plate-caption,
+  .living-meta span,
+  .layout-count,
+  .layout-kicker,
+  .layout-tag,
+  .layout-source,
+  .murmur-index,
+  .murmur-tag,
+  .murmur-source,
+  .notes-meta span,
+  .notes-rail-label,
+  .rail-search-label,
+  .link-cat-num,
+  .link-note-inner .author-tag,
+  .link-extra,
+  .link-kind,
+  .link-must,
+  .scene .kit,
+  .scene li,
+  .swap-row .arrow,
+  .swap-row .why,
+  .rec-card .rec-type,
+  .rec-card cite,
+  .tools-mode,
+  .tools-mode small,
+  .must-strip-head .mono,
+  .must-item small,
+  .log-meta span,
+  .log-version,
+  .log-side time,
+  .log-flag,
+  .log-empty,
+  .feedback-like-label,
+  .feedback-like-note,
+  .feedback-field > span,
+  .feedback-field small,
+  .feedback-status,
+  .feedback-sent-label,
+  .feedback-sent-meta,
+  .index-trigger,
+  .index-trigger kbd,
+  .is-kicker,
+  .is-close,
+  .is-field kbd,
+  .is-group,
+  .is-type,
+  .is-result-meta,
+  .is-copy-btn,
+  .is-foot,
+  .is-hint,
+  .is-result-copy small,
+  .qb-label,
+  .qb-select,
+  .qb-count,
+  .qb-step,
+  .qb-progress small,
+  .qb-note,
+  .qb-action,
+  .qb-plate-name,
+  .check-find-label,
+  .check-jump,
+  .hero-shuffle,
+  .hero-headline-switch,
+  .section-label .n,
+  .principle .p-num,
+  .swatch b,
+  .swatch span,
+  .type-specimen .specs p,
+  .demo-tile,
+  .demo-track .demo-tick,
+  .motion-demo-foot p,
+  .motion-demo-foot button,
+  .touch-note,
+  .token-row,
+  .reference-row .ref-index,
+  .reference-row .ref-src,
+  .design-foot,
+  .intro-facts span,
+  .ring-label b small,
+  .ring-label span,
+  .progress-copy .save-note,
+  .filter-label,
+  .filter-group .chip,
+  .cat-head .cat-num,
+  .cat-head .cat-count,
+  .optional-tag,
+  .mobile-bar .m-count,
+  .mobile-bar button,
+  .print-head
+) {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+/* Controls need a little more room once the label grows. */
+
+:is(.qa-copy, .qa-like, .link-note-btn, .chip, .tag, .filter-group .chip, .rail-actions button, .tool-btn, .qb-action, .is-copy-btn) {
+  font-size: 10.5px;
+}
+
+.qa-copy,
+.qa-like {
+  padding: 4px 8px;
+}
+
+.qa-like {
+  gap: 7px;
+}
+
+.qa-foot {
+  font-size: 11px;
+  letter-spacing: 0.035em;
+}
+
+.qa-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.link-note-btn {
+  font-size: 11px;
+}
+
+.link-note-inner .author-tag {
+  font-size: 10px;
+}
+
+.link-must {
+  font-size: 9.5px;
+}
+
+.about-meta span,
+.about-support-note,
+.about-foot,
+.support-foot,
+.reward-tag {
+  font-size: 11px;
+}
+
+.reward-note {
+  font-size: 10.5px;
+}
+
+.support-stamp {
+  font-size: 11px;
+}
+
+.must-item > span:not(.link-icon) {
+  min-width: 0;
+}
+
+.like-stamp-count {
+  font-size: 12px;
+}
+
+.contents-log-meta,
+.contents-log-kicker {
+  font-size: 10.5px;
+}
+
+/* Secondary copy: keep hierarchy, lose the cramped feeling. */
+
+.lede {
+  font-size: clamp(1.04rem, 1.26vw, 1.14rem);
+}
+
+.answer-body {
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+.link-desc {
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.link-note-inner {
+  font-size: 15px;
+}
+
+.layout-text {
+  font-size: 16.5px;
+}
+
+.design-copy > p {
+  font-size: 16.5px;
+}
+
+.foot-brand p,
+.menu-aside p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.foot-col a,
+.foot-col p {
+  font-size: 14px;
+}
+
+.q-desc {
+  font-size: 13.5px;
+}
+
+.notes-intro .lede,
+.living-intro .lede,
+.design-intro .lede {
+  font-size: clamp(1.04rem, 1.26vw, 1.14rem);
+}
+
+/* Very small decorative stamps get a readable floor too. */
+
+.plate-stamp {
+  font-size: 10px;
+}
+
+.theme-swatch small {
+  font-size: 9px;
+}
+
+.demo-track .demo-tick,
+.stage::before {
+  font-size: 9px;
+}
+
+/* Full-width Chinese copy should not look thin or synthetic. */
+
+.hero-title,
+.section-title,
+.page-title,
+.notes-title,
+.living-title,
+.design-title,
+.log-title,
+.about-title {
+  font-synthesis: none;
+}
+
+@media (max-width: 360px) {
+  .site-head {
+    padding-inline: 12px;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand-type b {
+    font-size: 11px;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .head-right {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 16px;
+  }
+
+  .answer-body {
+    font-size: 16.5px;
+  }
+
+  .link-desc,
+  .link-note-inner {
+    font-size: 14px;
+  }
+
+  .layout-text,
+  .design-copy > p {
+    font-size: 16px;
+  }
+
+  .hero-figure figcaption {
+    font-size: 10.5px;
+  }
+
+  .plate-stamp {
+    font-size: 8.5px;
+  }
+
+  .plate-stamp b {
+    font-size: 15px;
+  }
+}
