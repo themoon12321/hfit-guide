@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3efe6">
+  <meta http-equiv="refresh" content="0; url=layouts.html">
+  <title>宿舍布置参考 · 合肥理工学院指南</title>
+  <style>
+    body{margin:0;min-height:100svh;display:grid;place-items:center;background:#f3efe6;color:#191916;font:16px/1.7 "PingFang SC","Microsoft YaHei",sans-serif}
+    a{color:#d5472a}
+  </style>
+</head>
+<body>
+  <p>宿舍布置和碎碎念已经拆成两个独立页面。<a href="layouts.html">去宿舍布置</a> · <a href="murmur.html">去碎碎念</a></p>
+  <script>
+    (function () {
+      var hash = location.hash || "";
+      var toMurmur = hash === "#murmur" || hash === "#murmurTitle";
+      location.replace((toMurmur ? "murmur.html" : "layouts.html") + (toMurmur ? "" : hash));
+    })();
+  </script>
+</body>
+</html>

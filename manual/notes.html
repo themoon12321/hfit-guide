@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3efe6">
+  <meta http-equiv="refresh" content="0; url=faq.html">
+  <title>常见问答 · 合肥理工学院指南</title>
+  <style>
+    body{margin:0;min-height:100svh;display:grid;place-items:center;background:#f3efe6;color:#191916;font:16px/1.7 "PingFang SC","Microsoft YaHei",sans-serif}
+    a{color:#d5472a}
+  </style>
+</head>
+<body>
+  <p>问题与软件已经拆成两个独立页面。<a href="faq.html">去常见问答</a> · <a href="software.html">去软件与官网</a></p>
+  <script>
+    (function () {
+      var hash = location.hash || "";
+      var query = new URLSearchParams(location.search);
+      var toSoftware = /^#l-/.test(hash) || hash === "#links" || query.get("tab") === "links";
+      location.replace((toSoftware ? "software.html" : "faq.html") + hash);
+    })();
+  </script>
+</body>
+</html>
